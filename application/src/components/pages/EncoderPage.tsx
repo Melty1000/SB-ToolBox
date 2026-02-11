@@ -41,8 +41,8 @@ const ScriptStrip = ({
 
     const filteredActions = useMemo(() => {
         return availableActions.filter(a =>
-            a.name.toLowerCase().includes(search.toLowerCase()) ||
-            a.id.toLowerCase().includes(search.toLowerCase())
+            (a.name || '').toLowerCase().includes(search.toLowerCase()) ||
+            (a.id || '').toLowerCase().includes(search.toLowerCase())
         );
     }, [availableActions, search]);
 
@@ -214,7 +214,10 @@ export function EncoderPage({ initialValue }: { initialValue?: string }) {
             Object.keys(scripts || {}).forEach(fileName => {
                 if (!newMap[fileName]) {
                     const baseName = fileName.replace('.cs', '').toLowerCase();
-                    const match = (availableActions || []).find((a: any) => a.name.toLowerCase() === baseName || a.id.toLowerCase() === baseName);
+                    const match = (availableActions || []).find((a: any) =>
+                        (a.name || '').toLowerCase() === baseName ||
+                        (a.id || '').toLowerCase() === baseName
+                    );
                     if (match) {
                         newMap[fileName] = match.id;
                         changed = true;

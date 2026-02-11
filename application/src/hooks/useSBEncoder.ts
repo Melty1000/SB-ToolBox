@@ -57,7 +57,7 @@ export const useSBEncoder = () => {
 
                     actions.push({
                         id: String(current.id),
-                        name: displayName
+                        name: displayName || 'Unnamed Action'
                     });
                 }
 
