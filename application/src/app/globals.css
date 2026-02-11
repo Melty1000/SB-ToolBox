@@ -1,0 +1,205 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
+
+    /* --- BASE: GRAPHITE (Dark) --- */
+    --melt-void: #050505;
+    --melt-frame: #0c0c0e;
+    --melt-surface: #18181b;
+
+    /* --- ACCENT: INDUSTRIAL ORANGE (Default) --- */
+    --melt-accent: #ffaa00;
+    --melt-accent-hover: #ffbb33;
+    --melt-accent-glow: rgba(255, 170, 0, 0.4);
+
+    /* Utility Colors */
+    --melt-twitch: #9146FF;
+
+    /* --- TYPOGRAPHY (Zinc Standard) --- */
+    --melt-text-heading: #E4E4E7;
+    /* Zinc-200 */
+    --melt-text-body: #D4D4D4;
+    /* Zinc-300 */
+    --melt-text-label: #A1A1AA;
+    /* Zinc-400 */
+    --melt-text-dim: #A1A1AA;
+    /* Zinc-400 (Secondary) */
+    --melt-text-muted: #71717A;
+    /* Zinc-500 (Decorative) */
+
+    /* Universal Shadow Spec */
+    --melt-shadow-opacity: 0.3;
+  }
+
+  /* Graphite | Cobalt (Default Reflector) */
+  [data-theme='graphite-cobalt'] {
+    --melt-accent: #1D4267;
+    --melt-accent-hover: #355C85;
+    --melt-accent-glow: rgba(29, 66, 103, 0.4);
+  }
+
+  /* Slate | Gold (Classic Pro Look) */
+  [data-theme='slate-gold'] {
+    --melt-void: #08090A;
+    --melt-frame: #0E1115;
+    --melt-surface: #1C1F26;
+    --melt-accent: #F2AF0D;
+    --melt-accent-hover: #FFC130;
+    --melt-accent-glow: rgba(242, 175, 13, 0.3);
+    --melt-shadow-opacity: 0.5;
+  }
+
+  /* Graphite | Gold (Hybrid A) */
+  [data-theme='graphite-gold'] {
+    --melt-accent: #F2AF0D;
+    --melt-accent-hover: #FFC130;
+    --melt-accent-glow: rgba(242, 175, 13, 0.3);
+  }
+
+  /* Slate | Cobalt (Hybrid B) */
+  [data-theme='slate-cobalt'] {
+    --melt-void: #08090A;
+    --melt-frame: #0E1115;
+    --melt-surface: #1C1F26;
+    --melt-accent: #1D4267;
+    --melt-accent-hover: #355C85;
+    --melt-accent-glow: rgba(29, 66, 103, 0.4);
+  }
+}
+
+@theme inline {
+  --color-melt-void: var(--melt-void);
+  --color-melt-frame: var(--melt-frame);
+  --color-melt-surface: var(--melt-surface);
+  --color-melt-accent: var(--melt-accent);
+  --color-melt-accent-hover: var(--melt-accent-hover);
+  --color-melt-accent-glow: var(--melt-accent-glow);
+  --color-melt-twitch: var(--melt-twitch);
+
+  --color-melt-text-label: var(--melt-text-label);
+  --color-melt-text-body: var(--melt-text-body);
+  --color-melt-text-heading: var(--melt-text-heading);
+  --color-melt-text-muted: var(--melt-text-muted);
+}
+
+body {
+  background-color: var(--melt-void);
+  color: var(--melt-text-body);
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Glass Morphism Primitives */
+.glass-panel {
+  background: rgba(18, 18, 23, 0.7);
+  backdrop-filter: blur(12px);
+  border: 1px solid color-mix(in srgb, var(--melt-text-muted), transparent 90%);
+}
+
+/* 6. MONACO TRANSPARENCY OVERRIDES */
+.monaco-editor,
+.monaco-editor-background,
+.monaco-editor .margin,
+.monaco-editor .sticky-scroll-container {
+  background-color: transparent !important;
+}
+
+.monaco-editor .scroll-decoration {
+  box-shadow: none !important;
+}
+
+/* Custom Scrollbar (Melt Spec) */
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--melt-surface);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--melt-text-muted);
+  border-radius: 6px;
+  border: 3px solid var(--melt-surface);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--melt-text-label);
+}
+
+/* Scrollbar Track Matcher */
+.scrollbar-track-focus:focus::-webkit-scrollbar-track {
+  background-color: transparent !important;
+}
+
+.scrollbar-track-focus:focus::-webkit-scrollbar-thumb {
+  background-clip: content-box !important;
+  border-color: transparent !important;
+}
+
+/* Monaco Scrollbar Overrides (Melt Sync) */
+.monaco-editor .scrollbar {
+  background: var(--melt-surface) !important;
+}
+
+.monaco-editor .scrollbar .slider {
+  background: var(--melt-text-muted) !important;
+  border-radius: 6px !important;
+  border: 3px solid var(--melt-surface) !important;
+}
+
+.monaco-editor .scrollbar .slider:hover {
+  background: var(--melt-text-label) !important;
+}
+
+.monaco-editor .scrollbar .slider.active {
+  background: var(--melt-accent) !important;
+}
+
+/* Frameless Window Drag Region */
+[data-tauri-drag-region],
+.drag-region {
+  -webkit-app-region: drag;
+}
+
+.no-drag {
+  -webkit-app-region: no-drag;
+}
+
+.shadow-glow {
+  box-shadow: 0 0 20px var(--melt-accent-glow);
+}
+
+@layer utilities {
+  .text-label-xs {
+    font-size: 10px;
+    line-height: 1rem;
+    letter-spacing: 0.15em;
+    font-weight: 900;
+    text-transform: uppercase;
+  }
+
+  .text-label-2xs {
+    font-size: 8px;
+    line-height: 1rem;
+    letter-spacing: 0.15em;
+    font-weight: 900;
+    text-transform: uppercase;
+  }
+
+  .text-label-sm {
+    font-size: 11px;
+    line-height: 1rem;
+    letter-spacing: 0.1em;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  .text-body-sm {
+    font-size: 13px;
+    line-height: 1.25rem;
+  }
+}
