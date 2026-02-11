@@ -136,7 +136,11 @@ export const SBEditor: React.FC<SBEditorProps> = ({ value, language, onChange, r
         refreshTheme(monaco);
 
         editor.updateOptions({
-            lineNumbersMinChars: 4,
+            lineNumbers: 'off',
+            lineNumbersMinChars: 0,
+            lineDecorationsWidth: 0,
+            glyphMargin: false,
+            folding: false,
             scrollbar: {
                 vertical: 'visible',
                 horizontal: 'visible',

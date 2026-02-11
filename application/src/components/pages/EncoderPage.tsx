@@ -433,7 +433,7 @@ export function EncoderPage({ initialValue }: { initialValue?: string }) {
                         onDragLeave={handleScriptDragLeave}
                         onDrop={handleScriptDrop}
                         className={cn(
-                            "relative group transition-all duration-700 ease-in-out flex flex-col border-b border-transparent hover:border-b-melt-accent/50 min-h-[600px]",
+                            "relative group transition-all duration-700 ease-in-out flex flex-col border-b border-transparent hover:border-b-melt-accent/50 h-[600px] overflow-y-auto custom-scrollbar",
                             isDraggingScripts && "border-b-melt-accent/50"
                         )}
                     >
@@ -476,15 +476,17 @@ export function EncoderPage({ initialValue }: { initialValue?: string }) {
                         className="absolute bottom-10 left-0 right-0 z-[100] px-10 pointer-events-none"
                     >
                         <div className="relative w-full animate-in fade-in slide-in-from-top-4 duration-500 pointer-events-auto">
-                            <div className="flex flex-col lg:flex-row items-center justify-between w-full min-h-[52px] gap-4 lg:gap-0 py-4 lg:py-0">
+                            <div className="flex flex-col lg:flex-row items-center justify-between w-full min-h-[52px] gap-6 lg:gap-0 py-4 lg:py-0">
                                 {/* LEFT SEGMENT */}
-                                <div className="h-[1px] flex-1 bg-melt-text-muted/10 hidden lg:block" />
-                                <ActionBtn
-                                    label={encodingMode === 'file' ? "Processing..." : "Encode To .SB File"}
-                                    icon={encodingMode === 'file' ? Loader2 : FileUp}
-                                    onClick={() => handleEncode('file')}
-                                />
-                                <div className="h-[1px] flex-1 bg-melt-text-muted/10 hidden lg:block" />
+                                <div className="flex-1 flex items-center h-full gap-6">
+                                    <div className="h-[1px] flex-1 bg-melt-text-muted/10 hidden lg:block" />
+                                    <ActionBtn
+                                        label={encodingMode === 'file' ? "Processing..." : "Encode To .SB File"}
+                                        icon={encodingMode === 'file' ? Loader2 : FileUp}
+                                        onClick={() => handleEncode('file')}
+                                    />
+                                    <div className="h-[1px] flex-1 bg-melt-text-muted/10 hidden lg:block" />
+                                </div>
 
                                 {/* CENTER DIVIDER */}
                                 <div className="flex items-center h-full gap-6 shrink-0">
