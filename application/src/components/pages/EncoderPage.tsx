@@ -137,9 +137,9 @@ const ScriptStrip = ({
                                                 : "border-transparent text-melt-text-muted hover:text-melt-text-body"
                                         )}
                                     >
-                                        <div className="flex flex-col gap-0.5">
-                                            <span className="font-black uppercase tracking-[0.15em] leading-none">{a.name}</span>
-                                            <span className="opacity-30 text-[8px] font-mono uppercase tracking-widest">SUB-ACTION ID: {a.id.substring(0, 13)}</span>
+                                        <div className="flex flex-col gap-0.5 min-w-0 flex-1">
+                                            <span className="font-black uppercase tracking-[0.15em] leading-tight truncate">{a.name}</span>
+                                            <span className="opacity-30 text-[8px] font-mono uppercase tracking-widest truncate">ID: {a.id}</span>
                                         </div>
                                         {targetId === a.id && <Zap size={10} fill="currentColor" className="text-emerald-500/40" />}
                                     </button>
@@ -476,32 +476,32 @@ export function EncoderPage({ initialValue }: { initialValue?: string }) {
                         className="absolute bottom-10 left-0 right-0 z-[100] px-10 pointer-events-none"
                     >
                         <div className="relative w-full animate-in fade-in slide-in-from-top-4 duration-500 pointer-events-auto">
-                            <div className="flex flex-col lg:flex-row items-center justify-between w-full h-[52px] gap-0">
+                            <div className="flex flex-col lg:flex-row items-center justify-between w-full min-h-[52px] gap-4 lg:gap-0 py-4 lg:py-0">
                                 {/* LEFT SEGMENT */}
-                                <div className="flex-1 flex items-center h-full gap-6">
-                                    <div className="h-[1px] flex-1 bg-melt-text-muted/10" />
-                                    <ActionBtn
-                                        label={encodingMode === 'file' ? "Processing..." : "Encode To .SB File"}
-                                        icon={encodingMode === 'file' ? Loader2 : FileUp}
-                                        onClick={() => handleEncode('file')}
-                                    />
-                                </div>
+                                <div className="h-[1px] flex-1 bg-melt-text-muted/10 hidden lg:block" />
+                                <ActionBtn
+                                    label={encodingMode === 'file' ? "Processing..." : "Encode To .SB File"}
+                                    icon={encodingMode === 'file' ? Loader2 : FileUp}
+                                    onClick={() => handleEncode('file')}
+                                />
+                                <div className="h-[1px] flex-1 bg-melt-text-muted/10 hidden lg:block" />
 
                                 {/* CENTER DIVIDER */}
-                                <div className="flex items-center h-full gap-6">
-                                    <div className="h-[1px] w-12 bg-melt-text-muted/10" />
+                                <div className="flex items-center h-full gap-6 shrink-0">
+                                    <div className="h-[1px] w-8 lg:w-12 bg-melt-text-muted/10" />
                                     <div className="px-4 py-2 bg-melt-surface text-[10px] font-black text-melt-text-muted uppercase tracking-[0.6em] translate-y-[-1px] shrink-0">OR</div>
-                                    <div className="h-[1px] w-12 bg-melt-text-muted/10" />
+                                    <div className="h-[1px] w-8 lg:w-12 bg-melt-text-muted/10" />
                                 </div>
 
                                 {/* RIGHT SEGMENT */}
                                 <div className="flex-1 flex items-center h-full gap-6">
+                                    <div className="h-[1px] flex-1 bg-melt-text-muted/10 hidden lg:block" />
                                     <ActionBtn
                                         label={encodingMode === 'string' ? "Processing..." : "Encode to Import String"}
                                         icon={encodingMode === 'string' ? Loader2 : Terminal}
                                         onClick={() => handleEncode('string')}
                                     />
-                                    <div className="h-[1px] flex-1 bg-melt-text-muted/10" />
+                                    <div className="h-[1px] flex-1 bg-melt-text-muted/10 hidden lg:block" />
                                 </div>
                             </div>
                         </div>
