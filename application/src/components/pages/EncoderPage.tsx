@@ -213,11 +213,21 @@ export function EncoderPage({ initialValue }: { initialValue?: string }) {
             let changed = false;
             Object.keys(scripts || {}).forEach(fileName => {
                 if (!newMap[fileName]) {
-                    const baseName = fileName.replace('.cs', '').toLowerCase();
-                    const match = (availableActions || []).find((a: any) =>
-                        (a.name || '').toLowerCase() === baseName ||
-                        (a.id || '').toLowerCase() === baseName
-                    );
+                    const baseName = fileName.replace('.cs', '');
+                    const sanitizeForMatch = (s: string) => s.toLowerCase().replace(/[^a-zA-Z0-9 _#[\]-]/g, '').replace(/\s+/g, ' ').trim();
+                    const targetBase = sanitizeForMatch(baseName);
+
+                    const match = (availableActions || []).find((a: any) => {
+                        const actionName = (a.name || '').toLowerCase();
+                        const actionId = (a.id || '').toLowerCase();
+                        if (sanitizeForMatch(actionName) === targetBase) return true;
+                        if (actionId === targetBase) return true;
+                        const displayHierarchy = actionName.split('>').map((s: string) => sanitizeForMatch(s)).join(' - ');
+                        if (displayHierarchy === targetBase) return true;
+                        const leafName = actionName.split('>').pop() || '';
+                        if (sanitizeForMatch(leafName) === targetBase) return true;
+                        return false;
+                    });
                     if (match) {
                         newMap[fileName] = match.id;
                         changed = true;

@@ -193,9 +193,12 @@ export const useSBEncoder = () => {
             const scripts: Record<string, string> = {};
             let scriptCount = 0;
 
-            const extractRecursive = (obj: any) => {
+            const extractRecursive = (obj: any, parentName: string | null = null) => {
                 try {
                     if (typeof obj === 'object' && obj !== null) {
+                        // If this is an action, capture its name for the next level
+                        const currentName = obj.name || parentName;
+
                         if (obj.byteCode && typeof obj.byteCode === 'string' && !obj.byteCode.startsWith('REF:')) {
                             try {
                                 const binary = atob(obj.byteCode);
@@ -203,7 +206,13 @@ export const useSBEncoder = () => {
                                 for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
                                 const code = new TextDecoder().decode(bytes);
 
-                                const nameBase = (obj.name || `script`).replace(/[^a-zA-Z0-9 _#[\]-]/g, '').replace(/\s+/g, ' ').trim();
+                                const sanitize = (s: string) => s.replace(/[^a-zA-Z0-9 _#[\]-]/g, '').replace(/\s+/g, ' ').trim();
+
+                                const leafName = sanitize(obj.name || 'script');
+                                const nameBase = (parentName && parentName !== obj.name)
+                                    ? `${sanitize(parentName)} - ${leafName}`
+                                    : leafName;
+
                                 let name = nameBase + '.cs';
                                 let counter = 1;
                                 while (scripts[name]) {
@@ -219,7 +228,7 @@ export const useSBEncoder = () => {
                             }
                         }
                         for (const key in obj) {
-                            if (key !== '__ext_name') extractRecursive(obj[key]);
+                            if (key !== '__ext_name') extractRecursive(obj[key], currentName);
                         }
                     }
                 } catch (e) {
