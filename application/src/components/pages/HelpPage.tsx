@@ -123,13 +123,71 @@ export function HelpPage() {
                 title="TRIGGERS REFERENCE"
                 description="Triggers define what events start an action. They are matched by Type ID and contain specific configuration fields like command IDs, twitch bits amounts, or chat message patterns."
             >
-                <IndustrialStrip label="VIEW TRIGGER TYPES" icon={Zap}>
+                <IndustrialStrip label="VIEW CORE TRIGGERS" icon={Zap}>
                     <div className="p-6 grid grid-cols-1 gap-6">
-                        <StatRow label="Chat Message" value="Type 0" sub="exact, ignoreCase" />
-                        <StatRow label="Twitch Bits" value="Type 26" sub="min, max" />
-                        <StatRow label="Twitch Sub" value="Type 28" sub="tiers" />
-                        <StatRow label="Command" value="Type 1" sub="commandId" />
-                        <StatRow label="Timer" value="Type 43" sub="timerId" />
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <StatRow label="Chat Message" value="Type 0" sub="exact, ignoreCase" />
+                            <StatRow label="Command" value="Type 1" sub="commandId" />
+                            <StatRow label="Timer" value="Type 43" sub="timerId" />
+                            <StatRow label="Twitch Follow" value="Type 120" sub="no extra fields" />
+                            <StatRow label="Twitch Bits" value="Type 26" sub="min, max" />
+                            <StatRow label="Twitch Sub" value="Type 28" sub="tiers" />
+                            <StatRow label="Twitch Raid" value="Type 31" sub="viewerCount" />
+                            <StatRow label="Reward Redeem" value="Type 50" sub="rewardId" />
+                        </div>
+                    </div>
+                </IndustrialStrip>
+            </Section>
+
+            {/* 8. SUB-ACTIONS REFERENCE */}
+            <Section
+                icon={Workflow}
+                title="SUB-ACTIONS REFERENCE"
+                description="Common sub-actions used to manipulate state, send messages, or interact with OBS. While Type 99999 is standard for scripts, these internal types handle core bot logic."
+            >
+                <IndustrialStrip label="VIEW LOGIC & BOT ACTIONS" icon={Layers}>
+                    <div className="p-6 grid grid-cols-1 gap-6">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <StatRow label="C# Execute" value="Type 99999" sub="byteCode, references" />
+                            <StatRow label="Twitch Message" value="Type 560" sub="message, botAccount" />
+                            <StatRow label="Set Argument" value="Type 200" sub="key, value" />
+                            <StatRow label="Play Sound" value="Type 21" sub="path, volume" />
+                            <StatRow label="Logic: If" value="Type 100" sub="var, compare, value" />
+                            <StatRow label="Log to File" value="Type 50" sub="path, content" />
+                            <StatRow label="OBS Set Scene" value="Type 400" sub="sceneName" />
+                            <StatRow label="VoiceMod Select" value="Type 1200" sub="voiceId" />
+                        </div>
+                    </div>
+                </IndustrialStrip>
+            </Section>
+
+            {/* 9. THE VARIABLE BIBLE */}
+            <Section
+                icon={Variable}
+                title="THE VARIABLE BIBLE"
+                description="Streamer.bot uses a dynamic variable system. Understanding the difference between local arguments and global persistence is key to building complex logic."
+            >
+                <IndustrialStrip label="ACCESSING DATA FLOW" icon={ListTree}>
+                    <div className="p-6 flex flex-col gap-8">
+                        <div className="flex flex-col gap-4">
+                            <span className="text-xs font-black text-melt-accent uppercase tracking-widest">LOCAL ARGUMENTS (%var%)</span>
+                            <p className="text-[10px] font-mono text-melt-text-label leading-relaxed">
+                                Variables surrounded by <span className="text-melt-accent">%</span> percent signs are only available in the current action's flow. They are destroyed after the action finishes.
+                            </p>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2 opacity-80">
+                                <StatRow label="%user%" value="Login name" sub="nutty" />
+                                <StatRow label="%userName%" value="Display name" sub="Nutty" />
+                                <StatRow label="%msg%" value="Full message" sub="!hello world" />
+                                <StatRow label="%userId%" value="Twitch UUID" sub="123456" />
+                            </div>
+                        </div>
+
+                        <div className="flex flex-col gap-4">
+                            <span className="text-xs font-black text-melt-accent uppercase tracking-widest">GLOBAL VARIABLES (~var~)</span>
+                            <p className="text-[10px] font-mono text-melt-text-label leading-relaxed">
+                                Variables surrounded by <span className="text-melt-accent">~</span> tildes are persisted in the bot's database. They can be shared across multiple actions and sessions.
+                            </p>
+                        </div>
                     </div>
                 </IndustrialStrip>
             </Section>

@@ -203,7 +203,12 @@ export const useSBEncoder = () => {
                                 for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
                                 const code = new TextDecoder().decode(bytes);
 
-                                const name = (obj.name || `script_${scriptCount}`).replace(/[^a-zA-Z0-9 _#[\]-]/g, '').replace(/\s+/g, ' ').trim() + '.cs';
+                                const nameBase = (obj.name || `script`).replace(/[^a-zA-Z0-9 _#[\]-]/g, '').replace(/\s+/g, ' ').trim();
+                                let name = nameBase + '.cs';
+                                let counter = 1;
+                                while (scripts[name]) {
+                                    name = `${nameBase}_${counter++}.cs`;
+                                }
 
                                 scripts[name] = code;
                                 obj.byteCode = `REF:${name}`;
@@ -254,8 +259,7 @@ export const useSBEncoder = () => {
                             if (code) {
                                 try {
                                     const utf8Bytes = new TextEncoder().encode(code);
-                                    let binary = '';
-                                    utf8Bytes.forEach(b => binary += String.fromCharCode(b));
+                                    const binary = Array.from(utf8Bytes).map(b => String.fromCharCode(b)).join('');
                                     current.byteCode = btoa(binary);
                                     injected = true;
                                 } catch (e) {
@@ -269,8 +273,7 @@ export const useSBEncoder = () => {
                             if (scriptName && scripts[scriptName]) {
                                 try {
                                     const utf8Bytes = new TextEncoder().encode(scripts[scriptName]);
-                                    let binary = '';
-                                    utf8Bytes.forEach(b => binary += String.fromCharCode(b));
+                                    const binary = Array.from(utf8Bytes).map(b => String.fromCharCode(b)).join('');
                                     current.byteCode = btoa(binary);
                                 } catch (e) {
                                     console.warn("INJECT_SCRIPT_LINK_FAIL (btoa):", e);
@@ -294,8 +297,7 @@ export const useSBEncoder = () => {
             finalData.set(header);
             finalData.set(compressed, header.length);
 
-            let finalBinary = '';
-            for (let i = 0; i < finalData.length; i++) finalBinary += String.fromCharCode(finalData[i]);
+            const finalBinary = Array.from(finalData).map(b => String.fromCharCode(b)).join('');
             return btoa(finalBinary);
         } catch (e: any) {
             const normalized = normalizeError(e, 'Encoding failed');
