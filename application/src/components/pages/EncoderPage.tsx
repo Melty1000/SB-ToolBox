@@ -393,7 +393,7 @@ export function EncoderPage({ initialValue }: { initialValue?: string }) {
                     </div>
                     <div
                         className={cn(
-                            "relative group transition-all duration-300 h-[600px] border-b border-transparent focus-within:border-b-melt-accent/50",
+                            "relative group transition-all duration-300 h-[600px] border-b border-transparent hover:border-b-melt-accent/50 focus-within:border-b-melt-accent/50",
                             isDraggingJson && "border-b-melt-accent/50"
                         )}
                         onDragOver={handleJsonDragOver}

@@ -286,7 +286,7 @@ export function DecoderPage({ initialValue }: { initialValue?: string }) {
                         onChange={(e) => setInputValue(e.target.value)}
                         spellCheck="false"
                         className={cn(
-                            "w-full bg-transparent border-b border-transparent py-3 px-4 text-sm font-mono text-melt-text-heading outline-none resize-none leading-relaxed focus:border-melt-accent/50 scrollbar-track-focus transition-all duration-700 ease-in-out custom-scrollbar z-10 relative",
+                            "w-full bg-transparent border-b border-transparent py-3 px-4 text-sm font-mono text-melt-text-heading outline-none resize-none leading-relaxed hover:border-b-melt-accent/50 focus:border-melt-accent/50 scrollbar-track-focus transition-all duration-700 ease-in-out custom-scrollbar z-10 relative",
                             decodedData ? "h-32" : "h-40",
                             isDragging && "border-melt-accent bg-melt-accent/5"
                         )}
@@ -528,7 +528,7 @@ function MetadataInput({ label, value, onChange }: { label: string; value: strin
                 value={value}
                 onChange={(e) => onChange(e.target.value)}
                 spellCheck="false"
-                className="w-full bg-transparent border-b border-transparent px-1 py-3 text-sm font-mono text-melt-text-body outline-none focus:border-melt-accent/50 focus:bg-melt-surface transition-all"
+                className="w-full bg-transparent border-b border-transparent px-1 py-3 text-sm font-mono text-melt-text-body outline-none hover:border-b-melt-accent/50 focus:border-melt-accent/50 focus:bg-melt-surface transition-all"
                 placeholder="..."
             />
         </div>
