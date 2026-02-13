@@ -61,4 +61,4 @@ To use SB ToolBox, simply access the live web version:
 This tool is intended for personal and community use in the Streamer.bot ecosystem. It facilitates script management but does not bypass the bot's inherent security or functional limitations.
 
 ---
-**Developed by [Melty1000](https://github.com/Melty1000)** | *Industrial Grade Tooling*
+**Developed by [Melty1000](https://github.com/Melty1000)**
