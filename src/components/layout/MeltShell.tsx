@@ -102,7 +102,7 @@ export const MeltShell: React.FC<MeltShellProps> = ({ children, activePage = 'de
             >
                 <div className="logo-container h-12 w-full relative grid place-items-center overflow-visible">
                     <img
-                        src="/assets/logo-collapsed.svg"
+                        src="/SB-ToolBox/assets/logo-collapsed.svg"
                         alt="Mascot"
                         className="w-12 h-12 logo-main object-contain z-20 opacity-100"
                         style={{ gridArea: '1/1', transform: 'rotate(0deg)' }}
@@ -111,7 +111,7 @@ export const MeltShell: React.FC<MeltShellProps> = ({ children, activePage = 'de
                         {...({ fetchPriority: "high" } as any)}
                     />
                     <img
-                        src="/assets/streamerbot-logo.svg"
+                        src="/SB-ToolBox/assets/streamerbot-logo.svg"
                         alt="Links"
                         className="h-11 w-auto logo-reveal object-contain z-10 opacity-0"
                         style={{ gridArea: '1/1', transform: 'rotate(0deg)', opacity: 0 }}
