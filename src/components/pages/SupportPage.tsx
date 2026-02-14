@@ -1,6 +1,7 @@
 "use client";
 
 import React from 'react';
+import { cn } from '@/lib/utils';
 import {
     Coffee, MessageSquare, Github,
     Globe, Sparkles, Youtube, Twitch, List, Activity, Heart, Users, Brain, ShoppingBag, Gift, Instagram
@@ -332,6 +333,7 @@ export function SupportPage() {
                             { icon: Gift, href: "https://throne.com/tattedtizzy", color: "#FF3F5F" },
                             { icon: Coffee, href: "https://ko-fi.com/tattedtizzy", color: "#FF5E5B" }
                         ]}
+                        twitchHandle="tattedtizzy"
                     />
                     <InspirationRow
                         name="OkV1sual"
@@ -345,6 +347,7 @@ export function SupportPage() {
                             { icon: DiscordIcon, href: "https://discord.gg/a5jkpbShfB", color: "#5865F2" },
                             { icon: Coffee, href: "https://streamelements.com/okv1sual/tip", color: "#FF5E5B" }
                         ]}
+                        twitchHandle="okv1sual"
                     />
                     <InspirationRow
                         name="Archurro_27"
@@ -357,6 +360,7 @@ export function SupportPage() {
                             { icon: XIcon, href: "https://twitter.com/Churro_A69", color: "#1DA1F2" },
                             { icon: DiscordIcon, href: "https://discord.gg/FDVu8JBe", color: "#5865F2" }
                         ]}
+                        twitchHandle="archurro_27"
                     />
                     <InspirationRow
                         name="LeftClickSnipe"
@@ -369,6 +373,7 @@ export function SupportPage() {
                             { icon: Youtube, href: "https://www.youtube.com/channel/UC5Cov8XjjXhbgWQbS3fZTxg", color: "#FF0000" },
                             { icon: DiscordIcon, href: "https://discord.gg/sKcrhVaCh2", color: "#5865F2" }
                         ]}
+                        twitchHandle="leftclicksnipe"
                     />
                     <InspirationRow
                         name="MiltyTheGreat"
@@ -381,6 +386,7 @@ export function SupportPage() {
                             { icon: XIcon, href: "https://twitter.com/MiltyTheGreat", color: "#1DA1F2" },
                             { icon: DiscordIcon, href: "https://discord.gg/2Hh3CZvVTh", color: "#5865F2" }
                         ]}
+                        twitchHandle="miltythegreat"
                     />
                     <InspirationRow
                         name="ImColeyMoley"
@@ -391,6 +397,7 @@ export function SupportPage() {
                             { icon: Youtube, href: "https://www.youtube.com/@ItsColeyMoley88", color: "#FF0000" },
                             { icon: DiscordIcon, href: "https://discord.gg/Vd6sK3s", color: "#5865F2" }
                         ]}
+                        twitchHandle="imcoleymoley"
                     />
                 </div>
             </div>
@@ -418,19 +425,58 @@ function SocialRow({ icon, label, desc, href, color }: any) {
     );
 }
 
-function InspirationRow({ name, logo, desc, socials }: any) {
+function InspirationRow({ name, logo, desc, socials, twitchHandle }: any) {
+    const [isLive, setIsLive] = React.useState(false);
+
+    React.useEffect(() => {
+        if (!twitchHandle) return;
+
+        const checkLive = async () => {
+            try {
+                // Determine if live by probing Twitch's public CDN thumbnail
+                // Live users return the image; offline users are redirected to a '404_preview' image.
+                const resp = await fetch(`https://static-cdn.jtvnw.net/previews-ttv/live_user_${twitchHandle.toLowerCase()}-440x248.jpg?t=${Date.now()}`, {
+                    method: 'GET',
+                    cache: 'no-cache',
+                });
+
+                if (resp.ok && !resp.url.includes('404_preview')) {
+                    setIsLive(true);
+                } else {
+                    setIsLive(false);
+                }
+            } catch (e) {
+                setIsLive(false);
+            }
+        };
+
+        checkLive();
+        const interval = setInterval(checkLive, 60000); // Check every minute
+        return () => clearInterval(interval);
+    }, [twitchHandle]);
+
     return (
         <div className="flex flex-col md:flex-row gap-4 md:gap-6 group/inspiration w-full">
             {/* Avatar / Logo - Standardized Industrial Circle */}
-            <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-melt-text-muted/5 border border-melt-text-muted/10 flex items-center justify-center shrink-0 overflow-hidden group-hover/inspiration:border-melt-accent/30 transition-all duration-500 shadow-[0_0_0_1px_rgba(255,255,255,0.01)]">
-                {logo ? (
-                    <img
-                        src={logo}
-                        alt={name}
-                        className="w-full h-full object-cover group-hover/inspiration:opacity-100 transition-opacity"
-                    />
-                ) : (
-                    <div className="text-[7px] font-black opacity-10 uppercase tracking-tighter">HEX</div>
+            <div className={cn(
+                "relative w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center shrink-0",
+                isLive && "before:absolute before:inset-[-3px] before:rounded-full before:border-2 before:border-red-500 before:animate-pulse z-10"
+            )}>
+                <div className="w-full h-full rounded-full bg-melt-text-muted/5 border border-melt-text-muted/10 flex items-center justify-center shrink-0 overflow-hidden group-hover/inspiration:border-melt-accent/30 transition-all duration-500 shadow-[0_0_0_1px_rgba(255,255,255,0.01)] relative">
+                    {logo ? (
+                        <img
+                            src={logo}
+                            alt={name}
+                            className="w-full h-full object-cover group-hover/inspiration:opacity-100 transition-opacity"
+                        />
+                    ) : (
+                        <div className="text-[7px] font-black opacity-10 uppercase tracking-tighter">HEX</div>
+                    )}
+                </div>
+                {isLive && (
+                    <div className="absolute -top-1 -right-1 bg-red-500 text-[6px] font-black text-white px-1 py-0.5 rounded-sm uppercase tracking-tighter animate-in fade-in zoom-in duration-300 shadow-lg">
+                        LIVE
+                    </div>
                 )}
             </div>
 
