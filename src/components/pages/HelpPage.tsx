@@ -291,7 +291,7 @@ function MetadataField({ label, value }: { label: string, value: string }) {
 
 function CodeBlock({ code, language = 'json' }: { code: string; language?: string }) {
     return (
-        <div className="w-full h-[400px] pl-[20px] py-4 bg-melt-void/30 border-y border-melt-text-muted/5 relative group">
+        <div className="w-full h-[400px] pl-[20px] bg-transparent relative group">
             <SBEditor
                 value={code}
                 language={language}
