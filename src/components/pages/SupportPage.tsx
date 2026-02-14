@@ -265,7 +265,7 @@ export function SupportPage() {
                         />
                         <InspirationRow
                             name="Nutty"
-                            logo="https://imgproxy.fourthwall.com/WSTKpmeQbr7HElolGXj3o27i6lfvx-r0f1JUOOJsbUM/w:40/sm:1/enc/AsDcwYLIVYXtqMOI/-J0gn4fPMCKphvSQ/UnUFID2fLXLJi-m9/-AM5XpdRn2K7H_WW/XdU2C-2VWb8GERI7/GEIeq0qYSsmRLcZe/JVqpBCxW3SV64CuX/JduguWX-DprgYN1k/w39L1v7NlerSFbAM/SPod2kNMThCbQYfe/SeMBCsduvzGU6P26/O3YhpDA2JhyOpIry/nlORSbBRbKdrteSa/6xVb2zWWrjVEjOOn/nSHBcgxgV00Yg7ru/txfSev9zP3UiigeK"
+                            logo="https://unavatar.io/twitter/nuttylmao"
                             desc="If you need help with move, or any other obs plugin, this is probably your guy. Ive used plenty of his projects and is probably the most well known of any of these guys. His youtube videos are super high quality."
                             socials={[
                                 { icon: Globe, href: "https://nutty.gg", color: "#3b82f6" },
@@ -288,7 +288,7 @@ export function SupportPage() {
                         />
                         <InspirationRow
                             name="DigiVybe"
-                            logo="https://imgproxy.fourthwall.com/5CmsePd2Aox0eLf2wnR2xp4KdZLSooyC3nCVbTxK1D4/w:135/sm:1/enc/sgprsgvfxQFXzctI/ntIorUsRDHADeq6s/PE274mJtk7v9Vcis/woEo57w27UVhu1SN/DZWjUTi9LhAOEH5v/kUH5_dxMhl4Bswvl/AdnOoJWUdpbY72a4/lcv8EZV_Ckfs5OIE/ingsW-wBPhpEkw3i/bi_2i23te3fTFWCx/gsjjLp9v5FIzmuTY/3hOPAITjjNyNRALH/mb9h1mgMHfuveC-i/rLoh9bEB3wUTmbiN/tl9oGdIc0SCJ46yg/gI9k70gr_4fhapSj"
+                            logo="https://unavatar.io/twitter/DigiVybe"
                             desc="I only recently met this guy but he has great vibes, and hes an up and comer in the sb space like me and oozes quality with everything he does. I highly suggest checking him out."
                             socials={[
                                 { icon: Globe, href: "https://digivybe.xyz", color: "#3b82f6" },
@@ -320,7 +320,7 @@ export function SupportPage() {
                 <div className="grid grid-cols-1 xl:grid-cols-2 gap-x-12 gap-y-10 w-full">
                     <InspirationRow
                         name="TattedTizzy"
-                        logo="https://unavatar.io/twitch/tattedtizzy"
+                        logo="https://unavatar.io/twitter/TattedTizzy"
                         desc="Incredibly entertaining streamer, a great friend and secretly my boyfriend...🙊"
                         socials={[
                             { icon: Twitch, href: "https://www.twitch.tv/tattedtizzy", color: "#9146FF" },
