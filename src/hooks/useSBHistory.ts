@@ -29,11 +29,20 @@ export const useSBHistory = () => {
             try {
                 const parsed = JSON.parse(stored);
                 if (Array.isArray(parsed)) {
-                    // MIGRATION: Ensure all items have stats object
-                    const migrated = parsed.map(item => ({
-                        ...item,
-                        stats: item.stats || { actions: 0, scripts: 0 }
-                    }));
+                    // MIGRATION: Ensure all items have stats object and cleanse "undefined" strings
+                    const migrated = parsed.map(item => {
+                        const cleanse = (v: any, fallback: string) => (v === undefined || v === null || v === 'undefined' || v === '') ? fallback : v;
+                        return {
+                            ...item,
+                            name: cleanse(item.name, 'Untitled Export'),
+                            author: cleanse(item.author, 'Unknown'),
+                            version: cleanse(item.version, '0.0.0'),
+                            type: cleanse(item.type, 'decode'),
+                            rawString: cleanse(item.rawString, ''),
+                            timestamp: item.timestamp || Date.now(),
+                            stats: item.stats || { actions: 0, scripts: 0 }
+                        };
+                    });
                     setHistory(migrated);
                 }
             } catch (e) {

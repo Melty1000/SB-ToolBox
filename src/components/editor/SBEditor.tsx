@@ -199,6 +199,19 @@ export const SBEditor: React.FC<SBEditorProps> = ({ value, language, onChange, r
             ref={containerRef}
             className={`w-full h-full overflow-hidden bg-transparent relative transition-all duration-500 ${isReady ? 'opacity-100 visible' : 'opacity-0 invisible'}`}
         >
+            <style jsx global>{`
+                .monaco-editor, 
+                .monaco-editor .margin, 
+                .monaco-editor .monaco-scrollable-element,
+                .monaco-editor.focused {
+                    outline: none !important;
+                    border: none !important;
+                    box-shadow: none !important;
+                }
+                .monaco-editor .cursor {
+                    display: ${readOnly ? 'none' : 'block'} !important;
+                }
+            `}</style>
             <Editor
                 height="100%"
                 language={language}
