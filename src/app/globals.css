@@ -105,6 +105,15 @@ body {
 .monaco-editor .margin,
 .monaco-editor .sticky-scroll-container {
   background-color: transparent !important;
+  outline: none !important;
+}
+
+.monaco-editor .view-lines {
+  outline: none !important;
+}
+
+.monaco-scrollable-element {
+  outline: none !important;
 }
 
 .monaco-editor .scroll-decoration {

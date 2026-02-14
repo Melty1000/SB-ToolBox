@@ -474,7 +474,7 @@ function InspirationRow({ name, logo, desc, socials, twitchHandle }: any) {
                     )}
                 </div>
                 {isLive && (
-                    <div className="absolute -top-1 -right-1 bg-red-500 text-[6px] font-black text-white px-1 py-0.5 rounded-sm uppercase tracking-tighter animate-in fade-in zoom-in duration-300 shadow-lg">
+                    <div className="absolute -top-1 -right-1 bg-red-500 text-[6px] font-black text-melt-surface px-1 py-0.5 rounded-sm uppercase tracking-tighter animate-in fade-in zoom-in duration-300 shadow-lg">
                         LIVE
                     </div>
                 )}

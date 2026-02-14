@@ -331,6 +331,13 @@ export function EncoderPage({ initialValue }: { initialValue?: string }) {
             return;
         }
 
+        const getList = (parent: any, ...keys: string[]) => {
+            for (const key of keys) {
+                if (Array.isArray(parent[key])) return parent[key];
+            }
+            return [];
+        };
+
         setEncodingMode(mode);
         safeTimeout(() => {
             try {
@@ -340,15 +347,16 @@ export function EncoderPage({ initialValue }: { initialValue?: string }) {
                     setResult(encoded);
 
                     // Add to history
-                    const meta = data.meta || data;
+                    const exportRoot = data.Export || data.export || data;
+                    const meta = exportRoot.meta || exportRoot;
                     addToHistory({
                         type: 'encode',
-                        name: meta.name || 'Untitled Export',
-                        author: meta.author || 'Unknown',
-                        version: meta.version || '0.0.0',
+                        name: meta.Name || meta.name || 'Untitled Export',
+                        author: meta.Author || meta.author || 'Unknown',
+                        version: meta.Version || meta.version || '0.0.0',
                         rawString: encoded,
                         stats: {
-                            actions: (data.actions || data.data?.actions || []).length,
+                            actions: (getList(exportRoot, 'Actions', 'actions')).length,
                             scripts: Object.keys(scripts || {}).length
                         }
                     });

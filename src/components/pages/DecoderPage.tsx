@@ -134,13 +134,15 @@ export function DecoderPage({ initialValue }: { initialValue?: string }) {
             const result = decode(inputValue);
             if (result) {
                 const { data, stats: newStats } = result;
-                // Metadata can be at: data.meta, data (top level), or data.data
-                const meta = data.meta || data;
+
+                // metadata extraction with PascalCase fallback
+                const exportRoot = data.Export || data.export || data;
+                const meta = exportRoot.meta || exportRoot;
                 const metadata = {
-                    name: String(meta.name || data.name || ''),
-                    author: String(meta.author || data.author || ''),
-                    version: String(meta.version || data.version || ''),
-                    description: String(meta.description || data.description || '')
+                    name: String(meta.Name || meta.name || data.Name || data.name || ''),
+                    author: String(meta.Author || meta.author || data.Author || data.author || ''),
+                    version: String(meta.Version || meta.version || data.Version || data.version || ''),
+                    description: String(meta.Description || meta.description || data.Description || data.description || '')
                 };
                 setLocalMetadata(metadata);
 

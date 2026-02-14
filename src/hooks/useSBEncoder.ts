@@ -77,41 +77,65 @@ export const useSBEncoder = () => {
             commands: 0, timedActions: 0, queues: 0, wsServers: 0,
             wsClients: 0, groups: 0
         };
-        const root = data.data || data;
+
+        // Streamer.bot often wraps everything in an "Export" key
+        const exportRoot = data.Export || data.export || data;
+        const root = exportRoot.data || exportRoot;
+
         if (!root) return {
             actions: 0, subActions: 0, scripts: 0, triggers: 0,
             commands: 0, timedActions: 0, queues: 0, wsServers: 0,
             wsClients: 0, groups: 0
         };
+
         let actions = 0;
         let triggers = 0;
         let subActions = 0;
 
-        const commands = (root.commands || []).length || 0;
-        const timedActions = (root.timedActions || root.timers || []).length || 0;
-        const queues = (root.actionQueues || root.queues || []).length || 0;
-        const wsServers = (root.webSocketServers || root.websocketServers || []).length || 0;
-        const wsClients = (root.webSocketClients || root.websocketClients || []).length || 0;
+        // Normalize PascalCase vs camelCase keys
+        const getList = (parent: any, ...keys: string[]) => {
+            for (const key of keys) {
+                if (Array.isArray(parent[key])) return parent[key];
+            }
+            return [];
+        };
+
+        const commandList = getList(root, 'Commands', 'commands');
+        const timedActionList = getList(root, 'TimedActions', 'Timers', 'timedActions', 'timers');
+        const queueList = getList(root, 'ActionQueues', 'Queues', 'actionQueues', 'queues');
+        const wsServerList = getList(root, 'WebSocketServers', 'webSocketServers', 'websocketServers');
+        const wsClientList = getList(root, 'WebSocketClients', 'webSocketClients', 'websocketClients');
+        const actionList = getList(root, 'Actions', 'actions');
+        const groupList = getList(root, 'Groups', 'groups');
+
         const groupSet = new Set<string>();
 
-        if (root.actions) {
-            actions = root.actions.length;
-            root.actions.forEach((a: any) => {
+        if (actionList.length > 0) {
+            actions = actionList.length;
+            actionList.forEach((a: any) => {
                 if (a && typeof a === 'object') {
-                    if (a.group) groupSet.add(String(a.group));
-                    if (a.triggers) triggers += (a.triggers.length || 0);
+                    const aGroup = a.Group || a.group;
+                    const aTriggers = a.Triggers || a.triggers;
+                    const aSubs = a.SubActions || a.subActions;
+
+                    if (aGroup) groupSet.add(String(aGroup));
+                    if (Array.isArray(aTriggers)) triggers += aTriggers.length;
 
                     const countSubs = (subs: any[]) => {
-                        if (!subs) return;
+                        if (!Array.isArray(subs)) return;
                         subActions += subs.length;
                         subs.forEach(s => {
-                            if (s && s.subActions) countSubs(s.subActions);
+                            if (s) {
+                                const nestedSubs = s.SubActions || s.subActions;
+                                if (nestedSubs) countSubs(nestedSubs);
+                            }
                         });
                     };
-                    if (a.subActions) countSubs(a.subActions);
+                    if (aSubs) countSubs(aSubs);
                 }
             });
-        } else if (root.id && root.name) {
+        } else if ((root.Id || root.id) && (root.Name || root.name)) {
+            // Single Action export
             actions = 1;
         }
 
@@ -120,12 +144,12 @@ export const useSBEncoder = () => {
             triggers,
             subActions,
             scripts: scriptCount,
-            commands,
-            timedActions,
-            queues,
-            wsServers,
-            wsClients,
-            groups: Math.max(root.groups?.length || 0, groupSet.size)
+            commands: commandList.length,
+            timedActions: timedActionList.length,
+            queues: queueList.length,
+            wsServers: wsServerList.length,
+            wsClients: wsClientList.length,
+            groups: Math.max(groupList.length, groupSet.size)
         };
     }, []);
 
@@ -196,20 +220,22 @@ export const useSBEncoder = () => {
             const extractRecursive = (obj: any, parentName: string | null = null) => {
                 try {
                     if (typeof obj === 'object' && obj !== null) {
-                        // If this is an action, capture its name for the next level
-                        const currentName = obj.name || parentName;
+                        // Normalize name and byteCode keys
+                        const currentName = obj.Name || obj.name || parentName;
+                        const byteCode = obj.ByteCode || obj.byteCode;
 
-                        if (obj.byteCode && typeof obj.byteCode === 'string' && !obj.byteCode.startsWith('REF:')) {
+                        if (byteCode && typeof byteCode === 'string' && !byteCode.startsWith('REF:')) {
                             try {
-                                const binary = atob(obj.byteCode);
+                                const binary = atob(byteCode);
                                 const bytes = new Uint8Array(binary.length);
                                 for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
                                 const code = new TextDecoder().decode(bytes);
 
-                                const sanitize = (s: string) => s.replace(/[^a-zA-Z0-9 _#[\]-]/g, '').replace(/\s+/g, ' ').trim();
+                                const sanitize = (s: string) => String(s).replace(/[^a-zA-Z0-9 _#[\]-]/g, '').replace(/\s+/g, ' ').trim();
 
-                                const leafName = sanitize(obj.name || 'script');
-                                const nameBase = (parentName && parentName !== obj.name)
+                                const rawName = obj.Name || obj.name || 'script';
+                                const leafName = sanitize(rawName);
+                                const nameBase = (parentName && parentName !== rawName)
                                     ? `${sanitize(parentName)} - ${leafName}`
                                     : leafName;
 
@@ -220,7 +246,9 @@ export const useSBEncoder = () => {
                                 }
 
                                 scripts[name] = code;
-                                obj.byteCode = `REF:${name}`;
+                                if (obj.ByteCode) obj.ByteCode = `REF:${name}`;
+                                else obj.byteCode = `REF:${name}`;
+
                                 obj.__ext_name = name;
                                 scriptCount++;
                             } catch (e) {

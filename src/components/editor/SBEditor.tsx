@@ -239,6 +239,10 @@ export const SBEditor: React.FC<SBEditorProps> = ({ value, language, onChange, r
                     folding: false,
                     guides: { indentation: false },
                     contextmenu: false,
+                    selectionHighlight: !readOnly,
+                    occurrencesHighlight: readOnly ? 'off' : 'singleFile',
+                    matchBrackets: readOnly ? 'never' : 'always',
+                    links: !readOnly,
                 }}
             />
         </div>
