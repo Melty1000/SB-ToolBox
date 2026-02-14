@@ -349,11 +349,13 @@ export function EncoderPage({ initialValue }: { initialValue?: string }) {
                     // Add to history
                     const exportRoot = data.Export || data.export || data;
                     const meta = exportRoot.meta || exportRoot;
+                    const safeStr = (val: any, fallback: string) => (val && typeof val === 'string' && val !== 'undefined') ? val : fallback;
+
                     addToHistory({
                         type: 'encode',
-                        name: meta.Name || meta.name || 'Untitled Export',
-                        author: meta.Author || meta.author || 'Unknown',
-                        version: meta.Version || meta.version || '0.0.0',
+                        name: safeStr(meta.Name || meta.name, 'Untitled Export'),
+                        author: safeStr(meta.Author || meta.author, 'Unknown'),
+                        version: safeStr(meta.Version || meta.version, '0.0.0'),
                         rawString: encoded,
                         stats: {
                             actions: (getList(exportRoot, 'Actions', 'actions')).length,

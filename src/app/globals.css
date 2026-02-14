@@ -103,17 +103,22 @@ body {
 .monaco-editor,
 .monaco-editor-background,
 .monaco-editor .margin,
-.monaco-editor .sticky-scroll-container {
+.monaco-editor .sticky-scroll-container,
+.monaco-editor .view-lines,
+.monaco-editor.focused,
+.monaco-scrollable-element {
   background-color: transparent !important;
   outline: none !important;
+  border: none !important;
+  box-shadow: none !important;
 }
 
-.monaco-editor .view-lines {
-  outline: none !important;
+.monaco-mouse-cursor-text {
+  cursor: default !important;
 }
 
-.monaco-scrollable-element {
-  outline: none !important;
+.monaco-editor .cursor {
+  display: none !important;
 }
 
 .monaco-editor .scroll-decoration {

@@ -243,7 +243,13 @@ export const SBEditor: React.FC<SBEditorProps> = ({ value, language, onChange, r
                     occurrencesHighlight: readOnly ? 'off' : 'singleFile',
                     matchBrackets: readOnly ? 'never' : 'always',
                     links: !readOnly,
-                }}
+                    renderCursorInReadOnly: false,
+                    quickSuggestions: !readOnly,
+                    parameterHints: { enabled: !readOnly },
+                    suggestOnTriggerCharacters: !readOnly,
+                    acceptSuggestionOnEnter: readOnly ? 'off' : 'on',
+                    snippetSuggestions: readOnly ? 'none' : 'bottom',
+                } as any}
             />
         </div>
     );

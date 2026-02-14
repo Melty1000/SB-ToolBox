@@ -138,11 +138,13 @@ export function DecoderPage({ initialValue }: { initialValue?: string }) {
                 // metadata extraction with PascalCase fallback
                 const exportRoot = data.Export || data.export || data;
                 const meta = exportRoot.meta || exportRoot;
+                const safeStr = (val: any) => (val && typeof val === 'string' && val !== 'undefined') ? val : '';
+
                 const metadata = {
-                    name: String(meta.Name || meta.name || data.Name || data.name || ''),
-                    author: String(meta.Author || meta.author || data.Author || data.author || ''),
-                    version: String(meta.Version || meta.version || data.Version || data.version || ''),
-                    description: String(meta.Description || meta.description || data.Description || data.description || '')
+                    name: safeStr(meta.Name || meta.name || data.Name || data.name),
+                    author: safeStr(meta.Author || meta.author || data.Author || data.author),
+                    version: safeStr(meta.Version || meta.version || data.Version || data.version),
+                    description: safeStr(meta.Description || meta.description || data.Description || data.description)
                 };
                 setLocalMetadata(metadata);
 
