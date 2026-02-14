@@ -1,4 +1,4 @@
 :HL["/SB-ToolBox/_next/static/chunks/a52e6c7360980bc7.css","style"]
 :HL["/SB-ToolBox/assets/logo-collapsed.svg","image",{"type":"image/svg+xml"}]
 :HL["/SB-ToolBox/assets/streamerbot-logo.svg","image",{"type":"image/svg+xml"}]
-0:{"buildId":"m6eAftxwzOvJFk8Xm7jTQ","tree":{"name":"","paramType":null,"paramKey":"","hasRuntimePrefetch":false,"slots":{"children":{"name":"__PAGE__","paramType":null,"paramKey":"__PAGE__","hasRuntimePrefetch":false,"slots":null,"isRootLayout":false}},"isRootLayout":true},"staleTime":300}
+0:{"buildId":"-Qd0RJHo_zsdEW1Djkuli","tree":{"name":"","paramType":null,"paramKey":"","hasRuntimePrefetch":false,"slots":{"children":{"name":"__PAGE__","paramType":null,"paramKey":"__PAGE__","hasRuntimePrefetch":false,"slots":null,"isRootLayout":false}},"isRootLayout":true},"staleTime":300}
