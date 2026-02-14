@@ -320,7 +320,7 @@ export function SupportPage() {
                 <div className="grid grid-cols-1 xl:grid-cols-2 gap-x-12 gap-y-10 w-full">
                     <InspirationRow
                         name="TattedTizzy"
-                        logo="https://unavatar.io/twitch/tattedtizzy?fallback=https://unavatar.io/twitter/TattedTizzy"
+                        logo="https://unavatar.io/twitch/tattedtizzy"
                         desc="Incredibly entertaining streamer, a great friend and secretly my boyfriend...🙊"
                         socials={[
                             { icon: Twitch, href: "https://www.twitch.tv/tattedtizzy", color: "#9146FF" },
@@ -335,7 +335,7 @@ export function SupportPage() {
                     />
                     <InspirationRow
                         name="OkV1sual"
-                        logo="https://unavatar.io/twitch/okv1sual?fallback=https://unavatar.io/twitter/ok_v1sual"
+                        logo="https://unavatar.io/twitter/ok_v1sual"
                         desc="My homie, my number one most collabed with streamer in 2025, an amazing artist and a wonderful friend."
                         socials={[
                             { icon: Twitch, href: "https://www.twitch.tv/okv1sual", color: "#9146FF" },
@@ -348,7 +348,7 @@ export function SupportPage() {
                     />
                     <InspirationRow
                         name="Archurro_27"
-                        logo="https://unavatar.io/twitch/archurro_27?fallback=https://unavatar.io/twitter/Churro_A69"
+                        logo="https://unavatar.io/twitch/archurro_27"
                         desc="Absolutely great dude and one of the most genuine people that I know with an incredible community."
                         socials={[
                             { icon: Twitch, href: "https://www.twitch.tv/archurro_27", color: "#9146FF" },
@@ -360,7 +360,7 @@ export function SupportPage() {
                     />
                     <InspirationRow
                         name="LeftClickSnipe"
-                        logo="https://unavatar.io/twitch/leftclicksnipe?fallback=https://unavatar.io/twitter/LeftClickSnipe"
+                        logo="https://unavatar.io/twitter/LeftClickSnipe"
                         desc="This will forever be an absolute homie of mine. Much love to you left, for everything."
                         socials={[
                             { icon: Twitch, href: "https://www.twitch.tv/leftclicksnipe", color: "#9146FF" },
@@ -372,7 +372,7 @@ export function SupportPage() {
                     />
                     <InspirationRow
                         name="MiltyTheGreat"
-                        logo="https://unavatar.io/twitch/miltythegreat?fallback=https://unavatar.io/twitter/MiltyTheGreat"
+                        logo="https://unavatar.io/twitter/MiltyTheGreat"
                         desc="This man is incredibly knowledgable about streaming, tech, and so much more. In case you were wondering, milty was right. Also my supposed evil twin."
                         socials={[
                             { icon: Twitch, href: "https://www.twitch.tv/miltythegreat", color: "#9146FF" },
@@ -384,7 +384,7 @@ export function SupportPage() {
                     />
                     <InspirationRow
                         name="ImColeyMoley"
-                        logo="https://unavatar.io/twitch/imcoleymoley?fallback=https://unavatar.io/twitter/ItsColeyMoley88"
+                        logo="https://unavatar.io/twitch/imcoleymoley"
                         desc="I might have spent more time in this mans stream than anyone else recently. Incredibly chill streams and usually laughs at my absolutely unhinged jokes. I cant wait for my relationship with him to continue to develop."
                         socials={[
                             { icon: Twitch, href: "https://www.twitch.tv/imcoleymoley", color: "#9146FF" },
