@@ -29,7 +29,12 @@ export const useSBHistory = () => {
             try {
                 const parsed = JSON.parse(stored);
                 if (Array.isArray(parsed)) {
-                    setHistory(parsed);
+                    // MIGRATION: Ensure all items have stats object
+                    const migrated = parsed.map(item => ({
+                        ...item,
+                        stats: item.stats || { actions: 0, scripts: 0 }
+                    }));
+                    setHistory(migrated);
                 }
             } catch (e) {
                 console.error("Failed to parse history", e);

@@ -150,11 +150,11 @@ function HistoryStrip({ item, formatDate, onRestore, onDelete }: {
                 </div>
                 <div className="flex flex-col gap-1">
                     <span className="text-[8px] font-black text-melt-text-muted uppercase tracking-widest">Actions</span>
-                    <span className="text-xs font-bold text-melt-text-label">{String(item.stats.actions)}</span>
+                    <span className="text-xs font-bold text-melt-text-label">{String(item.stats?.actions || 0)}</span>
                 </div>
                 <div className="flex flex-col gap-1">
                     <span className="text-[8px] font-black text-melt-text-muted uppercase tracking-widest">Scripts</span>
-                    <span className="text-xs font-bold text-melt-text-label">{String(item.stats.scripts)}</span>
+                    <span className="text-xs font-bold text-melt-text-label">{String(item.stats?.scripts || 0)}</span>
                 </div>
             </div>
             <div className="px-6 pb-6 bg-transparent border-b border-melt-text-muted/10">
