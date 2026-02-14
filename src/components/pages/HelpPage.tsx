@@ -8,6 +8,7 @@ import {
     Zap, Hash, Box, FileText, Braces
 } from 'lucide-react';
 import { IndustrialStrip } from '@/components/ui/IndustrialStrip';
+import { SBEditor } from '@/components/editor/SBEditor';
 
 /**
  * HELP PAGE: Documentation & Command Guide
@@ -288,36 +289,15 @@ function MetadataField({ label, value }: { label: string, value: string }) {
     );
 }
 
-function CodeBlock({ code }: { code: string }) {
-    const highlight = (code: string) => {
-        return code.split('\n').map((line, i) => {
-            const content = line.replace(
-                /(".*?")(:)/g,
-                `<span style="color:var(--melt-accent)">$1</span><span style="color:var(--melt-text-muted)">$2</span>`
-            ).replace(
-                /(:)\s(".*?")/g,
-                `<span style="color:var(--melt-text-muted)">$1</span> <span style="color:var(--melt-text-body)">$2</span>`
-            ).replace(
-                /(:)\s(\d+|true|false|null|\[|\{)/g,
-                `<span style="color:var(--melt-text-muted)">$1</span> <span style="color:#F472B6">$2</span>`
-            );
-
-            return (
-                <div key={i} className="table-row">
-                    <span className="table-cell select-none text-right pl-6 pr-4 text-melt-text-muted opacity-30 text-xs font-mono w-8 border-r border-melt-text-muted/10 bg-melt-void">{i + 1}</span>
-                    <span className="table-cell pl-4 whitespace-pre-wrap text-melt-text-body opacity-80" dangerouslySetInnerHTML={{ __html: content }} />
-                </div>
-            )
-        });
-    };
-
+function CodeBlock({ code, language = 'json' }: { code: string; language?: string }) {
     return (
-        <div className="w-full h-auto overflow-hidden bg-melt-void font-mono text-[13px] leading-6 py-6 border-y border-melt-text-muted/10">
-            <div className="overflow-x-auto custom-scrollbar">
-                <div className="table w-full">
-                    {highlight(code)}
-                </div>
-            </div>
+        <div className="w-full h-[400px] pl-[20px] py-4 bg-melt-void/30 border-y border-melt-text-muted/5 relative group">
+            <SBEditor
+                value={code}
+                language={language}
+                theme="melt-theme"
+                readOnly={true}
+            />
         </div>
     );
 }
