@@ -10,9 +10,9 @@ export const metadata: Metadata = {
   },
   description: "Modern Streamer.bot export tool",
   icons: {
-    icon: "/assets/icon.png",
-    shortcut: "/assets/icon.png",
-    apple: "/assets/icon.png",
+    icon: "/SB-ToolBox/assets/icon.png",
+    shortcut: "/SB-ToolBox/assets/icon.png",
+    apple: "/SB-ToolBox/assets/icon.png",
   },
 };
 
@@ -24,8 +24,8 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <link rel="preload" href="/assets/logo-collapsed.svg" as="image" type="image/svg+xml" />
-        <link rel="preload" href="/assets/streamerbot-logo.svg" as="image" type="image/svg+xml" />
+        <link rel="preload" href="/SB-ToolBox/assets/logo-collapsed.svg" as="image" type="image/svg+xml" />
+        <link rel="preload" href="/SB-ToolBox/assets/streamerbot-logo.svg" as="image" type="image/svg+xml" />
         <script dangerouslySetInnerHTML={{
           __html: `
           (function() {
