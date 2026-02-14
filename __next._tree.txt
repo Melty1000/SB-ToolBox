@@ -1,4 +1,4 @@
-:HL["/SB-ToolBox/_next/static/chunks/f8d32223410fdc72.css","style"]
+:HL["/SB-ToolBox/_next/static/chunks/55553a415df70404.css","style"]
 :HL["/SB-ToolBox/assets/logo-collapsed.svg","image",{"type":"image/svg+xml"}]
 :HL["/SB-ToolBox/assets/streamerbot-logo.svg","image",{"type":"image/svg+xml"}]
-0:{"buildId":"9c6BujIBf7I0uLXIxucjF","tree":{"name":"","paramType":null,"paramKey":"","hasRuntimePrefetch":false,"slots":{"children":{"name":"__PAGE__","paramType":null,"paramKey":"__PAGE__","hasRuntimePrefetch":false,"slots":null,"isRootLayout":false}},"isRootLayout":true},"staleTime":300}
+0:{"buildId":"Hgkli4TS7QPW8eacVqkW4","tree":{"name":"","paramType":null,"paramKey":"","hasRuntimePrefetch":false,"slots":{"children":{"name":"__PAGE__","paramType":null,"paramKey":"__PAGE__","hasRuntimePrefetch":false,"slots":null,"isRootLayout":false}},"isRootLayout":true},"staleTime":300}
