@@ -320,7 +320,7 @@ export function SupportPage() {
                 <div className="grid grid-cols-1 xl:grid-cols-2 gap-x-12 gap-y-10 w-full">
                     <InspirationRow
                         name="TattedTizzy"
-                        logo="https://unavatar.io/twitter/TattedTizzy"
+                        logo="https://static-cdn.jtvnw.net/jtv_user_pictures/fe125636-01e9-4d7e-a088-f4354f0d7ab6-profile_image-70x70.png"
                         desc="Incredibly entertaining streamer, a great friend and secretly my boyfriend...🙊"
                         socials={[
                             { icon: Twitch, href: "https://www.twitch.tv/tattedtizzy", color: "#9146FF" },
@@ -335,7 +335,7 @@ export function SupportPage() {
                     />
                     <InspirationRow
                         name="OkV1sual"
-                        logo="https://decapi.me/twitch/avatar/okv1sual"
+                        logo="https://static-cdn.jtvnw.net/jtv_user_pictures/e666e029-4976-4baf-a7c1-3a29b7e63468-profile_image-70x70.png"
                         desc="My homie, my number one most collabed with streamer in 2025, an amazing artist and a wonderful friend."
                         socials={[
                             { icon: Twitch, href: "https://www.twitch.tv/okv1sual", color: "#9146FF" },
@@ -348,7 +348,7 @@ export function SupportPage() {
                     />
                     <InspirationRow
                         name="Archurro_27"
-                        logo="https://decapi.me/twitch/avatar/archurro_27"
+                        logo="https://static-cdn.jtvnw.net/jtv_user_pictures/7c76becf-61c4-4147-a04d-dea0f6368e77-profile_image-70x70.png"
                         desc="Absolutely great dude and one of the most genuine people that I know with an incredible community."
                         socials={[
                             { icon: Twitch, href: "https://www.twitch.tv/archurro_27", color: "#9146FF" },
@@ -360,7 +360,7 @@ export function SupportPage() {
                     />
                     <InspirationRow
                         name="LeftClickSnipe"
-                        logo="https://decapi.me/twitch/avatar/leftclicksnipe"
+                        logo="https://static-cdn.jtvnw.net/jtv_user_pictures/b984141b-9b35-48e3-b663-97384f44fce6-profile_image-70x70.png"
                         desc="This will forever be an absolute homie of mine. Much love to you left, for everything."
                         socials={[
                             { icon: Twitch, href: "https://www.twitch.tv/leftclicksnipe", color: "#9146FF" },
@@ -372,7 +372,7 @@ export function SupportPage() {
                     />
                     <InspirationRow
                         name="MiltyTheGreat"
-                        logo="https://decapi.me/twitch/avatar/miltythegreat"
+                        logo="https://static-cdn.jtvnw.net/jtv_user_pictures/miltythegreat-profile_image-f768d57917f81863-70x70.png"
                         desc="This man is incredibly knowledgable about streaming, tech, and so much more. In case you were wondering, milty was right. Also my supposed evil twin."
                         socials={[
                             { icon: Twitch, href: "https://www.twitch.tv/miltythegreat", color: "#9146FF" },
@@ -384,7 +384,7 @@ export function SupportPage() {
                     />
                     <InspirationRow
                         name="ImColeyMoley"
-                        logo="https://decapi.me/twitch/avatar/imcoleymoley"
+                        logo="https://static-cdn.jtvnw.net/jtv_user_pictures/be0c8034-5a0d-4251-a87f-428481188b6e-profile_image-70x70.png"
                         desc="I might have spent more time in this mans stream than anyone else recently. Incredibly chill streams and usually laughs at my absolutely unhinged jokes. I cant wait for my relationship with him to continue to develop."
                         socials={[
                             { icon: Twitch, href: "https://www.twitch.tv/imcoleymoley", color: "#9146FF" },
