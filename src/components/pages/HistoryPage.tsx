@@ -27,6 +27,9 @@ export function HistoryPage({ onRestore }: HistoryPageProps) {
     };
 
     const formatDate = (timestamp: number) => {
+        if (!timestamp || isNaN(new Date(timestamp).getTime())) {
+            return "UNKNOWN DATE";
+        }
         return new Intl.DateTimeFormat('en-US', {
             month: 'short',
             day: 'numeric',
