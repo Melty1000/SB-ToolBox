@@ -204,7 +204,7 @@ export function SupportPage() {
                         />
                         <InspirationRow
                             name="GaelLevel"
-                            logo="/assets/gael_level_pfp.png"
+                            logo="/SB-ToolBox/assets/gael_level_pfp.png"
                             desc="If you want to learn anything about asset/scene creation, Gael is the person to watch. He was the first creator that i really locked into and learned from. His tutorials are top-tier."
                             socials={[
                                 { icon: Globe, href: "https://gaellevel.com", color: "#3b82f6" },
@@ -238,7 +238,7 @@ export function SupportPage() {
                         />
                         <InspirationRow
                             name="GoWMan"
-                            logo="/assets/gowman_pfp.png"
+                            logo="/SB-ToolBox/assets/gowman_pfp.png"
                             desc="You might not see him in the discord near as much as some of these other folks, but hes an alien and who tf doesnt love aliens? I also enjoy hanging out in his streams ;)"
                             socials={[
                                 { icon: Twitch, href: "https://www.twitch.tv/gowman", color: "#9146FF" },
@@ -265,7 +265,7 @@ export function SupportPage() {
                         />
                         <InspirationRow
                             name="Nutty"
-                            logo="https://imgproxy.fourthwall.com/WSTKpmeQbr7HElolGXj3o27i6lfvx-r0f1JUOOJsbUM/w:40/sm:1/enc/AsDcwYLIVYXtqMOI/-J0gn4fPMCKphvSQ/UnUFID2fLXLJi-m9/-AM5XpdRn2K7H_WW/XdU2C-2VWb8GERI7/GEIeq0qYSsmRLcZe/JVqpBCxW3SV64CuX/JduguWX-DprgYN1k/w39L1v7NlerSFbAM/SPod2kNMThCbQYfe/SeMBCsduvzGU6P26/O3YhpDA2JhyOpIry/nlORSbBRbKdrteSa/6xVb2zWWrjVEjOOn/nSHBcgxgV00Yg7ru/txfSev9zP3UiigeK"
+                            logo="https://github.com/nuttylmao.png"
                             desc="If you need help with move, or any other obs plugin, this is probably your guy. Ive used plenty of his projects and is probably the most well known of any of these guys. His youtube videos are super high quality."
                             socials={[
                                 { icon: Globe, href: "https://nutty.gg", color: "#3b82f6" },
@@ -288,7 +288,7 @@ export function SupportPage() {
                         />
                         <InspirationRow
                             name="DigiVybe"
-                            logo="https://imgproxy.fourthwall.com/5CmsePd2Aox0eLf2wnR2xp4KdZLSooyC3nCVbTxK1D4/w:135/sm:1/enc/sgprsgvfxQFXzctI/ntIorUsRDHADeq6s/PE274mJtk7v9Vcis/woEo57w27UVhu1SN/DZWjUTi9LhAOEH5v/kUH5_dxMhl4Bswvl/AdnOoJWUdpbY72a4/lcv8EZV_Ckfs5OIE/ingsW-wBPhpEkw3i/bi_2i23te3fTFWCx/gsjjLp9v5FIzmuTY/3hOPAITjjNyNRALH/mb9h1mgMHfuveC-i/rLoh9bEB3wUTmbiN/tl9oGdIc0SCJ46yg/gI9k70gr_4fhapSj"
+                            logo="https://github.com/DigiVybe.png"
                             desc="I only recently met this guy but he has great vibes, and hes an up and comer in the sb space like me and oozes quality with everything he does. I highly suggest checking him out."
                             socials={[
                                 { icon: Globe, href: "https://digivybe.xyz", color: "#3b82f6" },
@@ -320,7 +320,7 @@ export function SupportPage() {
                 <div className="grid grid-cols-1 xl:grid-cols-2 gap-x-12 gap-y-10 w-full">
                     <InspirationRow
                         name="TattedTizzy"
-                        logo="https://unavatar.io/twitch/tattedtizzy?fallback=https://unavatar.io/twitter/TattedTizzy"
+                        logo="https://unavatar.io/twitch/tattedtizzy"
                         desc="Incredibly entertaining streamer, a great friend and secretly my boyfriend...🙊"
                         socials={[
                             { icon: Twitch, href: "https://www.twitch.tv/tattedtizzy", color: "#9146FF" },
@@ -335,7 +335,7 @@ export function SupportPage() {
                     />
                     <InspirationRow
                         name="OkV1sual"
-                        logo="https://unavatar.io/twitch/okv1sual?fallback=https://unavatar.io/twitter/ok_v1sual"
+                        logo="https://unavatar.io/twitch/okv1sual"
                         desc="My homie, my number one most collabed with streamer in 2025, an amazing artist and a wonderful friend."
                         socials={[
                             { icon: Twitch, href: "https://www.twitch.tv/okv1sual", color: "#9146FF" },
@@ -348,7 +348,7 @@ export function SupportPage() {
                     />
                     <InspirationRow
                         name="Archurro_27"
-                        logo="https://unavatar.io/twitch/archurro_27?fallback=https://unavatar.io/twitter/Churro_A69"
+                        logo="https://unavatar.io/twitch/archurro_27"
                         desc="Absolutely great dude and one of the most genuine people that I know with an incredible community."
                         socials={[
                             { icon: Twitch, href: "https://www.twitch.tv/archurro_27", color: "#9146FF" },
@@ -360,7 +360,7 @@ export function SupportPage() {
                     />
                     <InspirationRow
                         name="LeftClickSnipe"
-                        logo="https://unavatar.io/twitch/leftclicksnipe?fallback=https://unavatar.io/twitter/LeftClickSnipe"
+                        logo="https://unavatar.io/twitch/leftclicksnipe"
                         desc="This will forever be an absolute homie of mine. Much love to you left, for everything."
                         socials={[
                             { icon: Twitch, href: "https://www.twitch.tv/leftclicksnipe", color: "#9146FF" },
@@ -372,7 +372,7 @@ export function SupportPage() {
                     />
                     <InspirationRow
                         name="MiltyTheGreat"
-                        logo="https://unavatar.io/twitch/miltythegreat?fallback=https://unavatar.io/twitter/MiltyTheGreat"
+                        logo="https://unavatar.io/twitch/miltythegreat"
                         desc="This man is incredibly knowledgable about streaming, tech, and so much more. In case you were wondering, milty was right. Also my supposed evil twin."
                         socials={[
                             { icon: Twitch, href: "https://www.twitch.tv/miltythegreat", color: "#9146FF" },
@@ -384,7 +384,7 @@ export function SupportPage() {
                     />
                     <InspirationRow
                         name="ImColeyMoley"
-                        logo="https://unavatar.io/twitch/imcoleymoley?fallback=https://unavatar.io/twitter/ItsColeyMoley88"
+                        logo="https://unavatar.io/twitch/imcoleymoley"
                         desc="I might have spent more time in this mans stream than anyone else recently. Incredibly chill streams and usually laughs at my absolutely unhinged jokes. I cant wait for my relationship with him to continue to develop."
                         socials={[
                             { icon: Twitch, href: "https://www.twitch.tv/imcoleymoley", color: "#9146FF" },
