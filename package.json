@@ -1,0 +1,88 @@
+{
+  "name": "sb-toolbox",
+  "version": "0.1.0",
+  "description": "SB ToolBox - Streamer.bot SBAE decode/encode utility for desktop and web.",
+  "author": "Melty1000",
+  "private": true,
+  "main": "dist-electron/main.js",
+  "scripts": {
+    "dev": "next dev --webpack -p 3001",
+    "dev:electron": "concurrently -k \"next dev --webpack -p 3001\" \"wait-on http://localhost:3001 && electron .\"",
+    "build": "npm run build:main && npm run build:renderer",
+    "build:main": "tsup electron/main.ts electron/preload.ts --format cjs --out-dir dist-electron --clean --external electron",
+    "build:renderer": "node scripts/build-renderer-desktop.mjs",
+    "build:renderer:web": "node scripts/build-renderer-web.mjs",
+    "deploy": "npm run dist:web && gh-pages -d release/webapp -t --nojekyll",
+    "dist": "npm run dist:desktop",
+    "dist:installer": "npm run build && electron-builder --win nsis --publish never && node scripts/stage-desktop-dist.mjs installer",
+    "dist:portable": "npm run build && electron-builder --win portable --publish never && node scripts/stage-desktop-dist.mjs portable",
+    "dist:desktop": "npm run build && electron-builder --win nsis portable --publish never && node scripts/stage-desktop-dist.mjs all",
+    "dist:web": "npm run build:renderer:web && node scripts/stage-web-dist.mjs",
+    "dist:all": "npm run dist:desktop && npm run dist:web",
+    "start": "next start",
+    "lint": "eslint"
+  },
+  "build": {
+    "appId": "com.antigravity.sbtoolbox",
+    "productName": "SB ToolBox",
+    "artifactName": "SB-ToolBox-${version}.${ext}",
+    "files": [
+      "dist-electron/**/*",
+      "out/**/*"
+    ],
+    "directories": {
+      "output": "release"
+    },
+    "win": {
+      "target": [
+        "nsis",
+        "portable"
+      ],
+      "icon": "public/assets/icon.png"
+    },
+    "nsis": {
+      "artifactName": "SB-ToolBox-Setup-${version}.${ext}"
+    },
+    "portable": {
+      "artifactName": "SB-ToolBox-Portable-${version}.${ext}"
+    },
+    "icon": "public/assets/icon.png"
+  },
+  "dependencies": {
+    "@gsap/react": "^2.1.2",
+    "@monaco-editor/react": "^4.7.0",
+    "clsx": "^2.1.1",
+    "electron-serve": "^1.3.0",
+    "electron-updater": "^6.7.3",
+    "file-saver": "^2.0.5",
+    "fs-extra": "^11.3.3",
+    "gsap": "^3.14.2",
+    "jszip": "^3.10.1",
+    "lucide-react": "^0.562.0",
+    "next": "16.1.4",
+    "pako": "^2.1.0",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "tailwind-merge": "^3.4.0",
+    "tailwindcss": "^4.1.18"
+  },
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.1.18",
+    "@tailwindcss/postcss": "^4.1.18",
+    "@types/electron": "^1.4.38",
+    "@types/file-saver": "^2.0.7",
+    "@types/node": "^20.19.30",
+    "@types/pako": "^2.0.4",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "concurrently": "^9.2.1",
+    "electron": "^40.0.0",
+    "electron-builder": "^26.7.0",
+    "eslint": "^9",
+    "eslint-config-next": "16.1.4",
+    "gh-pages": "^6.3.0",
+    "tsup": "^8.5.1",
+    "typescript": "^5",
+    "wait-on": "^9.0.3"
+  }
+}
