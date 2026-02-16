@@ -123,10 +123,11 @@ export const MeltShell: React.FC<MeltShellProps> = ({ children, activePage = 'de
     }, []);
 
     const queueExpand = () => {
-        if (hoverTimeoutRef.current) {
-            clearTimeout(hoverTimeoutRef.current);
-        }
-        hoverTimeoutRef.current = setTimeout(() => setIsExpanded(true), 90);
+        if (isExpanded || hoverTimeoutRef.current) return;
+        hoverTimeoutRef.current = setTimeout(() => {
+            hoverTimeoutRef.current = null;
+            setIsExpanded(true);
+        }, 90);
     };
 
     const collapseSidebar = () => {
@@ -149,7 +150,7 @@ export const MeltShell: React.FC<MeltShellProps> = ({ children, activePage = 'de
             {/* 1. SIDEBAR AREA */}
             <aside
                 ref={sidebarRef}
-                className="col-start-1 row-start-1 row-span-2 flex flex-col bg-melt-frame z-[55] transition-colors duration-300"
+                className="col-start-1 row-start-1 row-span-2 flex flex-col bg-melt-frame z-[220] transition-colors duration-300"
                 style={{ width: 'var(--sidebar-width, 64px)' }}
                 onPointerEnter={(event) => {
                     if (event.pointerType === 'touch') return;

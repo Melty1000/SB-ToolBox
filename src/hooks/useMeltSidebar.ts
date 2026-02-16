@@ -30,6 +30,26 @@ export const useMeltSidebar = (activePage?: string) => {
         selectionDrip: null
     });
 
+    const resetNavNodes = useCallback(() => {
+        navNodesRef.current = {
+            icons: [],
+            items: [],
+            texts: [],
+            selectionDrip: null
+        };
+    }, []);
+
+    const getSidebarWidthTargets = useCallback(() => {
+        const targets: gsap.TweenTarget[] = [];
+        if (shellRef.current) {
+            targets.push(shellRef.current);
+        }
+        if (typeof document !== 'undefined') {
+            targets.push(document.documentElement);
+        }
+        return targets;
+    }, []);
+
     const killNavTweens = useCallback(() => {
         const { icons, texts, selectionDrip } = navNodesRef.current;
         const targets: gsap.TweenTarget[] = [
@@ -45,7 +65,12 @@ export const useMeltSidebar = (activePage?: string) => {
 
     const ensureNavNodes = useCallback(() => {
         if (!shellRef.current) return;
-        if (navNodesRef.current.items.length > 0) return;
+        if (
+            navNodesRef.current.items.length > 0 &&
+            navNodesRef.current.items.every((item) => item.isConnected && shellRef.current?.contains(item))
+        ) {
+            return;
+        }
 
         const items = Array.from(shellRef.current.querySelectorAll('.nav-item')) as HTMLElement[];
         const icons = Array.from(shellRef.current.querySelectorAll('.nav-icon-wrapper')) as HTMLElement[];
@@ -254,7 +279,10 @@ export const useMeltSidebar = (activePage?: string) => {
         const cleanupListeners: Array<() => void> = [];
 
         const ctx = gsap.context(() => {
-            gsap.set(shellRef.current, { '--sidebar-width': MELT_CONSTANTS.SIDEBAR.COLLAPSED });
+            const sidebarWidthTargets = getSidebarWidthTargets();
+            if (sidebarWidthTargets.length > 0) {
+                gsap.set(sidebarWidthTargets, { '--sidebar-width': MELT_CONSTANTS.SIDEBAR.COLLAPSED });
+            }
 
             const mainTl = gsap.timeline({
                 paused: true,
@@ -264,10 +292,12 @@ export const useMeltSidebar = (activePage?: string) => {
                 }
             });
 
-            mainTl.to(shellRef.current, {
-                '--sidebar-width': MELT_CONSTANTS.SIDEBAR.EXPANDED,
-                ease: MELT_CONSTANTS.ANIMATION.LAYOUT_BOUNCE
-            }, 0);
+            if (sidebarWidthTargets.length > 0) {
+                mainTl.to(sidebarWidthTargets, {
+                    '--sidebar-width': MELT_CONSTANTS.SIDEBAR.EXPANDED,
+                    ease: MELT_CONSTANTS.ANIMATION.LAYOUT_BOUNCE
+                }, 0);
+            }
 
             mainTl.to('.logo-main', { x: -20, rotation: -10, ease: "back.out(1.2)" }, 0);
             mainTl.to('.logo-reveal', { x: 20, rotation: 10, opacity: 1, ease: "back.out(1.2)" }, 0);
@@ -301,10 +331,14 @@ export const useMeltSidebar = (activePage?: string) => {
         return () => {
             cleanupListeners.forEach((cleanup) => cleanup());
             ctx.revert();
+            resetNavNodes();
+            if (typeof document !== 'undefined') {
+                document.documentElement.style.removeProperty('--sidebar-width');
+            }
         };
     }, {
         scope: shellRef,
-        dependencies: [ensureNavNodes, applyCollapsedState, applyHoverBehavior, syncSelectionDrip]
+        dependencies: [ensureNavNodes, applyCollapsedState, applyHoverBehavior, syncSelectionDrip, getSidebarWidthTargets, resetNavNodes]
     });
 
     // 2. PHASE TWO: Navigation Controller (activePage ONLY)
