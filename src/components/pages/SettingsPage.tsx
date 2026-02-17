@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { Palette, Check, History, ChevronDown, RefreshCw, Download } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
+    applyTheme,
     bootstrapThemeSelection,
     DEFAULT_THEME,
     type ThemeVariant,
@@ -12,6 +13,7 @@ import {
 } from '@/lib/theme-preferences';
 import {
     getElectronApi,
+    isElectronRuntime,
     type AppSettings
 } from '@/lib/electron-api';
 
@@ -29,7 +31,6 @@ interface ToggleButtonProps {
 interface ThemeCardProps {
     id: ThemeVariant;
     name: string;
-    description: string;
     active: boolean;
     onClick: () => void;
     previewColors: string[];
@@ -43,6 +44,7 @@ interface ChangelogItemProps {
 }
 
 const setThemeExplicitSelection = (selection: ThemeSelection) => {
+    applyTheme(selection.theme);
     writeLocalThemeSelection(selection);
     const electron = getElectronApi();
     if (electron?.settings) {
@@ -52,6 +54,7 @@ const setThemeExplicitSelection = (selection: ThemeSelection) => {
 };
 
 export function SettingsPage() {
+    const [isDesktop] = useState(() => isElectronRuntime());
     const [config, setConfig] = useState<SettingsConfig>({
         autoUpdate: true,
         autoDownload: false,
@@ -80,7 +83,7 @@ export function SettingsPage() {
         void loadSettings();
 
         const electron = getElectronApi();
-        if (electron?.updater) {
+        if (isDesktop && electron?.updater) {
             const cleanupAvailable = electron.updater.on('update:available', () => setUpdateStatus('available'));
             const cleanupProgress = electron.updater.on('update:download-progress', (p) => {
                 setUpdateStatus('downloading');
@@ -99,7 +102,7 @@ export function SettingsPage() {
         return () => {
             disposed = true;
         };
-    }, []);
+    }, [isDesktop]);
 
     const handleConfigChange = <K extends keyof SettingsConfig>(key: K, value: SettingsConfig[K]) => {
         setConfig(prev => ({ ...prev, [key]: value }));
@@ -131,7 +134,6 @@ export function SettingsPage() {
                     <ThemeCard
                         id="graphite-gold"
                         name="Graphite | Gold"
-                        description="Deep graphite void with high-contrast gold accents."
                         active={config.theme === 'graphite-gold'}
                         onClick={() => handleConfigChange('theme', 'graphite-gold')}
                         previewColors={['#0c0c0e', '#F2AF0D']}
@@ -139,7 +141,6 @@ export function SettingsPage() {
                     <ThemeCard
                         id="graphite-cobalt"
                         name="Graphite | Cobalt"
-                        description="Professional dark graphite with deep cobalt accents."
                         active={config.theme === 'graphite-cobalt'}
                         onClick={() => handleConfigChange('theme', 'graphite-cobalt')}
                         previewColors={['#0c0c0e', '#1D4267']}
@@ -147,7 +148,6 @@ export function SettingsPage() {
                     <ThemeCard
                         id="slate-gold"
                         name="Slate | Gold"
-                        description="Structural slate frames with premium gold highlights."
                         active={config.theme === 'slate-gold'}
                         onClick={() => handleConfigChange('theme', 'slate-gold')}
                         previewColors={['#0E1115', '#F2AF0D']}
@@ -155,7 +155,6 @@ export function SettingsPage() {
                     <ThemeCard
                         id="slate-cobalt"
                         name="Slate | Cobalt"
-                        description="Sleek slate frame with technical cobalt accents."
                         active={config.theme === 'slate-cobalt'}
                         onClick={() => handleConfigChange('theme', 'slate-cobalt')}
                         previewColors={['#0E1115', '#1D4267']}
@@ -163,83 +162,87 @@ export function SettingsPage() {
                 </div>
             </div>
 
-            {/* AUTO-UPDATE SECTION */}
-            <div className="flex flex-col gap-8 w-full">
-                <div className="flex flex-col gap-1 px-2">
-                    <div className="flex items-center gap-3">
-                        <RefreshCw size={16} className="text-melt-accent" />
-                        <h3 className="text-xs font-black text-melt-text-label uppercase tracking-[0.2em]">AUTO-UPDATE</h3>
-                    </div>
-                </div>
-
-                <div className="flex flex-col gap-4 px-2">
-                    <div className="flex items-center justify-between p-6 border-l-2 border-melt-text-muted/10 bg-melt-surface/10">
-                        <div className="flex flex-col gap-1">
-                            <span className="text-xs font-bold text-melt-text-heading uppercase tracking-widest">Automatic Checks</span>
-                            <span className="text-[10px] font-mono text-melt-text-label opacity-60">CHECK GITHUB FOR RELEASES ON STARTUP</span>
-                        </div>
-                        <ToggleButton
-                            active={config.autoUpdate}
-                            onToggle={() => handleConfigChange('autoUpdate', !config.autoUpdate)}
-                        />
-                    </div>
-
-                    <div className="flex items-center justify-between p-6 border-l-2 border-melt-text-muted/10 bg-melt-surface/10">
-                        <div className="flex flex-col gap-1">
-                            <span className="text-xs font-bold text-melt-text-heading uppercase tracking-widest">Background Download</span>
-                            <span className="text-[10px] font-mono text-melt-text-label opacity-60">DOWNLOAD NEW VERSIONS AUTOMATICALLY</span>
-                        </div>
-                        <ToggleButton
-                            active={config.autoDownload}
-                            onToggle={() => handleConfigChange('autoDownload', !config.autoDownload)}
-                        />
-                    </div>
-
-                    {/* STATUS READOUT */}
-                    <div className="flex flex-col gap-4 p-6 border-l-2 border-melt-accent/20 bg-melt-accent/5 mt-4">
-                        <div className="flex items-center justify-between">
-                            <div className="flex flex-col gap-1">
-                                <span className="text-[10px] font-black text-melt-accent uppercase tracking-widest">Update Status</span>
-                                <span className="text-[11px] font-mono text-melt-text-body uppercase">
-                                    {updateStatus === 'idle' && 'Checked // Up to Date'}
-                                    {updateStatus === 'available' && 'Update Found // Pending Download'}
-                                    {updateStatus === 'downloading' && `Downloading // ${Math.round(progress)}%`}
-                                    {updateStatus === 'ready' && 'Ready // Restart to Apply'}
-                                </span>
+            {isDesktop && (
+                <>
+                    {/* AUTO-UPDATE SECTION */}
+                    <div className="flex flex-col gap-8 w-full">
+                        <div className="flex flex-col gap-1 px-2">
+                            <div className="flex items-center gap-3">
+                                <RefreshCw size={16} className="text-melt-accent" />
+                                <h3 className="text-xs font-black text-melt-text-label uppercase tracking-[0.2em]">AUTO-UPDATE</h3>
                             </div>
-
-                            {updateStatus === 'available' && (
-                                <button
-                                    onClick={() => getElectronApi()?.updater.download()}
-                                    className="flex items-center gap-2 bg-melt-accent text-melt-frame px-4 h-7 text-[10px] font-black uppercase tracking-widest hover:scale-105 transition-transform"
-                                >
-                                    <Download size={12} />
-                                    Download Now
-                                </button>
-                            )}
-
-                            {updateStatus === 'ready' && (
-                                <button
-                                    onClick={() => getElectronApi()?.updater.quitAndInstall()}
-                                    className="flex items-center gap-2 bg-melt-accent text-melt-frame px-4 h-7 text-[10px] font-black uppercase tracking-widest hover:scale-105 transition-transform"
-                                >
-                                    <RefreshCw size={12} className="animate-spin-slow" />
-                                    Restart Now
-                                </button>
-                            )}
                         </div>
 
-                        {updateStatus === 'downloading' && (
-                            <div className="w-full h-1 bg-melt-accent/10 rounded-full overflow-hidden">
-                                <div
-                                    className="h-full bg-melt-accent transition-all duration-300"
-                                    style={{ width: `${progress}%` }}
+                        <div className="flex flex-col gap-4 px-2">
+                            <div className="flex items-center justify-between p-6 border-l-2 border-melt-text-muted/10 bg-melt-surface/10">
+                                <div className="flex flex-col gap-1">
+                                    <span className="text-xs font-bold text-melt-text-heading uppercase tracking-widest">Automatic Checks</span>
+                                    <span className="text-[10px] font-mono text-melt-text-label opacity-60">CHECK GITHUB FOR RELEASES ON STARTUP</span>
+                                </div>
+                                <ToggleButton
+                                    active={config.autoUpdate}
+                                    onToggle={() => handleConfigChange('autoUpdate', !config.autoUpdate)}
                                 />
                             </div>
-                        )}
+
+                            <div className="flex items-center justify-between p-6 border-l-2 border-melt-text-muted/10 bg-melt-surface/10">
+                                <div className="flex flex-col gap-1">
+                                    <span className="text-xs font-bold text-melt-text-heading uppercase tracking-widest">Background Download</span>
+                                    <span className="text-[10px] font-mono text-melt-text-label opacity-60">DOWNLOAD NEW VERSIONS AUTOMATICALLY</span>
+                                </div>
+                                <ToggleButton
+                                    active={config.autoDownload}
+                                    onToggle={() => handleConfigChange('autoDownload', !config.autoDownload)}
+                                />
+                            </div>
+
+                            {/* STATUS READOUT */}
+                            <div className="flex flex-col gap-4 p-6 border-l-2 border-melt-accent/20 bg-melt-accent/5 mt-4">
+                                <div className="flex items-center justify-between">
+                                    <div className="flex flex-col gap-1">
+                                        <span className="text-[10px] font-black text-melt-accent uppercase tracking-widest">Update Status</span>
+                                        <span className="text-[11px] font-mono text-melt-text-body uppercase">
+                                            {updateStatus === 'idle' && 'Checked // Up to Date'}
+                                            {updateStatus === 'available' && 'Update Found // Pending Download'}
+                                            {updateStatus === 'downloading' && `Downloading // ${Math.round(progress)}%`}
+                                            {updateStatus === 'ready' && 'Ready // Restart to Apply'}
+                                        </span>
+                                    </div>
+
+                                    {updateStatus === 'available' && (
+                                        <button
+                                            onClick={() => getElectronApi()?.updater.download()}
+                                            className="flex items-center gap-2 bg-melt-accent text-melt-frame px-4 h-7 text-[10px] font-black uppercase tracking-widest hover:scale-105 transition-transform"
+                                        >
+                                            <Download size={12} />
+                                            Download Now
+                                        </button>
+                                    )}
+
+                                    {updateStatus === 'ready' && (
+                                        <button
+                                            onClick={() => getElectronApi()?.updater.quitAndInstall()}
+                                            className="flex items-center gap-2 bg-melt-accent text-melt-frame px-4 h-7 text-[10px] font-black uppercase tracking-widest hover:scale-105 transition-transform"
+                                        >
+                                            <RefreshCw size={12} className="animate-spin-slow" />
+                                            Restart Now
+                                        </button>
+                                    )}
+                                </div>
+
+                                {updateStatus === 'downloading' && (
+                                    <div className="w-full h-1 bg-melt-accent/10 rounded-full overflow-hidden">
+                                        <div
+                                            className="h-full bg-melt-accent transition-all duration-300"
+                                            style={{ width: `${progress}%` }}
+                                        />
+                                    </div>
+                                )}
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
+                </>
+            )}
 
             {/* CHANGELOG SECTION */}
             <div className="flex flex-col gap-8 w-full">
@@ -252,6 +255,20 @@ export function SettingsPage() {
 
                 <div className="w-full flex flex-col gap-2">
                     <ChangelogItem
+                        version="V0.1.1 PATCH"
+                        date="2026-02-16"
+                        changes={[
+                            "Fixed GitHub Pages hydration issue that blocked sidebar interactions in web mode",
+                            "Hidden desktop auto-update/background-download controls in web app settings",
+                            "Delayed sidebar label reveal to avoid icon/text overlap during expand",
+                            "Stabilized first sidebar hover after refresh so icon positions stay aligned",
+                            "Fixed theme switching so selected themes apply immediately in web mode",
+                            "Pinned desktop window controls so sidebar hover animation no longer shifts them",
+                            "Fixed selected-tab accent indicator sticking during rapid hover/click interactions"
+                        ]}
+                        isLatest
+                    />
+                    <ChangelogItem
                         version="V0.1 ALPHA"
                         date="2026-02-10"
                         changes={[
@@ -262,7 +279,6 @@ export function SettingsPage() {
                             "Refined Theme Selection UI",
                             "Fixed tab animation clip bug"
                         ]}
-                        isLatest
                     />
                 </div>
             </div>
@@ -287,7 +303,7 @@ function ToggleButton({ active, onToggle }: ToggleButtonProps) {
     );
 }
 
-function ThemeCard({ id, name, description, active, onClick, previewColors }: ThemeCardProps) {
+function ThemeCard({ id, name, active, onClick, previewColors }: ThemeCardProps) {
     return (
         <button
             data-theme-id={id}
@@ -309,12 +325,9 @@ function ThemeCard({ id, name, description, active, onClick, previewColors }: Th
             </div>
 
             <h4 className={cn(
-                "text-xs font-black uppercase tracking-widest mb-2 transition-colors",
+                "text-xs font-black uppercase tracking-widest transition-colors",
                 active ? "text-melt-accent" : "text-melt-text-label group-hover:text-melt-text-heading"
             )}>{name}</h4>
-            <p className="text-[10px] font-mono text-melt-text-label leading-relaxed opacity-60 group-hover:opacity-100 transition-opacity">
-                {String(description)}
-            </p>
         </button>
     );
 }

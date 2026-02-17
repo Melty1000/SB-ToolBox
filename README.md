@@ -1,4 +1,4 @@
-![SB ToolBox](https://img.shields.io/badge/SB--ToolBox-v0.1.0-2ea043)
+![SB ToolBox](https://img.shields.io/badge/SB--ToolBox-v0.1.1-2ea043)
 ![Streamer.bot](https://img.shields.io/badge/Streamer.bot-1.0.4-f5a623)
 ![Next.js](https://img.shields.io/badge/Next.js-16.1.4-000000?logo=nextdotjs&logoColor=white)
 ![React](https://img.shields.io/badge/React-19.2.3-61DAFB?logo=react&logoColor=000)
@@ -94,8 +94,8 @@ npm run dist:all
 
 ## ⚠️ Trust, Signing, and Transparency
 
-- Builds are currently **not code-signed**.
-- Windows SmartScreen prompts can occur.
+- Official release artifacts produced from the maintainer build environment are code-signed.
+- Local/source builds on machines without signing configuration will be unsigned, and SmartScreen prompts can occur.
 - Source is public for full transparency and manual review.
 
 ## 🧪 Troubleshooting

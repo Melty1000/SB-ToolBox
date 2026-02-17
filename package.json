@@ -1,6 +1,6 @@
 {
   "name": "sb-toolbox",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "SB ToolBox - Streamer.bot SBAE decode/encode utility for desktop and web.",
   "author": "Melty1000",
   "private": true,

@@ -35,8 +35,6 @@ const NAV_CONFIG = [
     { id: 'settings', icon: Settings, label: "Settings" },
 ] as const;
 
-const NAV_IDS: readonly string[] = NAV_CONFIG.map((item) => item.id);
-
 interface MeltShellProps {
     children: React.ReactNode;
     activePage: string;
@@ -53,6 +51,8 @@ export const MeltShell: React.FC<MeltShellProps> = ({ children, activePage = 'de
     const [updateReady, setUpdateReady] = useState(false);
     const hoverTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const sidebarRef = useRef<HTMLElement | null>(null);
+    const appVersion = `V${process.env.NEXT_PUBLIC_APP_VERSION || '0.1.0'}`;
+    const appChannel = String(process.env.NEXT_PUBLIC_APP_CHANNEL || '').trim().toUpperCase();
 
     // Title Logic
     useEffect(() => {
@@ -91,8 +91,6 @@ export const MeltShell: React.FC<MeltShellProps> = ({ children, activePage = 'de
     const handleMin = () => getElectronApi()?.minimize();
     const handleMax = () => getElectronApi()?.maximize();
     const handleClose = () => getElectronApi()?.close();
-
-    const activeNavIndex = NAV_IDS.indexOf(activePage);
 
     const [isDesktop] = useState(() => isElectronRuntime());
     useEffect(() => {
@@ -206,12 +204,7 @@ export const MeltShell: React.FC<MeltShellProps> = ({ children, activePage = 'de
                 </div>
                 <nav className="flex-1 w-full px-3 space-y-1 flex flex-col relative">
                     <div
-                        className="absolute inset-x-3 h-10 bg-melt-accent rounded-md selection-drip z-0 pointer-events-none"
-                        style={{
-                            transform: activeNavIndex !== -1 ? `translateY(${activeNavIndex * 44}px)` : 'none',
-                            opacity: activeNavIndex !== -1 ? 1 : 0,
-                            visibility: activeNavIndex !== -1 ? 'visible' : 'hidden'
-                        } as React.CSSProperties}
+                        className="absolute inset-x-3 h-10 bg-melt-accent rounded-md selection-drip z-0 pointer-events-none opacity-0 invisible"
                     />
                     {NAV_CONFIG.map((item) => (
                         <NavItem
@@ -221,7 +214,6 @@ export const MeltShell: React.FC<MeltShellProps> = ({ children, activePage = 'de
                             label={item.label}
                             active={activePage === item.id}
                             onClick={() => setActivePage(item.id)}
-                            isExpanded={isExpanded}
                             hasBadge={item.id === 'settings' && hasUpdate}
                         />
                     ))}
@@ -230,14 +222,14 @@ export const MeltShell: React.FC<MeltShellProps> = ({ children, activePage = 'de
                     <div className="h-px w-full bg-melt-text-muted/10 mb-2 opacity-30" />
                     <div className="h-4 w-full relative version-container overflow-visible flex items-center justify-center">
                         <span className="inline-flex h-[10px] items-center text-label-2xs text-melt-text-muted tracking-widest whitespace-nowrap leading-none">
-                            <span className="inline-flex h-[10px] items-center leading-none">V0.1</span>
+                            <span className="inline-flex h-[10px] items-center leading-none">{appVersion}</span>
                             <span
                                 className={cn(
                                     "inline-flex h-[10px] items-center overflow-hidden whitespace-nowrap align-middle leading-none transition-[width,opacity,margin] duration-250 ease-out",
-                                    isExpanded ? "w-[44px] opacity-100 ml-1" : "w-0 opacity-0 ml-0"
+                                    isExpanded && appChannel ? "w-[44px] opacity-100 ml-1" : "w-0 opacity-0 ml-0"
                                 )}
                             >
-                                ALPHA
+                                {appChannel}
                             </span>
                         </span>
                     </div>
@@ -247,7 +239,7 @@ export const MeltShell: React.FC<MeltShellProps> = ({ children, activePage = 'de
             {/* 2. TITLE BAR AREA */}
             <header
                 className={cn(
-                    "col-start-2 row-start-1 flex items-center justify-between pr-2 bg-melt-frame z-50",
+                    "col-start-2 row-start-1 relative flex items-center pr-2 bg-melt-frame z-50",
                     isDesktop && "drag-region"
                 )}
             >
@@ -259,14 +251,14 @@ export const MeltShell: React.FC<MeltShellProps> = ({ children, activePage = 'de
                         SB ToolBox // {String(activePage?.toUpperCase() || 'DECODER')}
                     </span>
                 </div>
-                {isDesktop && (
-                    <div className="flex items-center no-drag">
-                        <ControlBtn icon={Minus} onClick={handleMin} />
-                        <ControlBtn icon={Square} onClick={handleMax} />
-                        <ControlBtn icon={X} onClick={handleClose} isClose />
-                    </div>
-                )}
             </header>
+            {isDesktop && (
+                <div className="fixed top-0 right-2 h-10 flex items-center no-drag z-[300]">
+                    <ControlBtn icon={Minus} onClick={handleMin} />
+                    <ControlBtn icon={Square} onClick={handleMax} />
+                    <ControlBtn icon={X} onClick={handleClose} isClose />
+                </div>
+            )}
 
             {/* 3. CONTENT AREA */}
             <main
@@ -340,13 +332,12 @@ interface NavItemProps {
     icon: LucideIcon;
     label: string;
     active: boolean;
-    isExpanded: boolean;
     onClick: () => void;
     id: string;
     hasBadge: boolean;
 }
 
-const NavItem = ({ icon: Icon, label, active, isExpanded, onClick, id, hasBadge }: NavItemProps) => (
+const NavItem = ({ icon: Icon, label, active, onClick, id, hasBadge }: NavItemProps) => (
     <button
         onClick={onClick}
         id={`nav-item-${id}`}
@@ -360,7 +351,6 @@ const NavItem = ({ icon: Icon, label, active, isExpanded, onClick, id, hasBadge 
             <span
                 className="flex items-center justify-center min-w-[20px] h-full nav-icon-wrapper"
                 style={{
-                    transform: active ? 'rotate(-10deg) scale(1.25)' : 'rotate(0deg) scale(1)',
                     opacity: 1
                 } as React.CSSProperties}
             >
@@ -376,9 +366,9 @@ const NavItem = ({ icon: Icon, label, active, isExpanded, onClick, id, hasBadge 
             <span
                 className="absolute inset-0 text-label-xs whitespace-nowrap nav-text flex items-center justify-center h-full px-4 text-center pointer-events-none tracking-[0.4em]"
                 style={{
-                    opacity: isExpanded ? 1 : 0,
-                    visibility: isExpanded ? 'visible' : 'hidden',
-                    transform: 'translateY(-30px)'
+                    opacity: 0,
+                    visibility: 'hidden',
+                    transform: 'translateY(-24px)'
                 } as React.CSSProperties}
             >
                 {String(label).toUpperCase()}

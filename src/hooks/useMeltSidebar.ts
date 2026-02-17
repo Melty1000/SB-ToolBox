@@ -10,13 +10,14 @@ const NAV_IDS: readonly string[] = ['decoder', 'encoder', 'history', 'help', 'su
  * High-poly 12-point rounding + 1.25x persistent icon scale.
  */
 export const useMeltSidebar = (activePage?: string) => {
-    const [isExpanded, setIsExpanded] = useState(false);
+    const [isExpanded, setIsExpandedState] = useState(false);
     const shellRef = useRef<HTMLDivElement>(null);
     const tl = useRef<gsap.core.Timeline | null>(null);
     const isFirstMount = useRef(true);
     const isExpandedRef = useRef(false);
     const activeIndexRef = useRef(0);
     const visitedPagesRef = useRef<Set<string>>(new Set());
+    const hoveredIndexRef = useRef<number | null>(null);
 
     const navNodesRef = useRef<{
         icons: HTMLElement[];
@@ -39,6 +40,11 @@ export const useMeltSidebar = (activePage?: string) => {
         };
     }, []);
 
+    const setIsExpanded = useCallback((next: boolean) => {
+        isExpandedRef.current = next;
+        setIsExpandedState(next);
+    }, []);
+
     const getSidebarWidthTargets = useCallback(() => {
         const targets: gsap.TweenTarget[] = [];
         if (shellRef.current) {
@@ -51,11 +57,10 @@ export const useMeltSidebar = (activePage?: string) => {
     }, []);
 
     const killNavTweens = useCallback(() => {
-        const { icons, texts, selectionDrip } = navNodesRef.current;
+        const { icons, texts } = navNodesRef.current;
         const targets: gsap.TweenTarget[] = [
             ...icons,
-            ...texts.filter((text): text is HTMLElement => !!text),
-            ...(selectionDrip ? [selectionDrip] : [])
+            ...texts.filter((text): text is HTMLElement => !!text)
         ];
 
         if (targets.length > 0) {
@@ -167,6 +172,7 @@ export const useMeltSidebar = (activePage?: string) => {
                     x: 0,
                     y: -6,
                     visibility: 'visible',
+                    delay: 0.12,
                     duration: MELT_CONSTANTS.ANIMATION.TEXT_DURATION_EXPAND,
                     ease: "back.out(1.5)",
                     overwrite: true
@@ -214,12 +220,12 @@ export const useMeltSidebar = (activePage?: string) => {
             gsap.killTweensOf(text);
 
             if (immediate || isFirstMount.current) {
-                gsap.set(text, { autoAlpha: 0, x: 20, y: -6, visibility: 'hidden' });
+                gsap.set(text, { autoAlpha: 0, x: 0, y: -24, visibility: 'hidden' });
             } else {
                 gsap.to(text, {
                     autoAlpha: 0,
-                    x: 20,
-                    y: -6,
+                    x: 0,
+                    y: -24,
                     visibility: 'hidden',
                     duration: 0.25,
                     overwrite: true
@@ -228,16 +234,48 @@ export const useMeltSidebar = (activePage?: string) => {
         });
     }, []);
 
-    const applyHoverBehavior = useCallback((itemIndex: number, isEntering: boolean) => {
+    const restoreExpandedItemState = useCallback((itemIndex: number) => {
         const { icons, texts } = navNodesRef.current;
         const icon = icons[itemIndex];
         const text = texts[itemIndex];
         if (!icon || !text) return;
+
+        const isActive = itemIndex === activeIndexRef.current;
         gsap.killTweensOf([icon, text]);
 
-        if (itemIndex === activeIndexRef.current) return;
+        gsap.to(icon, {
+            y: "70%",
+            scale: isActive ? 2.5 : 2.25,
+            rotation: 0,
+            duration: MELT_CONSTANTS.ANIMATION.ICON_DURATION,
+            ease: MELT_CONSTANTS.ANIMATION.SMOOTH_EASE,
+            overwrite: true,
+            force3D: true
+        });
+        gsap.to(text, {
+            autoAlpha: 1,
+            y: -6,
+            duration: 0.3,
+            ease: MELT_CONSTANTS.ANIMATION.SMOOTH_EASE,
+            overwrite: true
+        });
+    }, []);
+
+    const applyHoverBehavior = useCallback((itemIndex: number, isEntering: boolean) => {
+        if (!isExpandedRef.current) return;
+
+        const { icons, texts } = navNodesRef.current;
+        const icon = icons[itemIndex];
+        const text = texts[itemIndex];
+        if (!icon || !text) return;
 
         if (isEntering) {
+            hoveredIndexRef.current = itemIndex;
+            if (itemIndex === activeIndexRef.current) {
+                return;
+            }
+
+            gsap.killTweensOf([icon, text]);
             gsap.to(icon, {
                 y: 0,
                 scale: 1.6,
@@ -256,23 +294,11 @@ export const useMeltSidebar = (activePage?: string) => {
             return;
         }
 
-        gsap.to(icon, {
-            y: "70%",
-            scale: 2.25,
-            rotation: 0,
-            duration: MELT_CONSTANTS.ANIMATION.ICON_DURATION,
-            ease: MELT_CONSTANTS.ANIMATION.SMOOTH_EASE,
-            overwrite: true,
-            force3D: true
-        });
-        gsap.to(text, {
-            autoAlpha: 1,
-            y: -6,
-            duration: 0.3,
-            ease: MELT_CONSTANTS.ANIMATION.SMOOTH_EASE,
-            overwrite: true
-        });
-    }, []);
+        if (hoveredIndexRef.current === itemIndex) {
+            hoveredIndexRef.current = null;
+        }
+        restoreExpandedItemState(itemIndex);
+    }, [restoreExpandedItemState]);
 
     // 1. PHASE ONE: Layout & Branding (isExpanded ONLY)
     useGSAP(() => {
@@ -307,18 +333,18 @@ export const useMeltSidebar = (activePage?: string) => {
             ensureNavNodes();
             activeIndexRef.current = NAV_IDS.indexOf(activePage || 'decoder');
             syncSelectionDrip(true);
-            applyCollapsedState(true);
+            const shouldStartExpanded = isExpandedRef.current;
+            mainTl.progress(shouldStartExpanded ? 1 : 0).pause();
+            if (shouldStartExpanded) {
+                applyExpandedState(true);
+            } else {
+                applyCollapsedState(true);
+            }
+            isFirstMount.current = false;
 
             navNodesRef.current.items.forEach((item, i) => {
-                const handleMouseEnter = () => {
-                    if (!isExpandedRef.current) return;
-                    applyHoverBehavior(i, true);
-                };
-
-                const handleMouseLeave = () => {
-                    if (!isExpandedRef.current) return;
-                    applyHoverBehavior(i, false);
-                };
+                const handleMouseEnter = () => applyHoverBehavior(i, true);
+                const handleMouseLeave = () => applyHoverBehavior(i, false);
 
                 item.addEventListener('mouseenter', handleMouseEnter);
                 item.addEventListener('mouseleave', handleMouseLeave);
@@ -345,6 +371,7 @@ export const useMeltSidebar = (activePage?: string) => {
     useEffect(() => {
         ensureNavNodes();
         killNavTweens();
+        hoveredIndexRef.current = null;
         const resolvedPage = activePage || 'decoder';
         activeIndexRef.current = NAV_IDS.indexOf(resolvedPage);
         syncSelectionDrip(false);
@@ -386,6 +413,7 @@ export const useMeltSidebar = (activePage?: string) => {
 
         ensureNavNodes();
         killNavTweens();
+        hoveredIndexRef.current = null;
         isExpandedRef.current = isExpanded;
 
         if (isExpanded) {
@@ -404,7 +432,7 @@ export const useMeltSidebar = (activePage?: string) => {
         const handleGlobalMouseLeave = () => setIsExpanded(false);
         window.addEventListener('mouseleave', handleGlobalMouseLeave);
         return () => window.removeEventListener('mouseleave', handleGlobalMouseLeave);
-    }, []);
+    }, [setIsExpanded]);
 
     return { isExpanded, setIsExpanded, shellRef };
 };
