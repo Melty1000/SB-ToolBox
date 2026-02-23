@@ -95,6 +95,12 @@ export const SocialLink = ({
                 href={href}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={(e) => {
+                    if ((window as any).electron?.shell) {
+                        e.preventDefault();
+                        (window as any).electron.shell.openExternal(href);
+                    }
+                }}
                 className="relative w-full h-full rounded-2xl outline-none flex items-center p-0 cursor-pointer overflow-hidden group/link transition-colors"
                 style={{
                     backgroundColor: 'transparent'

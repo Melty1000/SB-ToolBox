@@ -7,6 +7,20 @@ export interface ChangelogEntry {
 // Most recent release first. The first entry is automatically marked as "latest".
 export const CHANGELOG: ChangelogEntry[] = [
     {
+        version: "V0.1.3 ALPHA",
+        date: "2026-02-23",
+        changes: [
+            "Implemented working auto-update pipeline for installed and portable builds",
+            "Portable build now downloads new version to Windows Downloads folder with live progress",
+            "Added 'Show in Explorer' button for portable users after download completes",
+            "Added portable mode badge and status text in Settings",
+            "Background Download toggle is hidden in portable mode (not applicable)",
+            "Auto-download setting now triggers download automatically after update check",
+            "Fixed missing latest.yml — updater version checks now resolve correctly",
+            "Added GitHub publish config so electron-updater knows where to look"
+        ]
+    },
+    {
         version: "V0.1.2 ALPHA",
         date: "2026-02-22",
         changes: [

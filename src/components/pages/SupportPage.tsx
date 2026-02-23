@@ -123,7 +123,7 @@ const INSPIRATIONS: PersonData[] = [
     {
         name: "GaelLevel",
         twitchHandle: "gaellevel",
-        logo: "/SB-ToolBox/assets/gael_level_pfp.png",
+        logo: "https://static-cdn.jtvnw.net/jtv_user_pictures/a14088a7-329d-45cb-8df3-e183cf25b11f-profile_image-70x70.png",
         desc: "If you want to learn anything about asset/scene creation, Gael is the person to watch. He was the first creator that i really locked into and learned from. His tutorials are top-tier.",
         socials: [
             { icon: Globe, href: "https://gaellevel.com", color: "#3b82f6" },
@@ -160,7 +160,7 @@ const INSPIRATIONS: PersonData[] = [
     {
         name: "GoWMan",
         twitchHandle: "gowman",
-        logo: "/SB-ToolBox/assets/gowman_pfp.png",
+        logo: "https://static-cdn.jtvnw.net/jtv_user_pictures/dd70b1ec-b906-416a-8a56-d067bda64514-profile_image-70x70.png",
         desc: "You might not see him in the discord near as much as some of these other folks, but hes an alien and who tf doesnt love aliens? I also enjoy hanging out in his streams ;)",
         socials: [
             { icon: Twitch, href: "https://www.twitch.tv/gowman", color: "#9146FF" },
@@ -230,7 +230,7 @@ const INSPIRATIONS: PersonData[] = [
         name: "Andilippi",
         twitchHandle: "andilippi",
         logo: "https://static-cdn.jtvnw.net/jtv_user_pictures/c12eceed-4ba5-49f3-86bd-9641678fb6b0-profile_image-70x70.png",
-        desc: "PLACEHOLDER — add description.",
+        desc: "Andi is a truly goated member of the obs and streamerbot community. His youtube content covers all of the stuff that him and the rest of the StreamUp guys create and also any other incredible obs plugins that come out in the community. Super fun guy and without him, so many streams wouldnt look near as good as they do! 😂",
         socials: [
             { icon: Globe, href: "https://doras.to/andi", color: "#3b82f6" },
             { icon: Twitch, href: "https://www.twitch.tv/andilippi", color: "#9146FF" },
@@ -245,7 +245,7 @@ const INSPIRATIONS: PersonData[] = [
         name: "CodeWithTD",
         twitchHandle: "codewithtd",
         logo: "https://static-cdn.jtvnw.net/jtv_user_pictures/4441aea3-94c5-48d5-aa9b-52e4c3d37e9b-profile_image-70x70.jpeg",
-        desc: "PLACEHOLDER — add description.",
+        desc: "I look forward to the day that this guy starts streaming on a regular basis again. Ive only heard rumors of the commitment that this guy contributed to the SB community in its earlier days. Most likely, if you are using anything created by anyone, it wouldnt exist in its current capacity without the things that he has done.",
         socials: [
             { icon: Globe, href: "https://doras.to/td", color: "#3b82f6" },
             { icon: Twitch, href: "https://www.twitch.tv/codewithtd", color: "#9146FF" },
@@ -260,7 +260,7 @@ const INSPIRATIONS: PersonData[] = [
         name: "OsuPhoenix",
         twitchHandle: "osuphoenix",
         logo: "https://static-cdn.jtvnw.net/jtv_user_pictures/2a814e73-2250-453d-9379-41e9fe175893-profile_image-70x70.png",
-        desc: "PLACEHOLDER — add description.",
+        desc: "Incredible streamer and content creator. He has made a ton of tutorials for some higher level stuff including using blender to create custom 3d alerts and overlays. An extremely genuine person who diserves all the support!",
         socials: [
             { icon: Globe, href: "https://osuphoenix.tv", color: "#3b82f6" },
             { icon: Twitch, href: "https://www.twitch.tv/osuphoenix", color: "#9146FF" },
@@ -359,7 +359,7 @@ const COMMUNITY: PersonData[] = [
         name: "YoThatsCarter",
         twitchHandle: "yothatscarter",
         logo: "https://static-cdn.jtvnw.net/jtv_user_pictures/6ee8b67e-bccf-4362-a131-61b8ec60f316-profile_image-70x70.png",
-        desc: "PLACEHOLDER — add description.",
+        desc: "Dope ass dude. Super high quality content and fun to talk to. If your looking for a chill community to hang out in, this guy is beyond worth checking out!",
         socials: [
             { icon: Twitch, href: "https://www.twitch.tv/yothatscarter", color: "#9146FF" },
             { icon: Youtube, href: "https://www.youtube.com/@yothatscarter", color: "#FF0000" },
@@ -369,6 +369,14 @@ const COMMUNITY: PersonData[] = [
         ],
     },
 ];
+
+function openLink(href: string) {
+    if ((window as any).electron?.shell) {
+        (window as any).electron.shell.openExternal(href);
+    } else {
+        window.open(href, '_blank', 'noopener,noreferrer');
+    }
+}
 
 function sortByLive(list: PersonData[], liveHandles: Set<string>): PersonData[] {
     return [...list].sort((a, b) => {
@@ -550,48 +558,53 @@ function InspirationRow({ name, logo, desc, socials, twitchHandle, onLiveChange 
     }, [twitchHandle]);
 
     return (
-        <div className="flex flex-col md:flex-row gap-4 md:gap-6 group/inspiration w-full">
-            {/* Avatar / Logo */}
-            <a
-                href={isLive && twitchHandle ? `https://www.twitch.tv/${twitchHandle}` : undefined}
-                target={isLive ? "_blank" : undefined}
-                rel={isLive ? "noopener noreferrer" : undefined}
-                className={cn(
-                    "relative w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center shrink-0",
-                    isLive && "before:absolute before:inset-[-3px] before:rounded-full before:border-2 before:border-red-500 before:animate-pulse z-10 cursor-pointer"
-                )}>
-                <div className="w-full h-full rounded-full bg-melt-text-muted/5 border border-melt-text-muted/10 flex items-center justify-center shrink-0 overflow-hidden group-hover/inspiration:border-melt-accent/30 transition-all duration-500 shadow-[0_0_0_1px_rgba(255,255,255,0.01)] relative">
-                    {logo ? (
-                        <img src={logo} alt={name} className="w-full h-full object-cover group-hover/inspiration:opacity-100 transition-opacity" />
-                    ) : (
-                        <div className="text-[7px] font-black opacity-10 uppercase tracking-tighter">HEX</div>
-                    )}
-                </div>
-                {isLive && (
-                    <div className="absolute -top-1 -right-1 bg-red-500 text-[6px] font-black text-melt-surface px-1 py-0.5 rounded-sm uppercase tracking-tighter animate-in fade-in zoom-in duration-300 shadow-lg">
-                        LIVE
-                    </div>
-                )}
-            </a>
-
-            {/* Descriptor */}
-            <div className="flex-1 flex flex-col gap-1 min-w-0">
+        <div className="flex flex-col gap-3 group/inspiration w-full">
+            {/* Avatar + Descriptor row */}
+            <div className="flex flex-row gap-4 items-start">
+                {/* Avatar / Logo */}
                 <a
                     href={isLive && twitchHandle ? `https://www.twitch.tv/${twitchHandle}` : undefined}
                     target={isLive ? "_blank" : undefined}
                     rel={isLive ? "noopener noreferrer" : undefined}
+                    onClick={isLive && twitchHandle ? (e) => { e.preventDefault(); openLink(`https://www.twitch.tv/${twitchHandle}`); } : undefined}
                     className={cn(
-                        "text-[10px] font-black text-melt-text-label uppercase tracking-widest group-hover/inspiration:text-melt-accent transition-colors duration-300",
-                        isLive && "cursor-pointer hover:text-red-400"
+                        "relative w-10 h-10 rounded-full flex items-center justify-center shrink-0",
+                        isLive && "before:absolute before:inset-[-3px] before:rounded-full before:border-2 before:border-red-500 before:animate-pulse z-10 cursor-pointer"
+                    )}>
+                    <div className="w-full h-full rounded-full bg-melt-text-muted/5 border border-melt-text-muted/10 flex items-center justify-center shrink-0 overflow-hidden group-hover/inspiration:border-melt-accent/30 transition-all duration-500 shadow-[0_0_0_1px_rgba(255,255,255,0.01)] relative">
+                        {logo ? (
+                            <img src={logo} alt={name} className="w-full h-full object-cover group-hover/inspiration:opacity-100 transition-opacity" />
+                        ) : (
+                            <div className="text-[7px] font-black opacity-10 uppercase tracking-tighter">HEX</div>
+                        )}
+                    </div>
+                    {isLive && (
+                        <div className="absolute -top-1 -right-1 bg-red-500 text-[6px] font-black text-melt-surface px-1 py-0.5 rounded-sm uppercase tracking-tighter animate-in fade-in zoom-in duration-300 shadow-lg">
+                            LIVE
+                        </div>
                     )}
-                >{String(name)}</a>
-                <p className="text-[11px] font-mono text-melt-text-label leading-relaxed group-hover/inspiration:text-melt-text-body transition-opacity">
-                    {String(desc)}
-                </p>
+                </a>
+
+                {/* Descriptor */}
+                <div className="flex-1 flex flex-col gap-1 min-w-0">
+                    <a
+                        href={isLive && twitchHandle ? `https://www.twitch.tv/${twitchHandle}` : undefined}
+                        target={isLive ? "_blank" : undefined}
+                        rel={isLive ? "noopener noreferrer" : undefined}
+                        onClick={isLive && twitchHandle ? (e) => { e.preventDefault(); openLink(`https://www.twitch.tv/${twitchHandle}`); } : undefined}
+                        className={cn(
+                            "text-[10px] font-black text-melt-text-label uppercase tracking-widest group-hover/inspiration:text-melt-accent transition-colors duration-300",
+                            isLive && "cursor-pointer hover:text-red-400"
+                        )}
+                    >{String(name)}</a>
+                    <p className="text-[11px] font-mono text-melt-text-label leading-relaxed group-hover/inspiration:text-melt-text-body transition-opacity">
+                        {String(desc)}
+                    </p>
+                </div>
             </div>
 
-            {/* Socials */}
-            <div className="flex flex-wrap content-start gap-2 w-full md:w-auto md:max-w-[215px] shrink-0 justify-start md:justify-end items-center mt-2 md:mt-0">
+            {/* Socials — always below */}
+            <div className="flex flex-wrap gap-1">
                 {socials.map((social, i) => (
                     <InspirationSocialBtn key={i} icon={social.icon} href={social.href} brandColor={social.color} />
                 ))}
@@ -601,26 +614,19 @@ function InspirationRow({ name, logo, desc, socials, twitchHandle, onLiveChange 
 }
 
 function InspirationSocialBtn({ icon: Icon, href, brandColor }: { icon: any; href: string; brandColor: string }) {
-    const [isHovered, setIsHovered] = React.useState(false);
-
     return (
         <a
             href={href}
             target="_blank"
             rel="noopener noreferrer"
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
-            className="p-2.5 rounded-md hover:bg-melt-text-muted/10 transition-all group/sbtn flex items-center justify-center shrink-0"
+            onClick={(e) => { e.preventDefault(); openLink(href); }}
+            className="group/sbtn p-2.5 flex items-center justify-center shrink-0 border-b border-transparent hover:border-melt-accent transition-colors duration-200"
         >
             <Icon
                 width={14}
                 height={14}
-                className="transition-all duration-300"
-                style={{
-                    color: brandColor,
-                    opacity: isHovered ? 1 : 0.5,
-                    filter: isHovered ? `drop-shadow(0 0 8px ${brandColor}66)` : 'none'
-                }}
+                className="opacity-40 group-hover/inspiration:opacity-70 group-hover/sbtn:opacity-100 transition-opacity duration-300"
+                style={{ color: brandColor }}
             />
         </a>
     );

@@ -1,4 +1,4 @@
-![SB ToolBox](https://img.shields.io/badge/SB--ToolBox-v0.1.2-2ea043)
+![SB ToolBox](https://img.shields.io/badge/SB--ToolBox-v0.1.3-2ea043)
 ![Streamer.bot](https://img.shields.io/badge/Streamer.bot-1.0.4-f5a623)
 ![Next.js](https://img.shields.io/badge/Next.js-16.1.4-000000?logo=nextdotjs&logoColor=white)
 ![React](https://img.shields.io/badge/React-19.2.3-61DAFB?logo=react&logoColor=000)
@@ -97,7 +97,7 @@ Import strings are processed in six stages: the raw `.sb` string is validated ag
 
 [![Tawmae](https://img.shields.io/badge/Tawmae-Website-3b82f6)](https://tawmae.xyz/) [![Pwnyy](https://img.shields.io/badge/Pwnyy-Website-3b82f6)](https://doras.to/pwnyy) [![GaelLevel](https://img.shields.io/badge/GaelLevel-Website-3b82f6)](https://gaellevel.com) [![WebMage](https://img.shields.io/badge/WebMage-Twitch-9146FF?logo=twitch&logoColor=white)](https://www.twitch.tv/web_mage) [![VRFlad](https://img.shields.io/badge/VRFlad-Website-3b82f6)](https://vrflad.com)
 
-[![GoWMan](https://img.shields.io/badge/GoWMan-Twitch-9146FF?logo=twitch&logoColor=white)](https://www.twitch.tv/gowman) [![MustachedManiac](https://img.shields.io/badge/MustachedManiac-Website-3b82f6)](https://mustachedmaniac.com/socials) [![Nutty](https://img.shields.io/badge/Nutty-Website-3b82f6)](https://nutty.gg) [![StreamUp](https://img.shields.io/badge/StreamUp-Website-3b82f6)](https://streamup.tips) [![DigiVybe](https://img.shields.io/badge/DigiVybe-Website-3b82f6)](https://digivybe.xyz)
+[![GoWMan](https://img.shields.io/badge/GoWMan-Twitch-9146FF?logo=twitch&logoColor=white)](https://www.twitch.tv/gowman) [![MustachedManiac](https://img.shields.io/badge/MustachedManiac-Website-3b82f6)](https://mustachedmaniac.com/socials) [![Nutty](https://img.shields.io/badge/Nutty-Website-3b82f6)](https://nutty.gg) [![StreamUp](https://img.shields.io/badge/StreamUp-Website-3b82f6)](https://streamup.tips) [![DigiVybe](https://img.shields.io/badge/DigiVybe-Website-3b82f6)](https://digivybe.xyz) [![Andilippi](https://img.shields.io/badge/Andilippi-Website-3b82f6)](https://doras.to/andi) [![CodeWithTD](https://img.shields.io/badge/CodeWithTD-Website-3b82f6)](https://doras.to/td) [![OsuPhoenix](https://img.shields.io/badge/OsuPhoenix-Website-3b82f6)](https://osuphoenix.tv)
 
 ## 📜 Usage Terms
 

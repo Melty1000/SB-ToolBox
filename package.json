@@ -1,11 +1,11 @@
 {
   "name": "sb-toolbox",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "private": true,
   "main": "dist/main.js",
   "scripts": {
     "dev": "next dev --webpack -p 3001",
-    "dev:electron": "concurrently -k \"next dev --webpack -p 3001\" \"wait-on http://localhost:3001 && electron .\"",
+    "dev:electron": "concurrently -k \"next dev --webpack -p 3001\" \"wait-on http-get://localhost:3001/SB-ToolBox && electron .\"",
     "build": "npm run build:main && npm run build:renderer:electron",
     "build:main": "tsup electron/main.ts electron/preload.ts --format cjs --out-dir dist --clean --external electron",
     "build:renderer": "next build",
@@ -38,7 +38,12 @@
       ],
       "icon": "public/assets/icon-512.png"
     },
-    "icon": "public/assets/icon-512.png"
+    "icon": "public/assets/icon-512.png",
+    "publish": {
+      "provider": "github",
+      "owner": "Melty1000",
+      "repo": "SB-ToolBox"
+    }
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",

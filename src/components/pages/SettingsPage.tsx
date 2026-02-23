@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
-import { Palette, Check, History, ChevronDown, RefreshCw, Download } from 'lucide-react';
+import { Palette, Check, History, ChevronDown, RefreshCw, Download, FolderOpen } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { CHANGELOG } from '@/lib/changelog';
 
@@ -13,6 +13,9 @@ export function SettingsPage() {
     });
     const [updateStatus, setUpdateStatus] = useState<'idle' | 'available' | 'downloading' | 'ready'>('idle');
     const [progress, setProgress] = useState(0);
+    const [isElectron, setIsElectron] = useState(false);
+    const [isPortable, setIsPortable] = useState(false);
+    const [portableReadyPath, setPortableReadyPath] = useState('');
 
     useEffect(() => {
         const loadSettings = async () => {
@@ -26,6 +29,11 @@ export function SettingsPage() {
                 setConfig(prev => ({ ...prev, theme: savedTheme }));
                 document.documentElement.setAttribute('data-theme', savedTheme);
             }
+            setIsElectron(!!(window as any).electron);
+            if ((window as any).electron?.app) {
+                const portable = await (window as any).electron.app.isPortable();
+                setIsPortable(portable);
+            }
         };
         loadSettings();
 
@@ -36,11 +44,19 @@ export function SettingsPage() {
                 setProgress(p);
             });
             const cleanupReady = (window as any).electron.updater.on('update:ready', () => setUpdateStatus('ready'));
+            const cleanupPortableReady = (window as any).electron.updater.on(
+                'update:portable-ready',
+                (filePath: string) => {
+                    setPortableReadyPath(filePath);
+                    setUpdateStatus('ready');
+                }
+            );
 
             return () => {
                 cleanupAvailable();
                 cleanupProgress();
                 cleanupReady();
+                cleanupPortableReady();
             };
         }
     }, []);
@@ -110,19 +126,28 @@ export function SettingsPage() {
             </div>
 
             {/* AUTO-UPDATE SECTION */}
-            <div className="flex flex-col gap-8 w-full">
+            {isElectron && <div className="flex flex-col gap-8 w-full">
                 <div className="flex flex-col gap-1 px-2">
                     <div className="flex items-center gap-3">
                         <RefreshCw size={16} className="text-melt-accent" />
                         <h3 className="text-xs font-black text-melt-text-label uppercase tracking-[0.2em]">AUTO-UPDATE</h3>
                     </div>
+                    {isPortable && (
+                        <span className="text-[8px] font-black text-melt-text-muted uppercase tracking-widest">
+                            Portable // Downloads to Folder
+                        </span>
+                    )}
                 </div>
 
                 <div className="flex flex-col gap-4 px-2">
                     <div className="flex items-center justify-between p-6 border-l-2 border-melt-text-muted/10 bg-melt-surface/10">
                         <div className="flex flex-col gap-1">
                             <span className="text-xs font-bold text-melt-text-heading uppercase tracking-widest">Automatic Checks</span>
-                            <span className="text-[10px] font-mono text-melt-text-label opacity-60">CHECK GITHUB FOR RELEASES ON STARTUP</span>
+                            <span className="text-[10px] font-mono text-melt-text-label opacity-60">
+                                {isPortable
+                                    ? 'CHECKS ON STARTUP — IF A NEW VERSION IS FOUND, IT DOWNLOADS TO YOUR DOWNLOADS FOLDER'
+                                    : 'CHECK GITHUB FOR RELEASES ON STARTUP'}
+                            </span>
                         </div>
                         <ToggleButton
                             active={config.autoUpdate}
@@ -130,16 +155,18 @@ export function SettingsPage() {
                         />
                     </div>
 
-                    <div className="flex items-center justify-between p-6 border-l-2 border-melt-text-muted/10 bg-melt-surface/10">
-                        <div className="flex flex-col gap-1">
-                            <span className="text-xs font-bold text-melt-text-heading uppercase tracking-widest">Background Download</span>
-                            <span className="text-[10px] font-mono text-melt-text-label opacity-60">DOWNLOAD NEW VERSIONS AUTOMATICALLY</span>
+                    {!isPortable && (
+                        <div className="flex items-center justify-between p-6 border-l-2 border-melt-text-muted/10 bg-melt-surface/10">
+                            <div className="flex flex-col gap-1">
+                                <span className="text-xs font-bold text-melt-text-heading uppercase tracking-widest">Background Download</span>
+                                <span className="text-[10px] font-mono text-melt-text-label opacity-60">DOWNLOAD NEW VERSIONS AUTOMATICALLY</span>
+                            </div>
+                            <ToggleButton
+                                active={config.autoDownload}
+                                onToggle={() => handleConfigChange('autoDownload', !config.autoDownload)}
+                            />
                         </div>
-                        <ToggleButton
-                            active={config.autoDownload}
-                            onToggle={() => handleConfigChange('autoDownload', !config.autoDownload)}
-                        />
-                    </div>
+                    )}
 
                     {/* STATUS READOUT */}
                     <div className="flex flex-col gap-4 p-6 border-l-2 border-melt-accent/20 bg-melt-accent/5 mt-4">
@@ -150,7 +177,7 @@ export function SettingsPage() {
                                     {updateStatus === 'idle' && 'Checked // Up to Date'}
                                     {updateStatus === 'available' && 'Update Found // Pending Download'}
                                     {updateStatus === 'downloading' && `Downloading // ${Math.round(progress)}%`}
-                                    {updateStatus === 'ready' && 'Ready // Restart to Apply'}
+                                    {updateStatus === 'ready' && (isPortable ? 'Saved // Downloads Folder' : 'Ready // Restart to Apply')}
                                 </span>
                             </div>
 
@@ -164,13 +191,22 @@ export function SettingsPage() {
                                 </button>
                             )}
 
-                            {updateStatus === 'ready' && (
+                            {updateStatus === 'ready' && !isPortable && (
                                 <button
                                     onClick={() => (window as any).electron.updater.quitAndInstall()}
                                     className="flex items-center gap-2 bg-melt-accent text-melt-frame px-4 h-7 text-[10px] font-black uppercase tracking-widest hover:scale-105 transition-transform"
                                 >
                                     <RefreshCw size={12} className="animate-spin-slow" />
                                     Restart Now
+                                </button>
+                            )}
+                            {updateStatus === 'ready' && isPortable && (
+                                <button
+                                    onClick={() => (window as any).electron.shell.showInFolder(portableReadyPath)}
+                                    className="flex items-center gap-2 bg-melt-accent text-melt-frame px-4 h-7 text-[10px] font-black uppercase tracking-widest hover:scale-105 transition-transform"
+                                >
+                                    <FolderOpen size={12} />
+                                    Show in Explorer
                                 </button>
                             )}
                         </div>
@@ -185,7 +221,7 @@ export function SettingsPage() {
                         )}
                     </div>
                 </div>
-            </div>
+            </div>}
 
             {/* CHANGELOG SECTION */}
             <div className="flex flex-col gap-8 w-full">
