@@ -2,6 +2,7 @@
 
 @layer base {
   :root {
+    color-scheme: dark;
     --background: 240 10% 3.9%;
     --foreground: 0 0% 98%;
 
@@ -111,6 +112,21 @@ body {
   outline: none !important;
   border: none !important;
   box-shadow: none !important;
+}
+
+.monaco-editor *,
+.monaco-editor *:focus,
+.monaco-editor *:focus-visible {
+  outline: 0 !important;
+  outline-offset: 0 !important;
+  box-shadow: none !important;
+  -webkit-appearance: none !important;
+}
+
+.monaco-editor .inputarea,
+.monaco-editor .inputarea.ime-input {
+  border: none !important;
+  caret-color: transparent !important;
 }
 
 .monaco-mouse-cursor-text {

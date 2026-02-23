@@ -60,6 +60,18 @@ const TikTokIcon = (props: React.SVGProps<SVGSVGElement>) => (
     </svg>
 );
 
+const FacebookIcon = (props: React.SVGProps<SVGSVGElement>) => (
+    <svg viewBox="0 0 24 24" fill="currentColor" width={props.width || props.height || 14} height={props.height || props.width || 14} {...props}>
+        <path d="M24 12.073C24 5.445 18.627 0 12 0S0 5.445 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047v-2.66c0-3.025 1.792-4.697 4.533-4.697 1.312 0 2.686.236 2.686.236v2.953h-1.514c-1.491 0-1.956.93-1.956 1.883v2.285h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z" />
+    </svg>
+);
+
+const KickIcon = (props: React.SVGProps<SVGSVGElement>) => (
+    <svg viewBox="0 0 24 24" fill="currentColor" width={props.width || props.height || 14} height={props.height || props.width || 14} {...props}>
+        <path d="M4 2v20h4v-8l8 8h5L12 12l9-10h-5L8 10V2z" />
+    </svg>
+);
+
 const CodePenIcon = (props: React.SVGProps<SVGSVGElement>) => (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width={props.width || props.height || 14} height={props.height || props.width || 14} {...props}>
         <polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5 12 2"></polygon>
@@ -70,9 +82,322 @@ const CodePenIcon = (props: React.SVGProps<SVGSVGElement>) => (
     </svg>
 );
 
+// ---------------------------------------------------------------------------
+// Data
+// ---------------------------------------------------------------------------
+
+interface SocialEntry { icon: any; href: string; color: string; }
+interface PersonData { name: string; logo: string; desc: string; twitchHandle?: string; socials: SocialEntry[]; }
+
+const INSPIRATIONS: PersonData[] = [
+    {
+        name: "Tawmae",
+        twitchHandle: "tawmae",
+        logo: "https://github.com/tawmae.png",
+        desc: "I cannot glaze this man enough. He is the reason i started building tools for Streamer.bot. Every single utility that he puts out is incredible and top notch. My entire style is 100% inspired by him. And though he doesnt know it, I could never thank him enough for what he has done for this entire community. If there is one person to check out from this list, I cannot suggest him enough.",
+        socials: [
+            { icon: Globe, href: "https://tawmae.xyz/", color: "#3b82f6" },
+            { icon: Twitch, href: "https://www.twitch.tv/tawmae", color: "#9146FF" },
+            { icon: Youtube, href: "https://www.youtube.com/@tawmae", color: "#FF0000" },
+            { icon: XIcon, href: "https://x.com/tawmaeXYZ", color: "#1DA1F2" },
+            { icon: BlueSkyIcon, href: "https://bsky.app/profile/tawmae.xyz", color: "#0085ff" },
+            { icon: DiscordIcon, href: "https://discord.com/invite/gEm5UMSvYs", color: "#5865F2" },
+            { icon: Github, href: "https://github.com/tawmae", color: "#6e5494" },
+            { icon: Coffee, href: "https://ko-fi.com/tawmae", color: "#FF5E5B" },
+            { icon: PayPalIcon, href: "https://paypal.me/tawmae", color: "#003087" },
+            { icon: SpotifyIcon, href: "https://open.spotify.com/user/ruw453b3m44bz9jpgjlv9tk6v?si=6e57242b3f464c57", color: "#1DB954" },
+        ],
+    },
+    {
+        name: "Pwnyy",
+        logo: "https://github.com/pwnyy.png",
+        desc: "I cant count the number of times ive been in a bind and pwnyy was immediately available in the official sb discord #general. Theres several of my projects that weather he knows it or not, would not exist without him.",
+        socials: [
+            { icon: Globe, href: "https://doras.to/pwnyy", color: "#3b82f6" },
+            { icon: DiscordIcon, href: "https://discord.com/invite/XFNRDmguzM", color: "#5865F2" },
+            { icon: BlueSkyIcon, href: "https://bsky.app/profile/pwnyy.tv", color: "#0085ff" },
+            { icon: Github, href: "https://github.com/pwnyy/Streamer.bot_Imports/tree/main", color: "#6e5494" },
+            { icon: Coffee, href: "https://ko-fi.com/pwnyy", color: "#FF5E5B" },
+        ],
+    },
+    {
+        name: "GaelLevel",
+        twitchHandle: "gaellevel",
+        logo: "/SB-ToolBox/assets/gael_level_pfp.png",
+        desc: "If you want to learn anything about asset/scene creation, Gael is the person to watch. He was the first creator that i really locked into and learned from. His tutorials are top-tier.",
+        socials: [
+            { icon: Globe, href: "https://gaellevel.com", color: "#3b82f6" },
+            { icon: Twitch, href: "https://www.twitch.tv/gaellevel", color: "#9146FF" },
+            { icon: Youtube, href: "https://www.youtube.com/GaelLEVEL", color: "#FF0000" },
+            { icon: XIcon, href: "https://x.com/Level_Photo/photo", color: "#1DA1F2" },
+            { icon: ShoppingBag, href: "https://gaellevel.gumroad.com", color: "#ff90e8" },
+        ],
+    },
+    {
+        name: "WebMage",
+        twitchHandle: "web_mage",
+        logo: "https://github.com/Web-Mage.png",
+        desc: "Weather pwnyy is around in #general or not, this awesome dude is lurking in the shadows. Ive enjoyed our conversations and want you to know that I am extremely appreciative of everything you have done for this community.",
+        socials: [
+            { icon: Twitch, href: "https://www.twitch.tv/web_mage", color: "#9146FF" },
+            { icon: CodePenIcon, href: "https://codepen.io/Web_Mage", color: "#AE63E4" },
+        ],
+    },
+    {
+        name: "VRFlad",
+        twitchHandle: "vrflad",
+        logo: "https://static-cdn.jtvnw.net/jtv_user_pictures/06753b06-46ee-48e6-92fa-ad427e7eea2d-profile_image-70x70.png",
+        desc: "He doesnt output as much as he used to but if I diddnt add him here i would be leaving out a true pillar of the community.",
+        socials: [
+            { icon: Globe, href: "https://vrflad.com", color: "#3b82f6" },
+            { icon: Twitch, href: "https://www.twitch.tv/vrflad", color: "#9146FF" },
+            { icon: Youtube, href: "https://www.youtube.com/@vrflad", color: "#FF0000" },
+            { icon: XIcon, href: "https://x.com/VRFlad", color: "#1DA1F2" },
+            { icon: Instagram, href: "https://www.instagram.com/VRFlad", color: "#E4405F" },
+            { icon: CodePenIcon, href: "https://codepen.io/vrflad", color: "#AE63E4" },
+        ],
+    },
+    {
+        name: "GoWMan",
+        twitchHandle: "gowman",
+        logo: "/SB-ToolBox/assets/gowman_pfp.png",
+        desc: "You might not see him in the discord near as much as some of these other folks, but hes an alien and who tf doesnt love aliens? I also enjoy hanging out in his streams ;)",
+        socials: [
+            { icon: Twitch, href: "https://www.twitch.tv/gowman", color: "#9146FF" },
+            { icon: Youtube, href: "https://www.youtube.com/channel/UCaJX1z9GD7Dz3HnNlkeNJWQ", color: "#FF0000" },
+            { icon: XIcon, href: "https://x.com/GoWMan_", color: "#1DA1F2" },
+            { icon: TikTokIcon, href: "https://www.tiktok.com/@gowman_", color: "#ff0050" },
+            { icon: BlueSkyIcon, href: "https://bsky.app/profile/alienwaifu.com", color: "#0085ff" },
+            { icon: DiscordIcon, href: "https://discord.com/invite/84aFtrGrWe", color: "#5865F2" },
+            { icon: CodePenIcon, href: "https://codepen.io/gowmantv", color: "#AE63E4" },
+        ],
+    },
+    {
+        name: "MustachedManiac",
+        twitchHandle: "mustached_maniac",
+        logo: "https://github.com/Mustached-Maniac.png",
+        desc: "Real legend to allot of content creators for his spotify and ai chat plugins. The basis for my 1st 2nd 3rd project is due to him and his youtube tutorials.",
+        socials: [
+            { icon: Globe, href: "https://mustachedmaniac.com/socials", color: "#3b82f6" },
+            { icon: Twitch, href: "https://www.twitch.tv/mustached_maniac", color: "#9146FF" },
+            { icon: Youtube, href: "https://www.youtube.com/@mustached_maniac", color: "#FF0000" },
+            { icon: XIcon, href: "https://x.com/MustachedMan1ac", color: "#1DA1F2" },
+            { icon: DiscordIcon, href: "https://discord.com/invite/n4k7vW7vRC", color: "#5865F2" },
+            { icon: Coffee, href: "https://ko-fi.com/mustached_maniac/tip", color: "#FF5E5B" },
+        ],
+    },
+    {
+        name: "Nutty",
+        twitchHandle: "nutty",
+        logo: "https://imgproxy.fourthwall.com/WSTKpmeQbr7HElolGXj3o27i6lfvx-r0f1JUOOJsbUM/w:40/sm:1/enc/AsDcwYLIVYXtqMOI/-J0gn4fPMCKphvSQ/UnUFID2fLXLJi-m9/-AM5XpdRn2K7H_WW/XdU2C-2VWb8GERI7/GEIeq0qYSsmRLcZe/JVqpBCxW3SV64CuX/JduguWX-DprgYN1k/w39L1v7NlerSFbAM/SPod2kNMThCbQYfe/SeMBCsduvzGU6P26/O3YhpDA2JhyOpIry/nlORSbBRbKdrteSa/6xVb2zWWrjVEjOOn/nSHBcgxgV00Yg7ru/txfSev9zP3UiigeK",
+        desc: "If you need help with move, or any other obs plugin, this is probably your guy. Ive used plenty of his projects and is probably the most well known of any of these guys. His youtube videos are super high quality.",
+        socials: [
+            { icon: Globe, href: "https://nutty.gg", color: "#3b82f6" },
+            { icon: Twitch, href: "https://twitch.tv/nutty", color: "#9146FF" },
+            { icon: Youtube, href: "https://youtube.com/channel/UCI5t_ve3cr5a1_3rrmbp6jQ", color: "#FF0000" },
+            { icon: XIcon, href: "https://x.com/nuttylmao", color: "#1DA1F2" },
+            { icon: DiscordIcon, href: "https://discordapp.com/invite/V4rvjrb", color: "#5865F2" },
+            { icon: Github, href: "https://github.com/nuttylmao", color: "#6e5494" },
+            { icon: PatreonIcon, href: "https://patreon.com/nuttylmao", color: "#FF424D" },
+        ],
+    },
+    {
+        name: "StreamUp",
+        logo: "https://github.com/StreamUPTips.png",
+        desc: "CodewithTD and Andi have teamed up with some other great creators to create a super team over there at stream up and is a great place for resources no longer how long you have been streaming.",
+        socials: [
+            { icon: Globe, href: "https://streamup.tips", color: "#3b82f6" },
+            { icon: Github, href: "https://github.com/StreamUPTips", color: "#6e5494" },
+        ],
+    },
+    {
+        name: "DigiVybe",
+        twitchHandle: "digivybe",
+        logo: "https://imgproxy.fourthwall.com/5CmsePd2Aox0eLf2wnR2xp4KdZLSooyC3nCVbTxK1D4/w:135/sm:1/enc/sgprsgvfxQFXzctI/ntIorUsRDHADeq6s/PE274mJtk7v9Vcis/woEo57w27UVhu1SN/DZWjUTi9LhAOEH5v/kUH5_dxMhl4Bswvl/AdnOoJWUdpbY72a4/lcv8EZV_Ckfs5OIE/ingsW-wBPhpEkw3i/bi_2i23te3fTFWCx/gsjjLp9v5FIzmuTY/3hOPAITjjNyNRALH/mb9h1mgMHfuveC-i/rLoh9bEB3wUTmbiN/tl9oGdIc0SCJ46yg/gI9k70gr_4fhapSj",
+        desc: "I only recently met this guy but he has great vibes, and hes an up and comer in the sb space like me and oozes quality with everything he does. I highly suggest checking him out.",
+        socials: [
+            { icon: Globe, href: "https://digivybe.xyz", color: "#3b82f6" },
+            { icon: Twitch, href: "https://twitch.tv/digivybe", color: "#9146FF" },
+            { icon: Youtube, href: "https://youtube.com/channel/UCEHU0kJbaevBhtTe5GphkXA", color: "#FF0000" },
+            { icon: XIcon, href: "https://x.com/DigiVybe", color: "#1DA1F2" },
+            { icon: Instagram, href: "https://instagram.com/DigiVybe", color: "#E4405F" },
+            { icon: ThreadsIcon, href: "https://threads.net/@DigiVybe", color: "#C13584" },
+            { icon: TikTokIcon, href: "https://www.tiktok.com/@digivybe", color: "#ff0050" },
+            { icon: BlueSkyIcon, href: "https://bsky.app/profile/digivybe.bsky.social", color: "#0085ff" },
+        ],
+    },
+    {
+        name: "Andilippi",
+        twitchHandle: "andilippi",
+        logo: "https://static-cdn.jtvnw.net/jtv_user_pictures/c12eceed-4ba5-49f3-86bd-9641678fb6b0-profile_image-70x70.png",
+        desc: "PLACEHOLDER — add description.",
+        socials: [
+            { icon: Globe, href: "https://doras.to/andi", color: "#3b82f6" },
+            { icon: Twitch, href: "https://www.twitch.tv/andilippi", color: "#9146FF" },
+            { icon: XIcon, href: "https://x.com/andi_stone", color: "#1DA1F2" },
+            { icon: Instagram, href: "https://www.instagram.com/andistonemedia", color: "#E4405F" },
+            { icon: BlueSkyIcon, href: "https://bsky.app/profile/andistonemedia.bsky.social", color: "#0085ff" },
+            { icon: ThreadsIcon, href: "https://www.threads.com/@andistonemedia", color: "#C13584" },
+            { icon: DiscordIcon, href: "https://discord.com/invite/cACrArM7jT", color: "#5865F2" },
+        ],
+    },
+    {
+        name: "CodeWithTD",
+        twitchHandle: "codewithtd",
+        logo: "https://static-cdn.jtvnw.net/jtv_user_pictures/4441aea3-94c5-48d5-aa9b-52e4c3d37e9b-profile_image-70x70.jpeg",
+        desc: "PLACEHOLDER — add description.",
+        socials: [
+            { icon: Globe, href: "https://doras.to/td", color: "#3b82f6" },
+            { icon: Twitch, href: "https://www.twitch.tv/codewithtd", color: "#9146FF" },
+            { icon: Youtube, href: "https://www.youtube.com/@terrierdarts", color: "#FF0000" },
+            { icon: KickIcon, href: "https://kick.com/codewithtd", color: "#53FC18" },
+            { icon: Globe, href: "https://terrierdarts.co.uk/en/home/", color: "#3b82f6" },
+            { icon: XIcon, href: "https://x.com/terrierdarts", color: "#1DA1F2" },
+            { icon: BlueSkyIcon, href: "https://bsky.app/profile/terrierdarts.co.uk", color: "#0085ff" },
+        ],
+    },
+    {
+        name: "OsuPhoenix",
+        twitchHandle: "osuphoenix",
+        logo: "https://static-cdn.jtvnw.net/jtv_user_pictures/2a814e73-2250-453d-9379-41e9fe175893-profile_image-70x70.png",
+        desc: "PLACEHOLDER — add description.",
+        socials: [
+            { icon: Globe, href: "https://osuphoenix.tv", color: "#3b82f6" },
+            { icon: Twitch, href: "https://www.twitch.tv/osuphoenix", color: "#9146FF" },
+            { icon: Youtube, href: "https://www.youtube.com/channel/UCo1TRXk-Swpk1UkKOzkSdPQ", color: "#FF0000" },
+            { icon: XIcon, href: "https://x.com/OSUPhoenix13", color: "#1DA1F2" },
+            { icon: Instagram, href: "https://www.instagram.com/osuphoenix13/", color: "#E4405F" },
+            { icon: TikTokIcon, href: "https://www.tiktok.com/@osuphoenix?lang=en", color: "#ff0050" },
+            { icon: FacebookIcon, href: "https://www.facebook.com/OSUPhoenix", color: "#1877F2" },
+            { icon: DiscordIcon, href: "https://discord.com/invite/TGPwXM7Kfv", color: "#5865F2" },
+        ],
+    },
+];
+
+const COMMUNITY: PersonData[] = [
+    {
+        name: "TattedTizzy",
+        twitchHandle: "tattedtizzy",
+        logo: "https://static-cdn.jtvnw.net/jtv_user_pictures/fe125636-01e9-4d7e-a088-f4354f0d7ab6-profile_image-70x70.png",
+        desc: "Incredibly entertaining streamer, a great friend and secretly my boyfriend...🙊",
+        socials: [
+            { icon: Twitch, href: "https://www.twitch.tv/tattedtizzy", color: "#9146FF" },
+            { icon: Youtube, href: "https://www.youtube.com/@TattedTizzy", color: "#FF0000" },
+            { icon: TikTokIcon, href: "https://www.tiktok.com/@tattedtizzy?lang=en", color: "#ff0050" },
+            { icon: Instagram, href: "https://www.instagram.com/tattedtizzy/", color: "#E4405F" },
+            { icon: XIcon, href: "https://twitter.com/TattedTizzy", color: "#1DA1F2" },
+            { icon: DiscordIcon, href: "https://discord.gg/JE3K6tR5EZ", color: "#5865F2" },
+            { icon: Gift, href: "https://throne.com/tattedtizzy", color: "#FF3F5F" },
+            { icon: Coffee, href: "https://ko-fi.com/tattedtizzy", color: "#FF5E5B" },
+        ],
+    },
+    {
+        name: "OkV1sual",
+        twitchHandle: "okv1sual",
+        logo: "https://static-cdn.jtvnw.net/jtv_user_pictures/e666e029-4976-4baf-a7c1-3a29b7e63468-profile_image-70x70.png",
+        desc: "My homie, my number one most collabed with streamer in 2025, an amazing artist and a wonderful friend.",
+        socials: [
+            { icon: Twitch, href: "https://www.twitch.tv/okv1sual", color: "#9146FF" },
+            { icon: ShoppingBag, href: "https://vis-npk-shop.fourthwall.com/", color: "#3b82f6" },
+            { icon: Youtube, href: "https://www.youtube.com/channel/UCkWw7bnOcXBdNgEKknbwmfg", color: "#FF0000" },
+            { icon: XIcon, href: "https://x.com/ok_v1sual", color: "#1DA1F2" },
+            { icon: DiscordIcon, href: "https://discord.gg/a5jkpbShfB", color: "#5865F2" },
+            { icon: Coffee, href: "https://streamelements.com/okv1sual/tip", color: "#FF5E5B" },
+        ],
+    },
+    {
+        name: "Archurro_27",
+        twitchHandle: "archurro_27",
+        logo: "https://static-cdn.jtvnw.net/jtv_user_pictures/7c76becf-61c4-4147-a04d-dea0f6368e77-profile_image-70x70.png",
+        desc: "Absolutely great dude and one of the most genuine people that I know with an incredible community.",
+        socials: [
+            { icon: Twitch, href: "https://www.twitch.tv/archurro_27", color: "#9146FF" },
+            { icon: Youtube, href: "https://www.youtube.com/@archurro9403", color: "#FF0000" },
+            { icon: Instagram, href: "https://www.instagram.com/archurro27/", color: "#E4405F" },
+            { icon: XIcon, href: "https://twitter.com/Churro_A69", color: "#1DA1F2" },
+            { icon: DiscordIcon, href: "https://discord.gg/FDVu8JBe", color: "#5865F2" },
+        ],
+    },
+    {
+        name: "LeftClickSnipe",
+        twitchHandle: "leftclicksnipe",
+        logo: "https://static-cdn.jtvnw.net/jtv_user_pictures/b984141b-9b35-48e3-b663-97384f44fce6-profile_image-70x70.png",
+        desc: "This will forever be an absolute homie of mine. Much love to you left, for everything.",
+        socials: [
+            { icon: Twitch, href: "https://www.twitch.tv/leftclicksnipe", color: "#9146FF" },
+            { icon: Instagram, href: "https://instagram.com/leftclicksnipe", color: "#E4405F" },
+            { icon: TikTokIcon, href: "https://tiktok.com/@leftclicksnipe", color: "#ff0050" },
+            { icon: Youtube, href: "https://www.youtube.com/channel/UC5Cov8XjjXhbgWQbS3fZTxg", color: "#FF0000" },
+            { icon: DiscordIcon, href: "https://discord.gg/sKcrhVaCh2", color: "#5865F2" },
+        ],
+    },
+    {
+        name: "MiltyTheGreat",
+        twitchHandle: "miltythegreat",
+        logo: "https://static-cdn.jtvnw.net/jtv_user_pictures/miltythegreat-profile_image-f768d57917f81863-70x70.png",
+        desc: "This man is incredibly knowledgable about streaming, tech, and so much more. In case you were wondering, milty was right. Also my supposed evil twin.",
+        socials: [
+            { icon: Twitch, href: "https://www.twitch.tv/miltythegreat", color: "#9146FF" },
+            { icon: Youtube, href: "https://www.youtube.com/@Milty_The_Great", color: "#FF0000" },
+            { icon: TikTokIcon, href: "https://www.tiktok.com/@miltythegreat", color: "#ff0050" },
+            { icon: XIcon, href: "https://twitter.com/MiltyTheGreat", color: "#1DA1F2" },
+            { icon: DiscordIcon, href: "https://discord.gg/2Hh3CZvVTh", color: "#5865F2" },
+        ],
+    },
+    {
+        name: "ImColeyMoley",
+        twitchHandle: "imcoleymoley",
+        logo: "https://static-cdn.jtvnw.net/jtv_user_pictures/be0c8034-5a0d-4251-a87f-428481188b6e-profile_image-70x70.png",
+        desc: "I might have spent more time in this mans stream than anyone else recently. Incredibly chill streams and usually laughs at my absolutely unhinged jokes. I cant wait for my relationship with him to continue to develop.",
+        socials: [
+            { icon: Twitch, href: "https://www.twitch.tv/imcoleymoley", color: "#9146FF" },
+            { icon: Youtube, href: "https://www.youtube.com/@ItsColeyMoley88", color: "#FF0000" },
+            { icon: DiscordIcon, href: "https://discord.gg/Vd6sK3s", color: "#5865F2" },
+        ],
+    },
+    {
+        name: "YoThatsCarter",
+        twitchHandle: "yothatscarter",
+        logo: "https://static-cdn.jtvnw.net/jtv_user_pictures/6ee8b67e-bccf-4362-a131-61b8ec60f316-profile_image-70x70.png",
+        desc: "PLACEHOLDER — add description.",
+        socials: [
+            { icon: Twitch, href: "https://www.twitch.tv/yothatscarter", color: "#9146FF" },
+            { icon: Youtube, href: "https://www.youtube.com/@yothatscarter", color: "#FF0000" },
+            { icon: TikTokIcon, href: "https://www.tiktok.com/@yothatscarter", color: "#ff0050" },
+            { icon: XIcon, href: "https://x.com/yothatscarter", color: "#1DA1F2" },
+            { icon: Instagram, href: "https://www.instagram.com/yothatscarter", color: "#E4405F" },
+        ],
+    },
+];
+
+function sortByLive(list: PersonData[], liveHandles: Set<string>): PersonData[] {
+    return [...list].sort((a, b) => {
+        const aLive = a.twitchHandle && liveHandles.has(a.twitchHandle) ? 1 : 0;
+        const bLive = b.twitchHandle && liveHandles.has(b.twitchHandle) ? 1 : 0;
+        return bLive - aLive;
+    });
+}
+
+// ---------------------------------------------------------------------------
+// Page
+// ---------------------------------------------------------------------------
+
 export function SupportPage() {
+    const [liveHandles, setLiveHandles] = React.useState<Set<string>>(new Set());
+
+    const handleLiveChange = React.useCallback((handle: string, live: boolean) => {
+        setLiveHandles(prev => {
+            const next = new Set(prev);
+            live ? next.add(handle) : next.delete(handle);
+            return next;
+        });
+    }, []);
+
+    const sortedInspirations = sortByLive(INSPIRATIONS, liveHandles);
+    const sortedCommunity = sortByLive(COMMUNITY, liveHandles);
+
     return (
-        <div className="flex flex-col gap-14 animate-in fade-in duration-500 pb-20">
+        <div className="flex flex-col gap-14 pb-20">
             {/* Manifesto Section */}
             <div className="flex flex-col gap-6 w-full">
                 <div className="flex items-center gap-3">
@@ -109,48 +434,12 @@ export function SupportPage() {
                 </div>
 
                 <div className="grid grid-cols-1 xl:grid-cols-3 gap-x-8 gap-y-4 w-full">
-                    <SocialRow
-                        icon={Coffee}
-                        label="Ko-fi"
-                        desc="Direct support to keep the tools running."
-                        href="https://ko-fi.com/melty1000"
-                        color="#FF5E5B"
-                    />
-                    <SocialRow
-                        icon={DiscordIcon}
-                        label="Discord"
-                        desc="Join Melty's community for help and updates."
-                        href="https://discord.gg/8EfuxXgVyT"
-                        color="#5865F2"
-                    />
-                    <SocialRow
-                        icon={Twitch}
-                        label="Twitch"
-                        desc="Watch development and gaming live."
-                        href="https://www.twitch.tv/melty1000"
-                        color="#9146FF"
-                    />
-                    <SocialRow
-                        icon={Youtube}
-                        label="YouTube"
-                        desc="Tutorials and project deep dives."
-                        href="https://www.youtube.com/@melty_1000"
-                        color="#FF0000"
-                    />
-                    <SocialRow
-                        icon={Github}
-                        label="GitHub"
-                        desc="View source code and other repositories."
-                        href="https://github.com/Melty1000"
-                        color="#6e5494"
-                    />
-                    <SocialRow
-                        icon={XIcon}
-                        label="X / Twitter"
-                        desc="Follow for the latest project news."
-                        href="https://x.com/Melty_1000"
-                        color="#1DA1F2"
-                    />
+                    <SocialRow icon={Coffee} label="Ko-fi" desc="Direct support to keep the tools running." href="https://ko-fi.com/melty1000" color="#FF5E5B" />
+                    <SocialRow icon={DiscordIcon} label="Discord" desc="Join Melty's community for help and updates." href="https://discord.gg/8EfuxXgVyT" color="#5865F2" />
+                    <SocialRow icon={Twitch} label="Twitch" desc="Watch development and gaming live." href="https://www.twitch.tv/melty1000" color="#9146FF" />
+                    <SocialRow icon={Youtube} label="YouTube" desc="Tutorials and project deep dives." href="https://www.youtube.com/@melty_1000" color="#FF0000" />
+                    <SocialRow icon={Github} label="GitHub" desc="View source code and other repositories." href="https://github.com/Melty1000" color="#6e5494" />
+                    <SocialRow icon={XIcon} label="X / Twitter" desc="Follow for the latest project news." href="https://x.com/Melty_1000" color="#1DA1F2" />
                 </div>
             </div>
 
@@ -174,237 +463,46 @@ export function SupportPage() {
                     </div>
 
                     <div className="grid grid-cols-1 xl:grid-cols-2 gap-x-12 gap-y-10 w-full">
-                        <InspirationRow
-                            name="Tawmae"
-                            logo="https://github.com/tawmae.png"
-                            desc="I cannot glaze this man enough. He is the reason i started building tools for Streamer.bot. Every single utility that he puts out is incredible and top notch. My entire style is 100% inspired by him. And though he doesnt know it, I could never thank him enough for what he has done for this entire community. If there is one person to check out from this list, I cannot suggest him enough."
-                            socials={[
-                                { icon: Globe, href: "https://tawmae.xyz/", color: "#3b82f6" },
-                                { icon: Twitch, href: "https://www.twitch.tv/tawmae", color: "#9146FF" },
-                                { icon: Youtube, href: "https://www.youtube.com/@tawmae", color: "#FF0000" },
-                                { icon: XIcon, href: "https://x.com/tawmaeXYZ", color: "#1DA1F2" },
-                                { icon: BlueSkyIcon, href: "https://bsky.app/profile/tawmae.xyz", color: "#0085ff" },
-                                { icon: DiscordIcon, href: "https://discord.com/invite/gEm5UMSvYs", color: "#5865F2" },
-                                { icon: Github, href: "https://github.com/tawmae", color: "#6e5494" },
-                                { icon: Coffee, href: "https://ko-fi.com/tawmae", color: "#FF5E5B" },
-                                { icon: PayPalIcon, href: "https://paypal.me/tawmae", color: "#003087" },
-                                { icon: SpotifyIcon, href: "https://open.spotify.com/user/ruw453b3m44bz9jpgjlv9tk6v?si=6e57242b3f464c57", color: "#1DB954" }
-                            ]}
-                        />
-                        <InspirationRow
-                            name="Pwnyy"
-                            logo="https://github.com/pwnyy.png"
-                            desc="I cant count the number of times ive been in a bind and pwnyy was immediately available in the official sb discord #general. Theres several of my projects that weather he knows it or not, would not exist without him."
-                            socials={[
-                                { icon: Globe, href: "https://doras.to/pwnyy", color: "#3b82f6" },
-                                { icon: DiscordIcon, href: "https://discord.com/invite/XFNRDmguzM", color: "#5865F2" },
-                                { icon: BlueSkyIcon, href: "https://bsky.app/profile/pwnyy.tv", color: "#0085ff" },
-                                { icon: Github, href: "https://github.com/pwnyy/Streamer.bot_Imports/tree/main", color: "#6e5494" },
-                                { icon: Coffee, href: "https://ko-fi.com/pwnyy", color: "#FF5E5B" }
-                            ]}
-                        />
-                        <InspirationRow
-                            name="GaelLevel"
-                            logo="/SB-ToolBox/assets/gael_level_pfp.png"
-                            desc="If you want to learn anything about asset/scene creation, Gael is the person to watch. He was the first creator that i really locked into and learned from. His tutorials are top-tier."
-                            socials={[
-                                { icon: Globe, href: "https://gaellevel.com", color: "#3b82f6" },
-                                { icon: Twitch, href: "https://www.twitch.tv/gaellevel", color: "#9146FF" },
-                                { icon: Youtube, href: "https://www.youtube.com/GaelLEVEL", color: "#FF0000" },
-                                { icon: XIcon, href: "https://x.com/Level_Photo/photo", color: "#1DA1F2" },
-                                { icon: ShoppingBag, href: "https://gaellevel.gumroad.com", color: "#ff90e8" }
-                            ]}
-                        />
-                        <InspirationRow
-                            name="WebMage"
-                            logo="https://github.com/Web-Mage.png"
-                            desc="Weather pwnyy is around in #general or not, this awesome dude is lurking in the shadows. Ive enjoyed our conversations and want you to know that I am extremely appreciative of everything you have done for this community."
-                            socials={[
-                                { icon: Twitch, href: "https://www.twitch.tv/web_mage", color: "#9146FF" },
-                                { icon: CodePenIcon, href: "https://codepen.io/Web_Mage", color: "#AE63E4" }
-                            ]}
-                        />
-                        <InspirationRow
-                            name="VRFlad"
-                            logo="https://static-cdn.jtvnw.net/jtv_user_pictures/06753b06-46ee-48e6-92fa-ad427e7eea2d-profile_image-70x70.png"
-                            desc="He doesnt output as much as he used to but if I diddnt add him here i would be leaving out a true pillar of the community."
-                            socials={[
-                                { icon: Globe, href: "https://vrflad.com", color: "#3b82f6" },
-                                { icon: Twitch, href: "https://www.twitch.tv/vrflad", color: "#9146FF" },
-                                { icon: Youtube, href: "https://www.youtube.com/@vrflad", color: "#FF0000" },
-                                { icon: XIcon, href: "https://x.com/VRFlad", color: "#1DA1F2" },
-                                { icon: Instagram, href: "https://www.instagram.com/VRFlad", color: "#E4405F" },
-                                { icon: CodePenIcon, href: "https://codepen.io/vrflad", color: "#AE63E4" }
-                            ]}
-                        />
-                        <InspirationRow
-                            name="GoWMan"
-                            logo="/SB-ToolBox/assets/gowman_pfp.png"
-                            desc="You might not see him in the discord near as much as some of these other folks, but hes an alien and who tf doesnt love aliens? I also enjoy hanging out in his streams ;)"
-                            socials={[
-                                { icon: Twitch, href: "https://www.twitch.tv/gowman", color: "#9146FF" },
-                                { icon: Youtube, href: "https://www.youtube.com/channel/UCaJX1z9GD7Dz3HnNlkeNJWQ", color: "#FF0000" },
-                                { icon: XIcon, href: "https://x.com/GoWMan_", color: "#1DA1F2" },
-                                { icon: TikTokIcon, href: "https://www.tiktok.com/@gowman_", color: "#ff0050" },
-                                { icon: BlueSkyIcon, href: "https://bsky.app/profile/alienwaifu.com", color: "#0085ff" },
-                                { icon: DiscordIcon, href: "https://discord.com/invite/84aFtrGrWe", color: "#5865F2" },
-                                { icon: CodePenIcon, href: "https://codepen.io/gowmantv", color: "#AE63E4" }
-                            ]}
-                        />
-                        <InspirationRow
-                            name="MustachedManiac"
-                            logo="https://github.com/Mustached-Maniac.png"
-                            desc="Real legend to allot of content creators for his spotify and ai chat plugins. The basis for my 1st 2nd 3rd project is due to him and his youtube tutorials."
-                            socials={[
-                                { icon: Globe, href: "https://mustachedmaniac.com/socials", color: "#3b82f6" },
-                                { icon: Twitch, href: "https://www.twitch.tv/mustached_maniac", color: "#9146FF" },
-                                { icon: Youtube, href: "https://www.youtube.com/@mustached_maniac", color: "#FF0000" },
-                                { icon: XIcon, href: "https://x.com/MustachedMan1ac", color: "#1DA1F2" },
-                                { icon: DiscordIcon, href: "https://discord.com/invite/n4k7vW7vRC", color: "#5865F2" },
-                                { icon: Coffee, href: "https://ko-fi.com/mustached_maniac/tip", color: "#FF5E5B" }
-                            ]}
-                        />
-                        <InspirationRow
-                            name="Nutty"
-                            logo="https://imgproxy.fourthwall.com/WSTKpmeQbr7HElolGXj3o27i6lfvx-r0f1JUOOJsbUM/w:40/sm:1/enc/AsDcwYLIVYXtqMOI/-J0gn4fPMCKphvSQ/UnUFID2fLXLJi-m9/-AM5XpdRn2K7H_WW/XdU2C-2VWb8GERI7/GEIeq0qYSsmRLcZe/JVqpBCxW3SV64CuX/JduguWX-DprgYN1k/w39L1v7NlerSFbAM/SPod2kNMThCbQYfe/SeMBCsduvzGU6P26/O3YhpDA2JhyOpIry/nlORSbBRbKdrteSa/6xVb2zWWrjVEjOOn/nSHBcgxgV00Yg7ru/txfSev9zP3UiigeK"
-                            desc="If you need help with move, or any other obs plugin, this is probably your guy. Ive used plenty of his projects and is probably the most well known of any of these guys. His youtube videos are super high quality."
-                            socials={[
-                                { icon: Globe, href: "https://nutty.gg", color: "#3b82f6" },
-                                { icon: Twitch, href: "https://twitch.tv/nutty", color: "#9146FF" },
-                                { icon: Youtube, href: "https://youtube.com/channel/UCI5t_ve3cr5a1_3rrmbp6jQ", color: "#FF0000" },
-                                { icon: XIcon, href: "https://x.com/nuttylmao", color: "#1DA1F2" },
-                                { icon: DiscordIcon, href: "https://discordapp.com/invite/V4rvjrb", color: "#5865F2" },
-                                { icon: Github, href: "https://github.com/nuttylmao", color: "#6e5494" },
-                                { icon: PatreonIcon, href: "https://patreon.com/nuttylmao", color: "#FF424D" }
-                            ]}
-                        />
-                        <InspirationRow
-                            name="StreamUp"
-                            logo="https://github.com/StreamUPTips.png"
-                            desc="CodewithTD and Andi have teamed up with some other great creators to create a super team over there at stream up and is a great place for resources no longer how long you have been streaming."
-                            socials={[
-                                { icon: Globe, href: "https://streamup.tips", color: "#3b82f6" },
-                                { icon: Github, href: "https://github.com/StreamUPTips", color: "#6e5494" }
-                            ]}
-                        />
-                        <InspirationRow
-                            name="DigiVybe"
-                            logo="https://imgproxy.fourthwall.com/5CmsePd2Aox0eLf2wnR2xp4KdZLSooyC3nCVbTxK1D4/w:135/sm:1/enc/sgprsgvfxQFXzctI/ntIorUsRDHADeq6s/PE274mJtk7v9Vcis/woEo57w27UVhu1SN/DZWjUTi9LhAOEH5v/kUH5_dxMhl4Bswvl/AdnOoJWUdpbY72a4/lcv8EZV_Ckfs5OIE/ingsW-wBPhpEkw3i/bi_2i23te3fTFWCx/gsjjLp9v5FIzmuTY/3hOPAITjjNyNRALH/mb9h1mgMHfuveC-i/rLoh9bEB3wUTmbiN/tl9oGdIc0SCJ46yg/gI9k70gr_4fhapSj"
-                            desc="I only recently met this guy but he has great vibes, and hes an up and comer in the sb space like me and oozes quality with everything he does. I highly suggest checking him out."
-                            socials={[
-                                { icon: Globe, href: "https://digivybe.xyz", color: "#3b82f6" },
-                                { icon: Twitch, href: "https://twitch.tv/digivybe", color: "#9146FF" },
-                                { icon: Youtube, href: "https://youtube.com/channel/UCEHU0kJbaevBhtTe5GphkXA", color: "#FF0000" },
-                                { icon: XIcon, href: "https://x.com/DigiVybe", color: "#1DA1F2" },
-                                { icon: Instagram, href: "https://instagram.com/DigiVybe", color: "#E4405F" },
-                                { icon: ThreadsIcon, href: "https://threads.net/@DigiVybe", color: "#C13584" },
-                                { icon: TikTokIcon, href: "https://www.tiktok.com/@digivybe", color: "#ff0050" },
-                                { icon: BlueSkyIcon, href: "https://bsky.app/profile/digivybe.bsky.social", color: "#0085ff" },
-                            ]}
-                        />
+                        {sortedInspirations.map(person => (
+                            <InspirationRow
+                                key={person.name}
+                                {...person}
+                                onLiveChange={handleLiveChange}
+                            />
+                        ))}
                     </div>
                 </div>
-            </div>
 
-            {/* Sub-group: My Little Community */}
-            <div className="flex flex-col gap-8 w-full pl-6 border-l border-melt-text-muted/10">
-                <div className="flex flex-col gap-4">
-                    <div className="flex items-center gap-3">
-                        <MessageSquare size={14} className="text-melt-accent" />
-                        <h3 className="text-[10px] font-black text-melt-text-label uppercase tracking-[0.2em]">MY LITTLE COMMUNITY</h3>
+                {/* Sub-group: My Little Community */}
+                <div className="flex flex-col gap-8 w-full pl-6 border-l border-melt-text-muted/10">
+                    <div className="flex flex-col gap-4">
+                        <div className="flex items-center gap-3">
+                            <MessageSquare size={14} className="text-melt-accent" />
+                            <h3 className="text-[10px] font-black text-melt-text-label uppercase tracking-[0.2em]">MY LITTLE COMMUNITY</h3>
+                        </div>
+                        <p className="text-[11px] font-mono text-melt-text-muted px-1 italic">
+                            These are some of my favorite people in the world. I love them all dearly.
+                        </p>
                     </div>
-                    <p className="text-[11px] font-mono text-melt-text-muted px-1 italic">
-                        These are some of my favorite people in the world. I love them all dearly.
-                    </p>
-                </div>
 
-                <div className="grid grid-cols-1 xl:grid-cols-2 gap-x-12 gap-y-10 w-full">
-                    <InspirationRow
-                        name="TattedTizzy"
-                        logo="https://static-cdn.jtvnw.net/jtv_user_pictures/fe125636-01e9-4d7e-a088-f4354f0d7ab6-profile_image-70x70.png"
-                        desc="Incredibly entertaining streamer, a great friend and secretly my boyfriend...🙊"
-                        socials={[
-                            { icon: Twitch, href: "https://www.twitch.tv/tattedtizzy", color: "#9146FF" },
-                            { icon: Youtube, href: "https://www.youtube.com/@TattedTizzy", color: "#FF0000" },
-                            { icon: TikTokIcon, href: "https://www.tiktok.com/@tattedtizzy?lang=en", color: "#ff0050" },
-                            { icon: Instagram, href: "https://www.instagram.com/tattedtizzy/", color: "#E4405F" },
-                            { icon: XIcon, href: "https://twitter.com/TattedTizzy", color: "#1DA1F2" },
-                            { icon: DiscordIcon, href: "https://discord.gg/JE3K6tR5EZ", color: "#5865F2" },
-                            { icon: Gift, href: "https://throne.com/tattedtizzy", color: "#FF3F5F" },
-                            { icon: Coffee, href: "https://ko-fi.com/tattedtizzy", color: "#FF5E5B" }
-                        ]}
-                        twitchHandle="tattedtizzy"
-                    />
-                    <InspirationRow
-                        name="OkV1sual"
-                        logo="https://static-cdn.jtvnw.net/jtv_user_pictures/e666e029-4976-4baf-a7c1-3a29b7e63468-profile_image-70x70.png"
-                        desc="My homie, my number one most collabed with streamer in 2025, an amazing artist and a wonderful friend."
-                        socials={[
-                            { icon: Twitch, href: "https://www.twitch.tv/okv1sual", color: "#9146FF" },
-                            { icon: ShoppingBag, href: "https://vis-npk-shop.fourthwall.com/", color: "#3b82f6" },
-                            { icon: Youtube, href: "https://www.youtube.com/channel/UCkWw7bnOcXBdNgEKknbwmfg", color: "#FF0000" },
-                            { icon: XIcon, href: "https://x.com/ok_v1sual", color: "#1DA1F2" },
-                            { icon: DiscordIcon, href: "https://discord.gg/a5jkpbShfB", color: "#5865F2" },
-                            { icon: Coffee, href: "https://streamelements.com/okv1sual/tip", color: "#FF5E5B" }
-                        ]}
-                        twitchHandle="okv1sual"
-                    />
-                    <InspirationRow
-                        name="Archurro_27"
-                        logo="https://static-cdn.jtvnw.net/jtv_user_pictures/7c76becf-61c4-4147-a04d-dea0f6368e77-profile_image-70x70.png"
-                        desc="Absolutely great dude and one of the most genuine people that I know with an incredible community."
-                        socials={[
-                            { icon: Twitch, href: "https://www.twitch.tv/archurro_27", color: "#9146FF" },
-                            { icon: Youtube, href: "https://www.youtube.com/@archurro9403", color: "#FF0000" },
-                            { icon: Instagram, href: "https://www.instagram.com/archurro27/", color: "#E4405F" },
-                            { icon: XIcon, href: "https://twitter.com/Churro_A69", color: "#1DA1F2" },
-                            { icon: DiscordIcon, href: "https://discord.gg/FDVu8JBe", color: "#5865F2" }
-                        ]}
-                        twitchHandle="archurro_27"
-                    />
-                    <InspirationRow
-                        name="LeftClickSnipe"
-                        logo="https://static-cdn.jtvnw.net/jtv_user_pictures/b984141b-9b35-48e3-b663-97384f44fce6-profile_image-70x70.png"
-                        desc="This will forever be an absolute homie of mine. Much love to you left, for everything."
-                        socials={[
-                            { icon: Twitch, href: "https://www.twitch.tv/leftclicksnipe", color: "#9146FF" },
-                            { icon: Instagram, href: "https://instagram.com/leftclicksnipe", color: "#E4405F" },
-                            { icon: TikTokIcon, href: "https://tiktok.com/@leftclicksnipe", color: "#ff0050" },
-                            { icon: Youtube, href: "https://www.youtube.com/channel/UC5Cov8XjjXhbgWQbS3fZTxg", color: "#FF0000" },
-                            { icon: DiscordIcon, href: "https://discord.gg/sKcrhVaCh2", color: "#5865F2" }
-                        ]}
-                        twitchHandle="leftclicksnipe"
-                    />
-                    <InspirationRow
-                        name="MiltyTheGreat"
-                        logo="https://static-cdn.jtvnw.net/jtv_user_pictures/miltythegreat-profile_image-f768d57917f81863-70x70.png"
-                        desc="This man is incredibly knowledgable about streaming, tech, and so much more. In case you were wondering, milty was right. Also my supposed evil twin."
-                        socials={[
-                            { icon: Twitch, href: "https://www.twitch.tv/miltythegreat", color: "#9146FF" },
-                            { icon: Youtube, href: "https://www.youtube.com/@Milty_The_Great", color: "#FF0000" },
-                            { icon: TikTokIcon, href: "https://www.tiktok.com/@miltythegreat", color: "#ff0050" },
-                            { icon: XIcon, href: "https://twitter.com/MiltyTheGreat", color: "#1DA1F2" },
-                            { icon: DiscordIcon, href: "https://discord.gg/2Hh3CZvVTh", color: "#5865F2" }
-                        ]}
-                        twitchHandle="miltythegreat"
-                    />
-                    <InspirationRow
-                        name="ImColeyMoley"
-                        logo="https://static-cdn.jtvnw.net/jtv_user_pictures/be0c8034-5a0d-4251-a87f-428481188b6e-profile_image-70x70.png"
-                        desc="I might have spent more time in this mans stream than anyone else recently. Incredibly chill streams and usually laughs at my absolutely unhinged jokes. I cant wait for my relationship with him to continue to develop."
-                        socials={[
-                            { icon: Twitch, href: "https://www.twitch.tv/imcoleymoley", color: "#9146FF" },
-                            { icon: Youtube, href: "https://www.youtube.com/@ItsColeyMoley88", color: "#FF0000" },
-                            { icon: DiscordIcon, href: "https://discord.gg/Vd6sK3s", color: "#5865F2" }
-                        ]}
-                        twitchHandle="imcoleymoley"
-                    />
+                    <div className="grid grid-cols-1 xl:grid-cols-2 gap-x-12 gap-y-10 w-full">
+                        {sortedCommunity.map(person => (
+                            <InspirationRow
+                                key={person.name}
+                                {...person}
+                                onLiveChange={handleLiveChange}
+                            />
+                        ))}
+                    </div>
                 </div>
             </div>
         </div>
-
     );
 }
+
+// ---------------------------------------------------------------------------
+// Sub-components
+// ---------------------------------------------------------------------------
 
 function SocialRow({ icon, label, desc, href, color }: any) {
     return (
@@ -425,7 +523,7 @@ function SocialRow({ icon, label, desc, href, color }: any) {
     );
 }
 
-function InspirationRow({ name, logo, desc, socials, twitchHandle }: any) {
+function InspirationRow({ name, logo, desc, socials, twitchHandle, onLiveChange }: PersonData & { onLiveChange?: (handle: string, live: boolean) => void }) {
     const [isLive, setIsLive] = React.useState(false);
 
     React.useEffect(() => {
@@ -433,42 +531,38 @@ function InspirationRow({ name, logo, desc, socials, twitchHandle }: any) {
 
         const checkLive = async () => {
             try {
-                // Determine if live by probing Twitch's public CDN thumbnail
-                // Live users return the image; offline users are redirected to a '404_preview' image.
-                const resp = await fetch(`https://static-cdn.jtvnw.net/previews-ttv/live_user_${twitchHandle.toLowerCase()}-440x248.jpg?t=${Date.now()}`, {
-                    method: 'GET',
-                    cache: 'no-cache',
-                });
-
-                if (resp.ok && !resp.url.includes('404_preview')) {
-                    setIsLive(true);
-                } else {
-                    setIsLive(false);
-                }
-            } catch (e) {
+                const resp = await fetch(
+                    `https://static-cdn.jtvnw.net/previews-ttv/live_user_${twitchHandle.toLowerCase()}-440x248.jpg?t=${Date.now()}`,
+                    { method: 'GET', cache: 'no-cache' }
+                );
+                const live = resp.ok && !resp.url.includes('404_preview');
+                setIsLive(live);
+                onLiveChange?.(twitchHandle, live);
+            } catch {
                 setIsLive(false);
+                onLiveChange?.(twitchHandle, false);
             }
         };
 
         checkLive();
-        const interval = setInterval(checkLive, 60000); // Check every minute
+        const interval = setInterval(checkLive, 60000);
         return () => clearInterval(interval);
     }, [twitchHandle]);
 
     return (
         <div className="flex flex-col md:flex-row gap-4 md:gap-6 group/inspiration w-full">
-            {/* Avatar / Logo - Standardized Industrial Circle */}
-            <div className={cn(
-                "relative w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center shrink-0",
-                isLive && "before:absolute before:inset-[-3px] before:rounded-full before:border-2 before:border-red-500 before:animate-pulse z-10"
-            )}>
+            {/* Avatar / Logo */}
+            <a
+                href={isLive && twitchHandle ? `https://www.twitch.tv/${twitchHandle}` : undefined}
+                target={isLive ? "_blank" : undefined}
+                rel={isLive ? "noopener noreferrer" : undefined}
+                className={cn(
+                    "relative w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center shrink-0",
+                    isLive && "before:absolute before:inset-[-3px] before:rounded-full before:border-2 before:border-red-500 before:animate-pulse z-10 cursor-pointer"
+                )}>
                 <div className="w-full h-full rounded-full bg-melt-text-muted/5 border border-melt-text-muted/10 flex items-center justify-center shrink-0 overflow-hidden group-hover/inspiration:border-melt-accent/30 transition-all duration-500 shadow-[0_0_0_1px_rgba(255,255,255,0.01)] relative">
                     {logo ? (
-                        <img
-                            src={logo}
-                            alt={name}
-                            className="w-full h-full object-cover group-hover/inspiration:opacity-100 transition-opacity"
-                        />
+                        <img src={logo} alt={name} className="w-full h-full object-cover group-hover/inspiration:opacity-100 transition-opacity" />
                     ) : (
                         <div className="text-[7px] font-black opacity-10 uppercase tracking-tighter">HEX</div>
                     )}
@@ -478,29 +572,29 @@ function InspirationRow({ name, logo, desc, socials, twitchHandle }: any) {
                         LIVE
                     </div>
                 )}
-            </div>
+            </a>
 
             {/* Descriptor */}
             <div className="flex-1 flex flex-col gap-1 min-w-0">
-                <span className="text-[10px] font-black text-melt-text-label uppercase tracking-widest group-hover/inspiration:text-melt-accent transition-colors duration-300">{String(name)}</span>
+                <a
+                    href={isLive && twitchHandle ? `https://www.twitch.tv/${twitchHandle}` : undefined}
+                    target={isLive ? "_blank" : undefined}
+                    rel={isLive ? "noopener noreferrer" : undefined}
+                    className={cn(
+                        "text-[10px] font-black text-melt-text-label uppercase tracking-widest group-hover/inspiration:text-melt-accent transition-colors duration-300",
+                        isLive && "cursor-pointer hover:text-red-400"
+                    )}
+                >{String(name)}</a>
                 <p className="text-[11px] font-mono text-melt-text-label leading-relaxed group-hover/inspiration:text-melt-text-body transition-opacity">
                     {String(desc)}
                 </p>
             </div>
 
-            {/* Socials - Compact Action Strips */}
-            <div className="flex flex-wrap gap-2 w-full md:w-auto md:max-w-[170px] shrink-0 justify-start md:justify-end items-center mt-2 md:mt-0">
-                {socials.map((social: any, i: number) => {
-                    const Icon = social.icon;
-                    return (
-                        <InspirationSocialBtn
-                            key={i}
-                            icon={Icon}
-                            href={social.href}
-                            brandColor={social.color}
-                        />
-                    );
-                })}
+            {/* Socials */}
+            <div className="flex flex-wrap content-start gap-2 w-full md:w-auto md:max-w-[215px] shrink-0 justify-start md:justify-end items-center mt-2 md:mt-0">
+                {socials.map((social, i) => (
+                    <InspirationSocialBtn key={i} icon={social.icon} href={social.href} brandColor={social.color} />
+                ))}
             </div>
         </div>
     );

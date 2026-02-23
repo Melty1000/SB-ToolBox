@@ -19,7 +19,7 @@ import { SBEditor } from '@/components/editor/SBEditor';
 
 export function HelpPage() {
     return (
-        <div className="flex flex-col gap-10 animate-in fade-in duration-500 pb-20">
+        <div className="flex flex-col gap-10 pb-20">
 
             {/* PAGE HEADER */}
             <div className="flex flex-col gap-4 px-2 pt-0">

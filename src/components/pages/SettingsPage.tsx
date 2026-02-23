@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { Palette, Check, History, ChevronDown, RefreshCw, Download } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { CHANGELOG } from '@/lib/changelog';
 
 export function SettingsPage() {
     const [config, setConfig] = useState({
@@ -61,7 +62,7 @@ export function SettingsPage() {
     };
 
     return (
-        <div className="flex flex-col gap-14 animate-in fade-in duration-500 pb-20">
+        <div className="flex flex-col gap-14 pb-20">
 
             {/* THEME SECTION */}
             <div className="flex flex-col gap-8 w-full">
@@ -196,19 +197,15 @@ export function SettingsPage() {
                 </div>
 
                 <div className="w-full flex flex-col gap-2">
-                    <ChangelogItem
-                        version="V0.1 ALPHA"
-                        date="2026-02-10"
-                        changes={[
-                            "Renamed application to 'SB Toolbox'",
-                            "Fixed window layout regression (Logo/Title sync)",
-                            "Added 'Zombie Process' prevention (Hard exit)",
-                            "Added 100ms Sidebar hover delay",
-                            "Refined Theme Selection UI",
-                            "Fixed tab animation clip bug"
-                        ]}
-                        isLatest
-                    />
+                    {CHANGELOG.map((entry, i) => (
+                        <ChangelogItem
+                            key={entry.version}
+                            version={entry.version}
+                            date={entry.date}
+                            changes={entry.changes}
+                            isLatest={i === 0}
+                        />
+                    ))}
                 </div>
             </div>
         </div>

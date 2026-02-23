@@ -47,7 +47,7 @@ export function HistoryPage({ onRestore }: HistoryPageProps) {
     };
 
     return (
-        <div className="flex flex-col gap-6 animate-in fade-in duration-500 pb-20">
+        <div className="flex flex-col gap-6 pb-20">
             {/* Header / Actions */}
             <div className="flex items-center justify-between px-2">
                 <div className="flex items-center gap-3">

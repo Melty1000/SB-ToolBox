@@ -1,9 +1,6 @@
 "use client";
 
-import React, { useState, useRef, useMemo, useEffect } from 'react';
-import { useGSAP } from '@gsap/react';
-import gsap from 'gsap';
-import { Flip } from 'gsap/all';
+import React, { useState, useEffect } from 'react';
 import {
     FolderOpen,
     Archive,
@@ -102,7 +99,7 @@ export const MeltShell: React.FC<MeltShellProps> = ({ children, activePage = 'de
             >
                 <div className="logo-container h-12 w-full relative grid place-items-center overflow-visible">
                     <img
-                        src="/SB-ToolBox/assets/logo-collapsed.svg"
+                        src={`${process.env.NEXT_PUBLIC_BASE_PATH || ''}/assets/logo-collapsed.svg`}
                         alt="Mascot"
                         className="w-12 h-12 logo-main object-contain z-20 opacity-100"
                         style={{ gridArea: '1/1', transform: 'rotate(0deg)' }}
@@ -111,7 +108,7 @@ export const MeltShell: React.FC<MeltShellProps> = ({ children, activePage = 'de
                         {...({ fetchPriority: "high" } as any)}
                     />
                     <img
-                        src="/SB-ToolBox/assets/streamerbot-logo.svg"
+                        src={`${process.env.NEXT_PUBLIC_BASE_PATH || ''}/assets/streamerbot-logo.svg`}
                         alt="Links"
                         className="h-11 w-auto logo-reveal object-contain z-10 opacity-0"
                         style={{ gridArea: '1/1', transform: 'rotate(0deg)', opacity: 0 }}
@@ -167,10 +164,10 @@ export const MeltShell: React.FC<MeltShellProps> = ({ children, activePage = 'de
                     <div className="h-px w-full bg-melt-text-muted/10 mb-2 opacity-30" />
                     <div className="h-3 w-full relative version-container overflow-visible">
                         <div className="absolute inset-x-0 top-0 text-label-2xs text-melt-text-muted tracking-widest text-center whitespace-nowrap version-compact">
-                            V0.1
+                            V{process.env.NEXT_PUBLIC_APP_VERSION}
                         </div>
                         <div className="absolute inset-x-0 top-0 text-label-2xs text-melt-text-muted tracking-widest text-center whitespace-nowrap version-expanded opacity-0">
-                            V0.1 ALPHA
+                            V{process.env.NEXT_PUBLIC_APP_VERSION} ALPHA
                         </div>
                     </div>
                 </div>
@@ -305,8 +302,6 @@ const NavItem = ({ icon: Icon, label, active, isExpanded, onClick, id, hasBadge 
 );
 
 const PageHeader = ({ activePage }: { activePage: string }) => {
-    const headerRef = useRef<HTMLDivElement>(null);
-
     const pageData: any = {
         decoder: {
             title: "STREAMER.BOT EXPORT STRINGS & FILES",
@@ -336,16 +331,9 @@ const PageHeader = ({ activePage }: { activePage: string }) => {
 
     const current = pageData[activePage] || pageData.decoder;
 
-    useGSAP(() => {
-        gsap.fromTo(headerRef.current,
-            { opacity: 0, y: -10 },
-            { opacity: 1, y: 0, duration: 0.8, ease: "power3.out", delay: 0.1, overwrite: "auto" }
-        );
-    }, { dependencies: [activePage] });
 
     return (
         <header
-            ref={headerRef}
             className="flex items-center gap-4 w-full px-10 pt-8 pb-4 shrink-0"
         >
             <div className="h-[1px] flex-1 bg-melt-text-muted/10" />

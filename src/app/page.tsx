@@ -15,14 +15,14 @@ export default function Home() {
 
     const handleRestore = (type: 'decode' | 'encode', data: string) => {
         setRestoreData({ type, data });
-        // Fix: Map history type (verb) to page id (noun)
-        const pageId = type === 'decode' ? 'decoder' : 'encoder';
-        setActivePage(pageId);
+        // Both encode and decode history items store an SB import string as rawString,
+        // so always restore to the decoder.
+        setActivePage('decoder');
     };
 
     const renderPage = () => {
         switch (activePage) {
-            case 'decoder': return <DecoderPage key={restoreData?.data} initialValue={restoreData?.type === 'decode' ? restoreData.data : undefined} />;
+            case 'decoder': return <DecoderPage key={restoreData?.data} initialValue={restoreData?.data} />;
             case 'encoder': return <EncoderPage key={restoreData?.data} initialValue={restoreData?.type === 'encode' ? restoreData.data : undefined} />;
             case 'history': return <HistoryPage onRestore={handleRestore} />;
             case 'help': return <HelpPage />;

@@ -81,10 +81,16 @@ export const SBEditor: React.FC<SBEditorProps> = ({ value, language, onChange, r
                         'editorGutter.background': '#00000000',
                         'editorLineNumber.foreground': getHex(MELT_TYPOGRAPHY.muted),
                         'editorLineNumber.activeForeground': getHex(MELT_TYPOGRAPHY.label),
-                        'editor.lineHighlightBackground': `${config.surface || '#18181b'}33`,
+                        'editor.lineHighlightBackground': '#00000000',
+                        'editor.lineHighlightBorder': '#00000000',
                         'editor.selectionBackground': `${accent.main}44`,
                         'editor.wordHighlightBackground': `${accent.main}22`,
-                        'editorBracketMatch.border': getHex(accent.main),
+                        'editor.wordHighlightBorder': '#00000000',
+                        'editor.wordHighlightStrongBorder': '#00000000',
+                        'editor.selectionHighlightBackground': '#00000000',
+                        'editor.selectionHighlightBorder': '#00000000',
+                        'editorBracketMatch.background': '#00000000',
+                        'editorBracketMatch.border': '#00000000',
                     }
                 });
             } catch (err) {
@@ -149,6 +155,19 @@ export const SBEditor: React.FC<SBEditorProps> = ({ value, language, onChange, r
             }
         });
 
+        // Kill focus ring on the inputarea directly — CSS alone doesn't reliably
+        // suppress :focus-visible in Electron 40 / Chromium 130
+        const domNode = editor.getDomNode();
+        if (domNode) {
+            const inputArea = domNode.querySelector('.inputarea') as HTMLElement;
+            if (inputArea) {
+                inputArea.style.setProperty('outline', '0', 'important');
+                inputArea.style.setProperty('outline-offset', '0', 'important');
+                inputArea.style.setProperty('border', 'none', 'important');
+                inputArea.style.setProperty('box-shadow', 'none', 'important');
+            }
+        }
+
         // REVEAL: 150ms delay masks the pink/blue default syntax frames
         setTimeout(() => {
             if (!isActuallyUnmounted.current && !hasRevealed.current) {
@@ -200,13 +219,20 @@ export const SBEditor: React.FC<SBEditorProps> = ({ value, language, onChange, r
             className={`w-full h-full overflow-hidden bg-transparent relative transition-all duration-500 ${isReady ? 'opacity-100 visible' : 'opacity-0 invisible'}`}
         >
             <style jsx global>{`
-                .monaco-editor, 
-                .monaco-editor .margin, 
+                .monaco-editor,
+                .monaco-editor .margin,
                 .monaco-editor .monaco-scrollable-element,
                 .monaco-editor.focused {
                     outline: none !important;
                     border: none !important;
                     box-shadow: none !important;
+                }
+                .monaco-editor .inputarea,
+                .monaco-editor .inputarea.ime-input {
+                    outline: none !important;
+                    border: none !important;
+                    box-shadow: none !important;
+                    -webkit-appearance: none !important;
                 }
                 .monaco-editor .cursor {
                     display: ${readOnly ? 'none' : 'block'} !important;
@@ -234,6 +260,7 @@ export const SBEditor: React.FC<SBEditorProps> = ({ value, language, onChange, r
                     scrollBeyondLastLine: false,
                     padding: { top: 12, bottom: 12 },
                     renderLineHighlight: 'none',
+                    renderValidationDecorations: 'off',
                     automaticLayout: true,
                     stickyScroll: { enabled: false },
                     scrollbar: {
@@ -252,9 +279,9 @@ export const SBEditor: React.FC<SBEditorProps> = ({ value, language, onChange, r
                     folding: false,
                     guides: { indentation: false },
                     contextmenu: false,
-                    selectionHighlight: !readOnly,
-                    occurrencesHighlight: readOnly ? 'off' : 'singleFile',
-                    matchBrackets: readOnly ? 'never' : 'always',
+                    selectionHighlight: false,
+                    occurrencesHighlight: 'off',
+                    matchBrackets: 'never',
                     links: !readOnly,
                     renderCursorInReadOnly: false,
                     quickSuggestions: !readOnly,

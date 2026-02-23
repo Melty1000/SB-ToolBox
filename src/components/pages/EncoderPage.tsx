@@ -173,6 +173,8 @@ export function EncoderPage({ initialValue }: { initialValue?: string }) {
     const [result, setResult] = useState<string>('');
     const [encodingMode, setEncodingMode] = useState<'file' | 'string' | null>(null);
     const [isDraggingJson, setIsDraggingJson] = useState(false);
+    const [isHoveringJson, setIsHoveringJson] = useState(false);
+    const [isHoveringScripts, setIsHoveringScripts] = useState(false);
     const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
     const resultRef = useRef<HTMLDivElement>(null);
 
@@ -413,9 +415,11 @@ export function EncoderPage({ initialValue }: { initialValue?: string }) {
                     </div>
                     <div
                         className={cn(
-                            "relative group transition-all duration-300 h-[600px] border-b border-transparent hover:border-b-melt-accent/50 focus-within:border-b-melt-accent/50",
-                            isDraggingJson && "border-b-melt-accent/50"
+                            "relative group transition-all duration-300 h-[600px] border-b",
+                            (isHoveringJson || isDraggingJson) ? "border-melt-accent/50" : "border-transparent"
                         )}
+                        onMouseEnter={() => setIsHoveringJson(true)}
+                        onMouseLeave={() => setIsHoveringJson(false)}
                         onDragOver={handleJsonDragOver}
                         onDragLeave={handleJsonDragLeave}
                         onDrop={handleJsonDrop}
@@ -449,12 +453,14 @@ export function EncoderPage({ initialValue }: { initialValue?: string }) {
                     </div>
 
                     <div
+                        onMouseEnter={() => setIsHoveringScripts(true)}
+                        onMouseLeave={() => setIsHoveringScripts(false)}
                         onDragOver={handleScriptDragOver}
                         onDragLeave={handleScriptDragLeave}
                         onDrop={handleScriptDrop}
                         className={cn(
-                            "relative group transition-all duration-700 ease-in-out flex flex-col border-b border-transparent hover:border-b-melt-accent/50 h-[600px] overflow-y-auto custom-scrollbar",
-                            isDraggingScripts && "border-b-melt-accent/50"
+                            "relative group transition-all duration-700 ease-in-out flex flex-col border-b h-[600px] overflow-y-auto custom-scrollbar",
+                            (isHoveringScripts || isDraggingScripts) ? "border-melt-accent/50" : "border-transparent"
                         )}
                     >
                         {Object.keys(scripts).length === 0 ? (
@@ -493,7 +499,7 @@ export function EncoderPage({ initialValue }: { initialValue?: string }) {
             {(jsonTemplate && Object.keys(scripts).length > 0) && (
                 <MeltPortal hostId="melt-footer-host">
                     <div
-                        className="absolute bottom-10 left-0 right-0 z-[100] px-10 pointer-events-none"
+                        className="absolute bottom-10 left-0 right-0 z-[100] px-10 pointer-events-none bg-melt-surface"
                     >
                         <div className="relative w-full animate-in fade-in slide-in-from-top-4 duration-500 pointer-events-auto">
                             <div className="flex flex-col lg:flex-row items-center justify-between w-full min-h-[52px] gap-6 lg:gap-0 py-4 lg:py-0">
@@ -540,7 +546,7 @@ export function EncoderPage({ initialValue }: { initialValue?: string }) {
                         </div>
                         <button
                             onClick={handleCopy}
-                            className="flex items-center gap-1.5 group/copy px-0 py-1 transition-all duration-700 ease-in-out border-b border-transparent hover:border-melt-accent"
+                            className="flex items-center gap-1.5 group/copy px-0 py-1 transition-all duration-700 ease-in-out border-b border-transparent hover:border-melt-accent/50"
                         >
                             <span className="text-[9px] font-mono font-black text-melt-text-muted/60 group-hover/copy:text-melt-accent uppercase tracking-[0.2em] transition-colors">COPY EXPORT STRING</span>
                             <Copy size={11} className="text-melt-text-muted/40 group-hover/copy:text-melt-accent/60 transition-colors" />

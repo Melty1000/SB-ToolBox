@@ -41,19 +41,9 @@ export const useMeltSidebar = (activePage?: string) => {
         return () => ctx.revert();
     }, { scope: shellRef });
 
-    // 2. PHASE TWO: Navigation Controller (activePage ONLY)
-    useEffect(() => {
-        if (!shellRef.current) return;
-        const viewport = shellRef.current.querySelector('#page-transition-wrapper');
-        if (viewport) {
-            gsap.fromTo(viewport,
-                { y: 10, autoAlpha: 0, rotation: 0.5, scale: 0.98 },
-                { y: 0, autoAlpha: 1, rotation: 0, scale: 1, duration: 0.5, ease: "power2.out", overwrite: 'auto' }
-            );
-        }
-    }, [activePage]);
 
     const isFirstMount = useRef(true);
+    const prevIsExpanded = useRef(false);
 
     // 3. PHASE THREE: Liquid Interaction & Precision Morph
     // useGSAP = useLayoutEffect = Run BEFORE paint. Syncs hydration instantly.
@@ -67,7 +57,11 @@ export const useMeltSidebar = (activePage?: string) => {
         const navIds = ['decoder', 'encoder', 'history', 'help', 'support', 'settings'];
         const activeIndex = navIds.indexOf(activePage || 'decoder');
 
-        // Selection Drip (Synchronized Elastic Drift)
+        // Track whether the expand state actually changed vs. only activePage changed
+        const expandedChanged = prevIsExpanded.current !== isExpanded;
+        prevIsExpanded.current = isExpanded;
+
+        // Selection Drip (Synchronized Elastic Drift) — always update on any change
         if (selectionDrip && activeIndex !== -1) {
             if (isFirstMount.current) {
                 gsap.set(selectionDrip, { y: activeIndex * 44, autoAlpha: 1 });
@@ -85,9 +79,13 @@ export const useMeltSidebar = (activePage?: string) => {
         }
 
         if (isExpanded) {
-            tl.current.timeScale(1).play();
+            // Only play the expand timeline when actually transitioning to expanded,
+            // not on every activePage change while already expanded.
+            if (expandedChanged || isFirstMount.current) {
+                tl.current.timeScale(1).play();
+            }
 
-            // Icons Morph to Action-Style stacked layout
+            // Icons Morph to Action-Style stacked layout — always update for active state
             icons.forEach((icon, i) => {
                 const isActive = i === activeIndex;
                 const targetScale = isActive ? 2.5 : 2.25;
@@ -133,42 +131,61 @@ export const useMeltSidebar = (activePage?: string) => {
                 }
             });
 
-            // Smart Label Reveal: Falling from top + stagger
-            items.forEach((item, i) => {
-                const text = item.querySelector('.nav-text');
-                const isHovered = (item as HTMLElement).matches(':hover');
-                const isActive = i === activeIndex;
-
-                // Only hide text if hovered AND NOT active (Active item text should stay visible)
-                const shouldHideText = isHovered && !isActive;
-
+            // Always reveal active item text (handles click-while-hovered losing text)
+            if (activeIndex !== -1) {
+                const activeText = items[activeIndex]?.querySelector('.nav-text');
                 if (isFirstMount.current) {
-                    gsap.set(text, {
-                        autoAlpha: shouldHideText ? 0 : 1,
-                        x: 0,
-                        y: -6,
-                        visibility: shouldHideText ? 'hidden' : 'visible'
-                    });
+                    gsap.set(activeText, { autoAlpha: 1, y: -6, visibility: 'visible' });
                 } else {
-                    gsap.fromTo(text,
-                        { autoAlpha: 0, x: 0, y: -30 },
-                        {
-                            autoAlpha: shouldHideText ? 0 : 1, // Focused area stays text-free only if inactive
+                    gsap.to(activeText, {
+                        autoAlpha: 1,
+                        y: -6,
+                        duration: 0.4,
+                        ease: MELT_CONSTANTS.ANIMATION.SMOOTH_EASE,
+                        overwrite: true
+                    });
+                }
+            }
+
+            // Smart Label Reveal — only replay on true expand transition, not page nav
+            if (expandedChanged || isFirstMount.current) {
+                items.forEach((item, i) => {
+                    const text = item.querySelector('.nav-text');
+                    const isHovered = (item as HTMLElement).matches(':hover');
+                    const isActive = i === activeIndex;
+
+                    // Only hide text if hovered AND NOT active (Active item text should stay visible)
+                    const shouldHideText = isHovered && !isActive;
+
+                    if (isFirstMount.current) {
+                        gsap.set(text, {
+                            autoAlpha: shouldHideText ? 0 : 1,
                             x: 0,
                             y: -6,
-                            visibility: 'visible',
-                            duration: MELT_CONSTANTS.ANIMATION.TEXT_DURATION_EXPAND,
-                            delay: 0, // No stagger, instant feel
-                            overwrite: true,
-                            ease: "back.out(1.5)" // Catchy entry
-                        }
-                    );
-                }
-            });
+                            visibility: shouldHideText ? 'hidden' : 'visible'
+                        });
+                    } else {
+                        gsap.fromTo(text,
+                            { autoAlpha: 0, x: 0, y: -30 },
+                            {
+                                autoAlpha: shouldHideText ? 0 : 1,
+                                x: 0,
+                                y: -6,
+                                visibility: 'visible',
+                                duration: MELT_CONSTANTS.ANIMATION.TEXT_DURATION_EXPAND,
+                                delay: 0,
+                                overwrite: true,
+                                ease: "back.out(1.5)"
+                            }
+                        );
+                    }
+                });
+            }
 
+            // Mouse handlers always re-register — activeIndex may have changed on page nav
             items.forEach((item, i) => {
                 (item as HTMLElement).onmouseenter = () => {
-                    // Active item is already "Popped Out" (Scale 2.5). 
+                    // Active item is already "Popped Out" (Scale 2.5).
                     // Do not apply Bounce (Scale 1.6) or hide text.
                     if (i === activeIndex) return;
 
@@ -210,9 +227,12 @@ export const useMeltSidebar = (activePage?: string) => {
             });
 
         } else {
-            tl.current.timeScale(MELT_CONSTANTS.ANIMATION.UNHOVER_SPEED).reverse();
+            // Only reverse the timeline on true collapse transition, not page nav
+            if (expandedChanged || isFirstMount.current) {
+                tl.current.timeScale(MELT_CONSTANTS.ANIMATION.UNHOVER_SPEED).reverse();
+            }
 
-            // Icons restore to Collapsed layout
+            // Icons restore to Collapsed layout — always update for active state
             icons.forEach((icon, i) => {
                 const isActive = i === activeIndex;
                 const targetRotation = isActive ? -10 : 0;
@@ -221,14 +241,8 @@ export const useMeltSidebar = (activePage?: string) => {
 
                 if (isFirstMount.current) {
                     gsap.set(icon, { x: 0, y: 0, rotation: targetRotation, scale: targetScale, force3D: false });
-                    // Reset overflow on mount if needed
                     if (parentItem) gsap.set(parentItem, { overflow: 'hidden' });
                 } else {
-                    // For active item collapsing: Keep visible until done? 
-                    // No, usually shrinking back to center is safe to clip immediately?
-                    // Actually, if we were popped out, and we shrink, we want to tuck back in.
-                    // Safe bet: ensure hidden at end.
-
                     gsap.to(icon, {
                         x: 0,
                         y: 0,
@@ -245,23 +259,25 @@ export const useMeltSidebar = (activePage?: string) => {
                 }
             });
 
-            // Ensure text is correctly hidden without clearing props
-            if (isFirstMount.current) {
-                gsap.set('.nav-text', { autoAlpha: 0, x: 20, visibility: 'hidden' });
-            } else {
-                gsap.to('.nav-text', {
-                    autoAlpha: 0,
-                    x: 20,
-                    visibility: 'hidden',
-                    duration: 0.3,
-                    overwrite: true
+            // Text hide and handler teardown — only on true collapse transition
+            if (expandedChanged || isFirstMount.current) {
+                if (isFirstMount.current) {
+                    gsap.set('.nav-text', { autoAlpha: 0, x: 20, visibility: 'hidden' });
+                } else {
+                    gsap.to('.nav-text', {
+                        autoAlpha: 0,
+                        x: 20,
+                        visibility: 'hidden',
+                        duration: 0.3,
+                        overwrite: true
+                    });
+                }
+
+                items.forEach(item => {
+                    (item as HTMLElement).onmouseenter = null;
+                    (item as HTMLElement).onmouseleave = null;
                 });
             }
-
-            items.forEach(item => {
-                (item as HTMLElement).onmouseenter = null;
-                (item as HTMLElement).onmouseleave = null;
-            });
         }
 
         // Finalize Mount Lifecycle

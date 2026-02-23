@@ -1,14 +1,15 @@
 {
   "name": "sb-toolbox",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "private": true,
   "main": "dist/main.js",
   "scripts": {
     "dev": "next dev --webpack -p 3001",
     "dev:electron": "concurrently -k \"next dev --webpack -p 3001\" \"wait-on http://localhost:3001 && electron .\"",
-    "build": "npm run build:main && npm run build:renderer",
+    "build": "npm run build:main && npm run build:renderer:electron",
     "build:main": "tsup electron/main.ts electron/preload.ts --format cjs --out-dir dist --clean --external electron",
     "build:renderer": "next build",
+    "build:renderer:electron": "cross-env ELECTRON_BUILD=1 next build",
     "deploy": "npm run build:renderer && gh-pages -d out -t --nojekyll",
     "dist": "npm run build && electron-builder",
     "start": "next start",
@@ -21,17 +22,23 @@
       "dist/**/*",
       "out/**/*"
     ],
+    "extraResources": [
+      {
+        "from": "public/assets/icon-512.png",
+        "to": "icon.png"
+      }
+    ],
     "directories": {
       "output": "dist"
     },
     "win": {
       "target": [
-        "portable",
-        "zip"
+        "nsis",
+        "portable"
       ],
-      "icon": "build/icon.png"
+      "icon": "public/assets/icon-512.png"
     },
-    "icon": "build/icon.png"
+    "icon": "public/assets/icon-512.png"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",
@@ -61,6 +68,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "concurrently": "^9.2.1",
+    "cross-env": "^10.1.0",
     "electron": "^40.0.0",
     "electron-builder": "^26.7.0",
     "eslint": "^9",
