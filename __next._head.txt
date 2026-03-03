@@ -1,0 +1,6 @@
+1:"$Sreact.fragment"
+2:I[96712,["/SB-ToolBox/_next/static/chunks/26458daecd47be0a.js"],"ViewportBoundary"]
+3:I[96712,["/SB-ToolBox/_next/static/chunks/26458daecd47be0a.js"],"MetadataBoundary"]
+4:"$Sreact.suspense"
+5:I[35520,["/SB-ToolBox/_next/static/chunks/26458daecd47be0a.js"],"IconMark"]
+0:{"buildId":"Vm7JTnaoHr_gpzbY8hnB0","rsc":["$","$1","h",{"children":[null,["$","$L2",null,{"children":[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1"}]]}],["$","div",null,{"hidden":true,"children":["$","$L3",null,{"children":["$","$4",null,{"name":"Next.Metadata","children":[["$","title","0",{"children":"SB ToolBox // DECODER"}],["$","meta","1",{"name":"description","content":"Modern Streamer.bot export tool"}],["$","link","2",{"rel":"shortcut icon","href":"/SB-ToolBox/assets/icon.png"}],["$","link","3",{"rel":"icon","href":"/SB-ToolBox/assets/icon.png"}],["$","link","4",{"rel":"apple-touch-icon","href":"/SB-ToolBox/assets/icon.png"}],["$","$L5","5",{}]]}]}]}],null]}],"loading":null,"isPartial":false}
