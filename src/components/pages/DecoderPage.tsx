@@ -279,7 +279,7 @@ export function DecoderPage({ initialValue }: { initialValue?: string }) {
                 <div
                     className={cn(
                         "relative group transition-all duration-300",
-                        isDragging && "scale-[1.02] border-melt-accent/50"
+                        isDragging && "scale-[1.02] border-melt-accent"
                     )}
                     onDragOver={handleDragOver}
                     onDragLeave={handleDragLeave}
@@ -290,9 +290,9 @@ export function DecoderPage({ initialValue }: { initialValue?: string }) {
                         onChange={(e) => setInputValue(e.target.value)}
                         spellCheck="false"
                         className={cn(
-                            "w-full bg-transparent border-b border-transparent py-3 px-4 text-sm font-mono text-melt-text-heading outline-none resize-none leading-relaxed hover:border-b-melt-accent/50 focus:border-melt-accent/50 scrollbar-track-focus transition-all duration-700 ease-in-out custom-scrollbar z-10 relative",
+                            "w-full bg-transparent border-b border-melt-text-muted/10 py-3 px-4 text-sm font-mono text-melt-text-heading outline-none resize-none leading-relaxed hover:border-b-melt-accent focus:border-melt-accent scrollbar-track-focus transition-all duration-700 ease-in-out custom-scrollbar z-10 relative",
                             decodedData ? "h-32" : "h-40",
-                            isDragging && "border-melt-accent bg-melt-accent/5"
+                            isDragging && "border-melt-accent bg-melt-accent"
                         )}
                     />
                     {!inputValue && (
@@ -312,14 +312,15 @@ export function DecoderPage({ initialValue }: { initialValue?: string }) {
             {/* ROW 2: ACTION BAR (Tight) */}
             {inputValue.trim().length > 0 && (
                 <div className="relative w-full py-4 animate-in fade-in slide-in-from-top-4 duration-500">
-                    <div className="flex items-center w-full h-[52px] gap-6">
-                        <div className="h-[1px] flex-1 bg-melt-text-muted/10" />
+                    <div className="flex items-center justify-center w-full gap-6">
+                        <div className="h-[1px] flex-1 bg-melt-text-muted/10 hidden lg:block" />
                         <ActionBtn
                             label={decodedData ? "Decoded" : "Decode"}
+                            desc="Extracts JSON and script contents from the import string."
                             icon={decodedData ? CheckCircle2 : PackageOpen}
                             onClick={handleDecode}
                         />
-                        <div className="h-[1px] flex-1 bg-melt-text-muted/10" />
+                        <div className="h-[1px] flex-1 bg-melt-text-muted/10 hidden lg:block" />
                     </div>
                 </div>
             )}
@@ -442,7 +443,7 @@ export function DecoderPage({ initialValue }: { initialValue?: string }) {
                     {/* ROW 5: ACTION BAR (Persistent Floating Footer) - Teleported to local host in MeltShell */}
                     <MeltPortal hostId="melt-portal-host">
                         <div
-                            className="fixed bottom-0 right-[12px] h-[100px] bg-melt-surface z-[100] px-10 flex items-center justify-center pointer-events-auto"
+                            className="fixed bottom-0 right-[12px] bg-melt-surface z-[100] px-10 pb-6 flex items-center justify-center pointer-events-auto"
                             style={{ left: 'var(--sidebar-width, 64px)' }}
                         >
                             <div className="relative w-full animate-in fade-in slide-in-from-bottom-2 duration-500">
@@ -454,9 +455,9 @@ export function DecoderPage({ initialValue }: { initialValue?: string }) {
                                                 <div className="h-[1px] flex-1 bg-melt-text-muted/10" />
                                                 <ActionBtn
                                                     label={hasExported ? "EXPORTED" : "EXPORT TO ZIP"}
+                                                    desc="Creates a ZIP containing data and scripts."
                                                     icon={hasExported ? CheckCircle2 : FileUp}
                                                     onClick={handleZipExport}
-                                                    maxWidth={200}
                                                 />
                                                 <div className="h-[1px] flex-1 bg-melt-text-muted/10" />
                                             </div>
@@ -471,9 +472,9 @@ export function DecoderPage({ initialValue }: { initialValue?: string }) {
                                                 <div className="h-[1px] flex-1 bg-melt-text-muted/10" />
                                                 <ActionBtn
                                                     label={hasBundled ? "RE-ENCODED" : "RE-ENCODE"}
+                                                    desc="Bundles back into an encoded base64 string."
                                                     icon={hasBundled ? CheckCircle2 : Package}
                                                     onClick={handleBundle}
-                                                    maxWidth={200}
                                                 />
                                                 <div className="h-[1px] flex-1 bg-melt-text-muted/10" />
                                             </div>
@@ -483,6 +484,7 @@ export function DecoderPage({ initialValue }: { initialValue?: string }) {
                                             <div className="h-[1px] flex-1 bg-melt-text-muted/10" />
                                             <ActionBtn
                                                 label={hasExported ? "EXPORTED" : "EXPORT TO ZIP"}
+                                                desc="Creates a ZIP containing data and scripts."
                                                 icon={hasExported ? CheckCircle2 : FileUp}
                                                 onClick={handleZipExport}
                                             />
@@ -517,8 +519,8 @@ function InlineStat({ icon: Icon, label, value, color }: any) {
     return (
         <div className="flex items-center gap-4">
             <Icon size={20} className={cn("shrink-0", color)} />
-            <span className="text-base font-black text-melt-text-muted">{String(value)}</span>
-            <span className="text-xs font-bold text-melt-text-label uppercase tracking-[0.3em]">{label}</span>
+            <span className="text-base font-black text-melt-text-label">{String(value)}</span>
+            <span className="text-xs font-black text-melt-text-label uppercase tracking-[0.3em]">{label}</span>
         </div>
     );
 }
@@ -532,7 +534,7 @@ function MetadataInput({ label, value, onChange }: { label: string; value: strin
                 value={value}
                 onChange={(e) => onChange(e.target.value)}
                 spellCheck="false"
-                className="w-full bg-transparent border-b border-transparent px-1 py-3 text-sm font-mono text-melt-text-body outline-none hover:border-b-melt-accent/50 focus:border-melt-accent/50 focus:bg-melt-surface transition-all"
+                className="w-full bg-transparent border-b border-melt-text-muted/10 px-1 py-3 text-sm font-mono text-melt-text-body outline-none hover:border-b-melt-accent focus:border-melt-accent focus:bg-melt-surface transition-all duration-700 ease-in-out"
                 placeholder="..."
             />
         </div>

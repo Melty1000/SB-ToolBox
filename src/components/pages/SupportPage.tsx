@@ -1,6 +1,7 @@
 "use client";
 
 import React from 'react';
+import gsap from 'gsap';
 import { cn } from '@/lib/utils';
 import {
     Coffee, MessageSquare, Github,
@@ -93,7 +94,7 @@ const INSPIRATIONS: PersonData[] = [
     {
         name: "Tawmae",
         twitchHandle: "tawmae",
-        logo: "https://github.com/tawmae.png",
+        logo: "https://static-cdn.jtvnw.net/jtv_user_pictures/80819486-2bac-444b-82b9-24a16209224f-profile_image-70x70.png",
         desc: "I cannot glaze this man enough. He is the reason i started building tools for Streamer.bot. Every single utility that he puts out is incredible and top notch. My entire style is 100% inspired by him. And though he doesnt know it, I could never thank him enough for what he has done for this entire community. If there is one person to check out from this list, I cannot suggest him enough.",
         socials: [
             { icon: Globe, href: "https://tawmae.xyz/", color: "#3b82f6" },
@@ -136,7 +137,7 @@ const INSPIRATIONS: PersonData[] = [
     {
         name: "WebMage",
         twitchHandle: "web_mage",
-        logo: "https://github.com/Web-Mage.png",
+        logo: "https://static-cdn.jtvnw.net/jtv_user_pictures/e293c3b9-e8b7-43f2-b4c3-1f0ecc19b68a-profile_image-70x70.png",
         desc: "Weather pwnyy is around in #general or not, this awesome dude is lurking in the shadows. Ive enjoyed our conversations and want you to know that I am extremely appreciative of everything you have done for this community.",
         socials: [
             { icon: Twitch, href: "https://www.twitch.tv/web_mage", color: "#9146FF" },
@@ -175,7 +176,7 @@ const INSPIRATIONS: PersonData[] = [
     {
         name: "MustachedManiac",
         twitchHandle: "mustached_maniac",
-        logo: "https://github.com/Mustached-Maniac.png",
+        logo: "https://static-cdn.jtvnw.net/jtv_user_pictures/f2177ef5-3ada-4931-afda-b8ef940bd28c-profile_image-70x70.png",
         desc: "Real legend to allot of content creators for his spotify and ai chat plugins. The basis for my 1st 2nd 3rd project is due to him and his youtube tutorials.",
         socials: [
             { icon: Globe, href: "https://mustachedmaniac.com/socials", color: "#3b82f6" },
@@ -189,7 +190,7 @@ const INSPIRATIONS: PersonData[] = [
     {
         name: "Nutty",
         twitchHandle: "nutty",
-        logo: "https://imgproxy.fourthwall.com/WSTKpmeQbr7HElolGXj3o27i6lfvx-r0f1JUOOJsbUM/w:40/sm:1/enc/AsDcwYLIVYXtqMOI/-J0gn4fPMCKphvSQ/UnUFID2fLXLJi-m9/-AM5XpdRn2K7H_WW/XdU2C-2VWb8GERI7/GEIeq0qYSsmRLcZe/JVqpBCxW3SV64CuX/JduguWX-DprgYN1k/w39L1v7NlerSFbAM/SPod2kNMThCbQYfe/SeMBCsduvzGU6P26/O3YhpDA2JhyOpIry/nlORSbBRbKdrteSa/6xVb2zWWrjVEjOOn/nSHBcgxgV00Yg7ru/txfSev9zP3UiigeK",
+        logo: "https://static-cdn.jtvnw.net/jtv_user_pictures/f632e0c6-38e2-4065-a29e-6ba9b3e8cacf-profile_image-70x70.png",
         desc: "If you need help with move, or any other obs plugin, this is probably your guy. Ive used plenty of his projects and is probably the most well known of any of these guys. His youtube videos are super high quality.",
         socials: [
             { icon: Globe, href: "https://nutty.gg", color: "#3b82f6" },
@@ -213,7 +214,7 @@ const INSPIRATIONS: PersonData[] = [
     {
         name: "DigiVybe",
         twitchHandle: "digivybe",
-        logo: "https://imgproxy.fourthwall.com/5CmsePd2Aox0eLf2wnR2xp4KdZLSooyC3nCVbTxK1D4/w:135/sm:1/enc/sgprsgvfxQFXzctI/ntIorUsRDHADeq6s/PE274mJtk7v9Vcis/woEo57w27UVhu1SN/DZWjUTi9LhAOEH5v/kUH5_dxMhl4Bswvl/AdnOoJWUdpbY72a4/lcv8EZV_Ckfs5OIE/ingsW-wBPhpEkw3i/bi_2i23te3fTFWCx/gsjjLp9v5FIzmuTY/3hOPAITjjNyNRALH/mb9h1mgMHfuveC-i/rLoh9bEB3wUTmbiN/tl9oGdIc0SCJ46yg/gI9k70gr_4fhapSj",
+        logo: "https://static-cdn.jtvnw.net/jtv_user_pictures/2007e417-9eba-45e7-9e70-5e6c37b57b74-profile_image-70x70.png",
         desc: "I only recently met this guy but he has great vibes, and hes an up and comer in the sb space like me and oozes quality with everything he does. I highly suggest checking him out.",
         socials: [
             { icon: Globe, href: "https://digivybe.xyz", color: "#3b82f6" },
@@ -391,12 +392,18 @@ function sortByLive(list: PersonData[], liveHandles: Set<string>): PersonData[] 
 // ---------------------------------------------------------------------------
 
 export function SupportPage() {
-    const [liveHandles, setLiveHandles] = React.useState<Set<string>>(new Set());
+    const [liveHandles, setLiveHandles] = React.useState<Set<string>>(() => {
+        try {
+            const cached = sessionStorage.getItem('melt-live-handles');
+            return cached ? new Set(JSON.parse(cached)) : new Set();
+        } catch { return new Set(); }
+    });
 
     const handleLiveChange = React.useCallback((handle: string, live: boolean) => {
         setLiveHandles(prev => {
             const next = new Set(prev);
             live ? next.add(handle) : next.delete(handle);
+            try { sessionStorage.setItem('melt-live-handles', JSON.stringify([...next])); } catch { }
             return next;
         });
     }, []);
@@ -405,10 +412,10 @@ export function SupportPage() {
     const sortedCommunity = sortByLive(COMMUNITY, liveHandles);
 
     return (
-        <div className="flex flex-col gap-14 pb-20">
+        <div className="flex flex-col gap-14">
             {/* Manifesto Section */}
             <div className="flex flex-col gap-6 w-full">
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3 px-2">
                     <Activity size={18} className="text-melt-accent" />
                     <h2 className="text-xs font-black text-melt-text-label uppercase tracking-[0.2em]">MANIFESTO</h2>
                 </div>
@@ -436,71 +443,55 @@ export function SupportPage() {
 
             {/* Social Links Section */}
             <div className="flex flex-col gap-8 w-full">
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3 px-2">
                     <List size={18} className="text-melt-accent" />
                     <h2 className="text-xs font-black text-melt-text-label uppercase tracking-[0.2em]">LINKS</h2>
                 </div>
 
                 <div className="grid grid-cols-1 xl:grid-cols-3 gap-x-8 gap-y-4 w-full">
-                    <SocialRow icon={Coffee} label="Ko-fi" desc="Direct support to keep the tools running." href="https://ko-fi.com/melty1000" color="#FF5E5B" />
-                    <SocialRow icon={DiscordIcon} label="Discord" desc="Join Melty's community for help and updates." href="https://discord.gg/8EfuxXgVyT" color="#5865F2" />
+                    <SocialRow icon={Coffee} label="Ko-fi" desc="Buy me a coffee." href="https://ko-fi.com/melty1000" color="#FF5E5B" />
+                    <SocialRow icon={DiscordIcon} label="Discord" desc="Join my community for help and updates." href="https://discord.gg/8EfuxXgVyT" color="#5865F2" />
                     <SocialRow icon={Twitch} label="Twitch" desc="Watch development and gaming live." href="https://www.twitch.tv/melty1000" color="#9146FF" />
-                    <SocialRow icon={Youtube} label="YouTube" desc="Tutorials and project deep dives." href="https://www.youtube.com/@melty_1000" color="#FF0000" />
+                    <SocialRow icon={Youtube} label="YouTube" desc="I dont post on here enough." href="https://www.youtube.com/@melty_1000" color="#FF0000" />
                     <SocialRow icon={Github} label="GitHub" desc="View source code and other repositories." href="https://github.com/Melty1000" color="#6e5494" />
                     <SocialRow icon={XIcon} label="X / Twitter" desc="Follow for the latest project news." href="https://x.com/Melty_1000" color="#1DA1F2" />
                 </div>
             </div>
 
-            {/* Support Others Master Hub */}
-            <div className="flex flex-col gap-12 w-full pt-4">
-                <div className="flex items-center gap-3">
+            {/* Support Others — Side-by-side auto-scroll carousels */}
+            <div className="flex flex-col gap-8 w-full pt-4">
+                <div className="flex items-center gap-3 px-2">
                     <Users size={18} className="text-melt-accent" />
                     <h2 className="text-xs font-black text-melt-text-label uppercase tracking-[0.2em]">SUPPORT OTHERS</h2>
                 </div>
 
-                {/* Sub-group: Inspirations */}
-                <div className="flex flex-col gap-10 w-full pl-6 border-l border-melt-text-muted/10">
-                    <div className="flex flex-col gap-4">
-                        <div className="flex items-center gap-3">
-                            <Heart size={14} className="text-melt-accent" />
-                            <h3 className="text-[10px] font-black text-melt-text-label uppercase tracking-[0.2em]">INSPIRATIONS</h3>
-                        </div>
-                        <p className="text-[11px] font-mono text-melt-text-muted px-1 italic">
-                            Figures and projects that laid the foundation for the tools I build today.
-                        </p>
+                <div className="flex flex-col lg:flex-row gap-8 lg:gap-0 w-full">
+                    {/* Inspirations Carousel */}
+                    <div className="flex-1 lg:pr-8">
+                        <AutoScrollStrip
+                            items={sortedInspirations}
+                            onLiveChange={handleLiveChange}
+                            liveHandles={liveHandles}
+                            title="INSPIRATIONS"
+                            icon={<Heart size={14} className="text-melt-accent" />}
+                            description="Figures that laid the foundation for the tools I build today."
+                        />
                     </div>
 
-                    <div className="grid grid-cols-1 xl:grid-cols-2 gap-x-12 gap-y-10 w-full">
-                        {sortedInspirations.map(person => (
-                            <InspirationRow
-                                key={person.name}
-                                {...person}
-                                onLiveChange={handleLiveChange}
-                            />
-                        ))}
-                    </div>
-                </div>
+                    {/* Divider */}
+                    <div className="hidden lg:block w-[1px] bg-melt-text-muted/10 shrink-0 self-stretch my-2" />
+                    <div className="block lg:hidden h-[1px] w-full bg-melt-text-muted/10 shrink-0" />
 
-                {/* Sub-group: My Little Community */}
-                <div className="flex flex-col gap-8 w-full pl-6 border-l border-melt-text-muted/10">
-                    <div className="flex flex-col gap-4">
-                        <div className="flex items-center gap-3">
-                            <MessageSquare size={14} className="text-melt-accent" />
-                            <h3 className="text-[10px] font-black text-melt-text-label uppercase tracking-[0.2em]">MY LITTLE COMMUNITY</h3>
-                        </div>
-                        <p className="text-[11px] font-mono text-melt-text-muted px-1 italic">
-                            These are some of my favorite people in the world. I love them all dearly.
-                        </p>
-                    </div>
-
-                    <div className="grid grid-cols-1 xl:grid-cols-2 gap-x-12 gap-y-10 w-full">
-                        {sortedCommunity.map(person => (
-                            <InspirationRow
-                                key={person.name}
-                                {...person}
-                                onLiveChange={handleLiveChange}
-                            />
-                        ))}
+                    {/* Community Carousel */}
+                    <div className="flex-1 lg:pl-8">
+                        <AutoScrollStrip
+                            items={sortedCommunity}
+                            onLiveChange={handleLiveChange}
+                            liveHandles={liveHandles}
+                            title="MY LITTLE COMMUNITY"
+                            icon={<MessageSquare size={14} className="text-melt-accent" />}
+                            description="These are some of my favorite people in the world."
+                        />
                     </div>
                 </div>
             </div>
@@ -512,6 +503,106 @@ export function SupportPage() {
 // Sub-components
 // ---------------------------------------------------------------------------
 
+function AutoScrollStrip({ items, onLiveChange, liveHandles, title, icon, description }: { items: PersonData[], onLiveChange: (handle: string, live: boolean) => void, liveHandles: Set<string>, title: string, icon: React.ReactNode, description: string }) {
+    const [activeIdx, setActiveIdx] = React.useState(0);
+    const [isPaused, setIsPaused] = React.useState(false);
+    const cardRef = React.useRef<HTMLDivElement>(null);
+    const isFirst = React.useRef(true);
+
+    React.useEffect(() => {
+        if (isPaused || items.length <= 1) return;
+        const timer = setInterval(() => {
+            setActiveIdx(prev => (prev + 1) % items.length);
+        }, 5000);
+        return () => clearInterval(timer);
+    }, [isPaused, items.length]);
+
+    React.useEffect(() => {
+        if (!cardRef.current) return;
+
+        if (isFirst.current) {
+            gsap.set(cardRef.current, { x: 0, opacity: 1 });
+            isFirst.current = false;
+            return;
+        }
+
+        gsap.fromTo(cardRef.current,
+            { x: 40, opacity: 0 },
+            { x: 0, opacity: 1, duration: 0.45, ease: "power2.out" }
+        );
+    }, [activeIdx]);
+
+    const person = items[activeIdx];
+    const liveItems = items.filter(p => p.twitchHandle && liveHandles.has(p.twitchHandle));
+
+    return (
+        <div className="flex flex-col gap-4 w-full">
+            <div className="flex flex-col gap-2 px-2">
+                <div className="flex items-center justify-between w-full">
+                    <div className="flex items-center gap-3">
+                        {icon}
+                        <h3 className="text-[10px] font-black text-melt-text-label uppercase tracking-[0.2em]">{title}</h3>
+                        {liveItems.length > 0 && (
+                            <span className="text-[8px] font-black text-red-500 uppercase tracking-widest animate-pulse">
+                                · {liveItems.length} LIVE
+                            </span>
+                        )}
+                        {liveItems.map(p => (
+                            <a
+                                key={p.name}
+                                href={`https://www.twitch.tv/${p.twitchHandle}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                onClick={(e) => { if ((window as any).electron?.shell) { e.preventDefault(); (window as any).electron.shell.openExternal(`https://www.twitch.tv/${p.twitchHandle}`); } }}
+                                className="relative w-6 h-6 rounded-full overflow-hidden border border-red-500/50 hover:border-red-500 transition-all duration-300 hover:scale-110 shrink-0"
+                                title={`${p.name} is LIVE`}
+                            >
+                                {p.logo && <img src={p.logo} alt={p.name} className="w-full h-full object-cover" />}
+                                <div className="absolute inset-0 rounded-full ring-1 ring-red-500 animate-pulse" />
+                            </a>
+                        ))}
+                    </div>
+                    {/* Dot indicators — top right */}
+                    <div className="flex items-center gap-1.5 pl-4">
+                        {items.map((item, i) => {
+                            const isLive = item.twitchHandle && liveHandles.has(item.twitchHandle);
+                            return (
+                                <button
+                                    key={i}
+                                    onClick={() => setActiveIdx(i)}
+                                    className={cn(
+                                        "h-1.5 rounded-full transition-all duration-300",
+                                        i === activeIdx
+                                            ? isLive ? "bg-red-500 w-4" : "bg-melt-accent w-4"
+                                            : isLive ? "bg-red-500/50 w-1.5 animate-pulse" : "bg-melt-text-muted/20 hover:bg-melt-text-muted/40 w-1.5"
+                                    )}
+                                />
+                            );
+                        })}
+                    </div>
+                </div>
+                <p className="text-[11px] font-mono text-melt-text-muted px-1 italic">
+                    {description}
+                </p>
+            </div>
+
+            <div
+                className="relative w-full"
+                onMouseEnter={() => setIsPaused(true)}
+                onMouseLeave={() => setIsPaused(false)}
+            >
+                <div ref={cardRef}>
+                    <InspirationRow
+                        key={person.name}
+                        {...person}
+                        onLiveChange={onLiveChange}
+                    />
+                </div>
+            </div>
+        </div>
+    );
+}
+
 function SocialRow({ icon, label, desc, href, color }: any) {
     return (
         <div className="flex items-center gap-4 group/row w-full">
@@ -522,8 +613,8 @@ function SocialRow({ icon, label, desc, href, color }: any) {
                 color={color}
                 maxWidth={180}
             />
-            <div className="flex-1 border-b border-melt-text-muted/10 pb-2 transition-colors group-hover/row:border-melt-text-muted/20">
-                <p className="text-[11px] font-mono text-melt-text-label leading-relaxed group-hover/row:text-melt-text-body transition-opacity">
+            <div className="flex-1 border-b border-melt-text-muted/10 pb-2 transition-colors">
+                <p className="text-[11px] font-mono text-melt-text-label leading-relaxed transition-opacity">
                     {String(desc)}
                 </p>
             </div>
@@ -532,7 +623,13 @@ function SocialRow({ icon, label, desc, href, color }: any) {
 }
 
 function InspirationRow({ name, logo, desc, socials, twitchHandle, onLiveChange }: PersonData & { onLiveChange?: (handle: string, live: boolean) => void }) {
-    const [isLive, setIsLive] = React.useState(false);
+    const [isLive, setIsLive] = React.useState(() => {
+        if (!twitchHandle) return false;
+        try {
+            const cached = sessionStorage.getItem('melt-live-handles');
+            return cached ? JSON.parse(cached).includes(twitchHandle) : false;
+        } catch { return false; }
+    });
 
     React.useEffect(() => {
         if (!twitchHandle) return;
@@ -571,7 +668,7 @@ function InspirationRow({ name, logo, desc, socials, twitchHandle, onLiveChange 
                         "relative w-10 h-10 rounded-full flex items-center justify-center shrink-0",
                         isLive && "before:absolute before:inset-[-3px] before:rounded-full before:border-2 before:border-red-500 before:animate-pulse z-10 cursor-pointer"
                     )}>
-                    <div className="w-full h-full rounded-full bg-melt-text-muted/5 border border-melt-text-muted/10 flex items-center justify-center shrink-0 overflow-hidden group-hover/inspiration:border-melt-accent/30 transition-all duration-500 shadow-[0_0_0_1px_rgba(255,255,255,0.01)] relative">
+                    <div className="w-full h-full rounded-full bg-melt-text-muted/5 border border-melt-text-muted/10 flex items-center justify-center shrink-0 overflow-hidden group-hover/inspiration:border-melt-accent transition-all duration-500 shadow-[0_0_0_1px_rgba(255,255,255,0.01)] relative">
                         {logo ? (
                             <img src={logo} alt={name} className="w-full h-full object-cover group-hover/inspiration:opacity-100 transition-opacity" />
                         ) : (
@@ -594,7 +691,7 @@ function InspirationRow({ name, logo, desc, socials, twitchHandle, onLiveChange 
                         onClick={isLive && twitchHandle ? (e) => { e.preventDefault(); openLink(`https://www.twitch.tv/${twitchHandle}`); } : undefined}
                         className={cn(
                             "text-[10px] font-black text-melt-text-label uppercase tracking-widest group-hover/inspiration:text-melt-accent transition-colors duration-300",
-                            isLive && "cursor-pointer hover:text-red-400"
+                            isLive && "cursor-pointer"
                         )}
                     >{String(name)}</a>
                     <p className="text-[11px] font-mono text-melt-text-label leading-relaxed group-hover/inspiration:text-melt-text-body transition-opacity">
@@ -625,7 +722,7 @@ function InspirationSocialBtn({ icon: Icon, href, brandColor }: { icon: any; hre
             <Icon
                 width={14}
                 height={14}
-                className="opacity-40 group-hover/inspiration:opacity-70 group-hover/sbtn:opacity-100 transition-opacity duration-300"
+                className="opacity-40 group-hover/inspiration:opacity-100 transition-opacity duration-300"
                 style={{ color: brandColor }}
             />
         </a>

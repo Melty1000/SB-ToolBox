@@ -6,11 +6,11 @@ import { cn } from '@/lib/utils';
 import { CHANGELOG } from '@/lib/changelog';
 
 export function SettingsPage() {
-    const [config, setConfig] = useState({
+    const [config, setConfig] = useState(() => ({
         autoUpdate: true,
         autoDownload: false,
-        theme: 'graphite-cobalt'
-    });
+        theme: '' // Wait for useEffect to read actual DOM/stored state
+    }));
     const [updateStatus, setUpdateStatus] = useState<'idle' | 'available' | 'downloading' | 'ready'>('idle');
     const [progress, setProgress] = useState(0);
     const [isElectron, setIsElectron] = useState(false);
@@ -18,14 +18,19 @@ export function SettingsPage() {
     const [portableReadyPath, setPortableReadyPath] = useState('');
 
     useEffect(() => {
+        (window as any).debugUpdateStatus = (status: 'idle' | 'available' | 'downloading' | 'ready') => {
+            setUpdateStatus(status);
+        };
+
         const loadSettings = async () => {
             if ((window as any).electron?.settings) {
                 const settings = await (window as any).electron.settings.getAll();
                 setConfig(settings);
                 document.documentElement.setAttribute('data-theme', settings.theme);
+                localStorage.setItem('melt-theme', settings.theme);
             } else {
-                // Fallback for web dev
-                const savedTheme = localStorage.getItem('melt-theme') || 'graphite-cobalt';
+                // Read the theme initialized by layout.tsx (or fallback if missing)
+                const savedTheme = localStorage.getItem('melt-theme') || 'graphite-gold';
                 setConfig(prev => ({ ...prev, theme: savedTheme }));
                 document.documentElement.setAttribute('data-theme', savedTheme);
             }
@@ -66,13 +71,10 @@ export function SettingsPage() {
 
         if ((window as any).electron?.settings) {
             (window as any).electron.settings.set(key, value);
-        } else {
-            if (key === 'theme') {
-                localStorage.setItem('melt-theme', value);
-            }
         }
 
         if (key === 'theme') {
+            localStorage.setItem('melt-theme', value);
             document.documentElement.setAttribute('data-theme', value);
         }
     };
@@ -84,8 +86,8 @@ export function SettingsPage() {
             <div className="flex flex-col gap-8 w-full">
                 <div className="flex flex-col gap-1 px-2">
                     <div className="flex items-center gap-3">
-                        <Palette size={16} className="text-melt-accent" />
-                        <h3 className="text-xs font-black text-melt-text-label uppercase tracking-[0.2em]">THEME</h3>
+                        <Palette size={18} className="text-melt-accent" />
+                        <h2 className="text-xs font-black text-melt-text-label uppercase tracking-[0.2em]">THEME</h2>
                     </div>
                 </div>
 
@@ -93,7 +95,6 @@ export function SettingsPage() {
                     <ThemeCard
                         id="graphite-gold"
                         name="Graphite | Gold"
-                        description="Deep graphite void with high-contrast gold accents."
                         active={config.theme === 'graphite-gold'}
                         onClick={() => handleConfigChange('theme', 'graphite-gold')}
                         previewColors={['#0c0c0e', '#F2AF0D']}
@@ -101,7 +102,6 @@ export function SettingsPage() {
                     <ThemeCard
                         id="graphite-cobalt"
                         name="Graphite | Cobalt"
-                        description="Professional dark graphite with deep cobalt accents."
                         active={config.theme === 'graphite-cobalt'}
                         onClick={() => handleConfigChange('theme', 'graphite-cobalt')}
                         previewColors={['#0c0c0e', '#1D4267']}
@@ -109,7 +109,6 @@ export function SettingsPage() {
                     <ThemeCard
                         id="slate-gold"
                         name="Slate | Gold"
-                        description="Structural slate frames with premium gold highlights."
                         active={config.theme === 'slate-gold'}
                         onClick={() => handleConfigChange('theme', 'slate-gold')}
                         previewColors={['#0E1115', '#F2AF0D']}
@@ -117,7 +116,6 @@ export function SettingsPage() {
                     <ThemeCard
                         id="slate-cobalt"
                         name="Slate | Cobalt"
-                        description="Sleek slate frame with technical cobalt accents."
                         active={config.theme === 'slate-cobalt'}
                         onClick={() => handleConfigChange('theme', 'slate-cobalt')}
                         previewColors={['#0E1115', '#1D4267']}
@@ -129,8 +127,8 @@ export function SettingsPage() {
             {isElectron && <div className="flex flex-col gap-8 w-full">
                 <div className="flex flex-col gap-1 px-2">
                     <div className="flex items-center gap-3">
-                        <RefreshCw size={16} className="text-melt-accent" />
-                        <h3 className="text-xs font-black text-melt-text-label uppercase tracking-[0.2em]">AUTO-UPDATE</h3>
+                        <RefreshCw size={18} className="text-melt-accent" />
+                        <h2 className="text-xs font-black text-melt-text-label uppercase tracking-[0.2em]">AUTO-UPDATE</h2>
                     </div>
                     {isPortable && (
                         <span className="text-[8px] font-black text-melt-text-muted uppercase tracking-widest">
@@ -169,15 +167,21 @@ export function SettingsPage() {
                     )}
 
                     {/* STATUS READOUT */}
-                    <div className="flex flex-col gap-4 p-6 border-l-2 border-melt-accent/20 bg-melt-accent/5 mt-4">
-                        <div className="flex items-center justify-between">
-                            <div className="flex flex-col gap-1">
-                                <span className="text-[10px] font-black text-melt-accent uppercase tracking-widest">Update Status</span>
-                                <span className="text-[11px] font-mono text-melt-text-body uppercase">
-                                    {updateStatus === 'idle' && 'Checked // Up to Date'}
-                                    {updateStatus === 'available' && 'Update Found // Pending Download'}
-                                    {updateStatus === 'downloading' && `Downloading // ${Math.round(progress)}%`}
-                                    {updateStatus === 'ready' && (isPortable ? 'Saved // Downloads Folder' : 'Ready // Restart to Apply')}
+                    <div className={cn(
+                        "flex flex-col gap-4 pl-4 py-2 border-l mt-2",
+                        updateStatus === 'idle' ? "border-melt-accent" : "border-red-500"
+                    )}>
+                        <div className="flex justify-between items-center w-full">
+                            <div className="flex items-center gap-3">
+                                <span className={cn(
+                                    "text-[10px] font-black uppercase tracking-[0.2em]",
+                                    updateStatus === 'idle' ? "text-melt-accent" : "text-red-500"
+                                )}>Update Status</span>
+                                <span className="text-[10px] font-mono text-melt-text-label uppercase opacity-80">
+                                    {updateStatus === 'idle' && 'CURRENTLY UP TO DATE'}
+                                    {updateStatus === 'available' && 'UPDATE FOUND / PENDING'}
+                                    {updateStatus === 'downloading' && `DOWNLOADING [ ${Math.round(progress)}% ]`}
+                                    {updateStatus === 'ready' && (isPortable ? 'SAVED TO DOWNLOADS' : 'READY TO RESTART')}
                                 </span>
                             </div>
 
@@ -212,7 +216,7 @@ export function SettingsPage() {
                         </div>
 
                         {updateStatus === 'downloading' && (
-                            <div className="w-full h-1 bg-melt-accent/10 rounded-full overflow-hidden">
+                            <div className="w-full h-1 bg-melt-accent rounded-full overflow-hidden">
                                 <div
                                     className="h-full bg-melt-accent transition-all duration-300"
                                     style={{ width: `${progress}%` }}
@@ -227,8 +231,8 @@ export function SettingsPage() {
             <div className="flex flex-col gap-8 w-full">
                 <div className="flex flex-col gap-1 px-2">
                     <div className="flex items-center gap-3">
-                        <History size={16} className="text-melt-accent" />
-                        <h3 className="text-xs font-black text-melt-text-label uppercase tracking-[0.2em]">CHANGELOG</h3>
+                        <History size={18} className="text-melt-accent" />
+                        <h2 className="text-xs font-black text-melt-text-label uppercase tracking-[0.2em]">CHANGELOG</h2>
                     </div>
                 </div>
 
@@ -270,7 +274,7 @@ function ThemeCard({ name, description, active, onClick, previewColors }: any) {
         <button
             onClick={onClick}
             className={cn(
-                "group relative flex flex-col items-start p-6 rounded-none border-l-2 transition-colors duration-300 text-left h-full",
+                "group relative flex flex-col items-start px-6 py-3 rounded-none border-l-2 transition-colors duration-300 text-left",
                 active
                     ? "border-melt-accent bg-transparent"
                     : "border-melt-text-muted/10 hover:border-melt-text-muted/20"
@@ -289,9 +293,7 @@ function ThemeCard({ name, description, active, onClick, previewColors }: any) {
                 "text-xs font-black uppercase tracking-widest mb-2 transition-colors",
                 active ? "text-melt-accent" : "text-melt-text-label group-hover:text-melt-text-heading"
             )}>{name}</h4>
-            <p className="text-[10px] font-mono text-melt-text-label leading-relaxed opacity-60 group-hover:opacity-100 transition-opacity">
-                {String(description)}
-            </p>
+
         </button>
     );
 }
@@ -307,7 +309,7 @@ function ChangelogItem({ version, date, changes, isLatest }: any) {
         )}>
             <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="flex items-center justify-between w-full p-6 text-left group"
+                className="flex items-center justify-between w-full px-6 py-3 text-left group"
             >
                 <div className="flex items-center gap-3">
                     <span className={cn(
@@ -315,7 +317,7 @@ function ChangelogItem({ version, date, changes, isLatest }: any) {
                         isLatest ? "text-melt-accent" : "text-melt-text-label group-hover:text-melt-text-heading"
                     )}>{version}</span>
                     {isLatest && (
-                        <span className="text-[9px] font-bold bg-melt-accent/10 text-melt-accent px-2 py-0.5 rounded-full tracking-wider">
+                        <span className="text-[9px] font-bold bg-melt-accent text-melt-surface px-2 py-0.5 rounded-full tracking-wider">
                             LATEST
                         </span>
                     )}
@@ -337,7 +339,7 @@ function ChangelogItem({ version, date, changes, isLatest }: any) {
                 <ul className="flex flex-col gap-2 px-6 animate-in slide-in-from-top-1 fade-in duration-200">
                     {changes.map((change: string, i: number) => (
                         <li key={i} className="text-[11px] text-melt-text-body font-medium flex items-start gap-2">
-                            <span className="text-melt-accent/50 mt-1.5 w-1 h-1 rounded-full bg-current shrink-0" />
+                            <span className="text-melt-accent mt-1.5 w-1 h-1 rounded-full bg-current shrink-0" />
                             <span className="leading-relaxed opacity-80">{change}</span>
                         </li>
                     ))}

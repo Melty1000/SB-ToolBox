@@ -7,6 +7,31 @@ export interface ChangelogEntry {
 // Most recent release first. The first entry is automatically marked as "latest".
 export const CHANGELOG: ChangelogEntry[] = [
     {
+        version: "V0.2.0 BETA",
+        date: "2026-03-01",
+        changes: [
+            "Fixed persistent bug that forced the theme to 'Graphite and Cobalt' on Settings page visit",
+            "Synchronized DOM, React state, and Electron IPC cache to universally default to 'Graphite and Gold'",
+            "Completely rebuilt Support Page community grids into side-by-side auto-scrolling GSAP carousels",
+            "Added background prefetching system for Twitch live status, caching results in sessionStorage on boot",
+            "Fixed memory leak bug in Encoder where clearing a template left orphaned file linkages",
+            "ActionBtn component now supports descriptive tooltips via the new 'desc' prop (implemented on Encoder/Decoder pages)",
+            "Implemented a CSS-based animation in the Monaco 'SBEditor' to suppress scrollbar flashing during component mount",
+            "Removed hardcoded opacity filters from accent glows across all themes for true flat UI colors",
+            "Completely redesigned Sidebar Navigation Tabs to feature unified slide-out text and GSAP morphing logic",
+            "Replaced legacy floating docking behavior of sidebar tabs with modern flush-edge aesthetic",
+            "Refined overall UI layout padding, margins, and borders to provide a cohesive, unified visual experience",
+            "Adjusted text placement on extended sidebar tabs to sit tighter against the icons",
+            "Consolidated sidebar version text to a single smooth expanding element to eliminate disjointed cross-fade animations",
+            "Redesigned the Update Status block in Settings to be minimal and cohesive with the unified UI",
+            "Redesigned Encoder/Decoder action buttons to match borderless transparent 'Social Link' style",
+            "Restored 1px horizontal separator lines to Encoder and Decoder action bars",
+            "Eliminated false scrolling on the Support Page by removing unnecessary bottom padding",
+            "Fixed Encoder and Decoder footer backgrounds to extend solidly to the edge of the window",
+            "Updated formatting structure on the Help Guide page for better visual hierarchy"
+        ]
+    },
+    {
         version: "V0.1.3 ALPHA",
         date: "2026-02-23",
         changes: [

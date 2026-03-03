@@ -4,15 +4,20 @@ import gsap from 'gsap';
 import { MELT_CONSTANTS } from '../lib/melt-motion';
 
 /**
- * useMeltSidebar: The "Infinite Curve" Restoration
- * High-poly 12-point rounding + 1.25x persistent icon scale.
+ * useMeltSidebar: Clean SocialLink-Style Navigation
+ *
+ * Key rules:
+ * - Icons NEVER move on sidebar expand/collapse. Only on tab switch + individual hover.
+ * - Text color handled entirely by CSS classes (no GSAP color overrides).
+ * - Overflow always hidden (no text leaking outside buttons).
+ * - Active icon doesn't re-animate on expand/collapse.
  */
 export const useMeltSidebar = (activePage?: string) => {
     const [isExpanded, setIsExpanded] = useState(false);
     const shellRef = useRef<HTMLDivElement>(null);
     const tl = useRef<gsap.core.Timeline | null>(null);
 
-    // 1. PHASE ONE: Layout & Branding (isExpanded ONLY)
+    // 1. Sidebar width/branding timeline
     useGSAP(() => {
         const ctx = gsap.context(() => {
             gsap.set(shellRef.current, { '--sidebar-width': MELT_CONSTANTS.SIDEBAR.COLLAPSED });
@@ -21,47 +26,48 @@ export const useMeltSidebar = (activePage?: string) => {
                 paused: true,
                 defaults: {
                     duration: MELT_CONSTANTS.ANIMATION.DURATION,
-                    ease: MELT_CONSTANTS.ANIMATION.SMOOTH_EASE
+                    ease: "power2.inOut"
                 }
             });
 
             mainTl.to(shellRef.current, {
                 '--sidebar-width': MELT_CONSTANTS.SIDEBAR.EXPANDED,
-                ease: MELT_CONSTANTS.ANIMATION.LAYOUT_BOUNCE
+                ease: "power2.inOut"
             }, 0);
 
-            mainTl.to('.logo-main', { x: -20, rotation: -10, ease: "back.out(1.2)" }, 0);
-            mainTl.to('.logo-reveal', { x: 20, rotation: 10, opacity: 1, ease: "back.out(1.2)" }, 0);
-
-            mainTl.to('.version-compact', { autoAlpha: 0, y: -5 }, 0);
-            mainTl.to('.version-expanded', { autoAlpha: 1, y: 0 }, 0);
+            mainTl.to('.logo-main', { x: -20, rotation: -10 }, 0);
+            mainTl.to('.logo-reveal', { x: 20, rotation: 10, opacity: 1 }, 0);
+            mainTl.to('span.version-beta', { width: 40, autoAlpha: 1 }, 0);
 
             tl.current = mainTl;
         }, shellRef);
         return () => ctx.revert();
     }, { scope: shellRef });
 
-
     const isFirstMount = useRef(true);
     const prevIsExpanded = useRef(false);
+    const prevActiveIndex = useRef(-1);
 
-    // 3. PHASE THREE: Liquid Interaction & Precision Morph
-    // useGSAP = useLayoutEffect = Run BEFORE paint. Syncs hydration instantly.
+    // 2. Navigation interaction
     useGSAP(() => {
         if (!tl.current || !shellRef.current) return;
 
         const icons = shellRef.current.querySelectorAll('.nav-icon-wrapper');
+        const texts = shellRef.current.querySelectorAll('.nav-text');
+        const bgs = shellRef.current.querySelectorAll('.nav-bg');
         const selectionDrip = shellRef.current.querySelector('.selection-drip');
         const items = shellRef.current.querySelectorAll('.nav-item');
 
         const navIds = ['decoder', 'encoder', 'history', 'help', 'support', 'settings'];
         const activeIndex = navIds.indexOf(activePage || 'decoder');
 
-        // Track whether the expand state actually changed vs. only activePage changed
         const expandedChanged = prevIsExpanded.current !== isExpanded;
+        const activeChanged = prevActiveIndex.current !== activeIndex;
+        const oldActiveIndex = prevActiveIndex.current;
         prevIsExpanded.current = isExpanded;
+        prevActiveIndex.current = activeIndex;
 
-        // Selection Drip (Synchronized Elastic Drift) — always update on any change
+        // ── Selection Drip ──
         if (selectionDrip && activeIndex !== -1) {
             if (isFirstMount.current) {
                 gsap.set(selectionDrip, { y: activeIndex * 44, autoAlpha: 1 });
@@ -78,213 +84,194 @@ export const useMeltSidebar = (activePage?: string) => {
             gsap.to(selectionDrip, { autoAlpha: 0, duration: 0.3 });
         }
 
+        // ── Icons: position & scale ──
+        // Only update on first mount OR tab switch. NEVER on expand/collapse.
+        if (isFirstMount.current || activeChanged) {
+            icons.forEach((icon, i) => {
+                const isActive = i === activeIndex;
+                const wasActive = i === oldActiveIndex;
+
+                // Skip items that didn't change (not newly active, not previously active)
+                if (!isFirstMount.current && !isActive && !wasActive) return;
+
+                // Clear any GSAP color override so CSS classes take effect
+                gsap.set(icon, { clearProps: 'color' });
+
+                const targetProps = {
+                    left: '20px',
+                    xPercent: -50,
+                    top: '50%',
+                    yPercent: -50,
+                    scale: isActive ? 1.25 : 1,
+                    rotation: isActive ? -10 : 0,
+                    force3D: false
+                };
+
+                if (isFirstMount.current) {
+                    gsap.set(icon, targetProps);
+                } else {
+                    gsap.to(icon, {
+                        ...targetProps,
+                        duration: 0.45,
+                        ease: "power2.inOut",
+                        overwrite: 'auto'
+                    });
+                }
+            });
+        }
+
+        // ── Text ──
         if (isExpanded) {
-            // Only play the expand timeline when actually transitioning to expanded,
-            // not on every activePage change while already expanded.
+            // Play expand timeline
             if (expandedChanged || isFirstMount.current) {
                 tl.current.timeScale(1).play();
             }
 
-            // Icons Morph to Action-Style stacked layout — always update for active state
-            icons.forEach((icon, i) => {
-                const isActive = i === activeIndex;
-                const targetScale = isActive ? 2.5 : 2.25;
-                const parentItem = icon.closest('.nav-item');
-                const isHovered = parentItem?.matches(':hover');
+            if (isFirstMount.current) {
+                // Instant set on first mount
+                texts.forEach(text => {
+                    gsap.set(text, { clearProps: 'color' });
+                    gsap.set(text, { autoAlpha: 1, x: 0, visibility: 'visible' });
+                });
+            } else if (expandedChanged) {
+                // Sidebar just expanded — find which tab the mouse is currently on
+                const hoveredIndex = Array.from(items).findIndex(
+                    item => (item as HTMLElement).matches(':hover')
+                );
 
-                // Ensure active item has overflow visible for the pop-out effect
-                if (isActive && parentItem) {
-                    gsap.set(parentItem, { overflow: 'visible' });
-                } else if (parentItem) {
-                    // Non-active items should be clipped (user requirement)
-                    gsap.set(parentItem, { overflow: 'hidden' });
-                }
-
-                if (isHovered && !isActive) {
-                    if (isFirstMount.current) {
-                        gsap.set(icon, { x: 0, y: 0, scale: 1.6, rotation: -10, force3D: false });
-                    } else {
-                        gsap.to(icon, {
-                            x: 0,
-                            y: 0,
-                            scale: 1.6,
-                            rotation: -10,
-                            duration: 0.5,
-                            ease: MELT_CONSTANTS.ANIMATION.SMOOTH_EASE,
-                            force3D: false
-                        });
-                    }
-                } else {
-                    if (isFirstMount.current) {
-                        gsap.set(icon, { x: 0, y: "70%", scale: targetScale, rotation: 0, force3D: false });
-                    } else {
-                        gsap.to(icon, {
-                            x: 0,
-                            y: "70%",
-                            scale: targetScale,
-                            rotation: 0,
-                            duration: MELT_CONSTANTS.ANIMATION.ICON_DURATION,
-                            ease: MELT_CONSTANTS.ANIMATION.SMOOTH_EASE,
-                            force3D: false
-                        });
-                    }
-                }
-            });
-
-            // Always reveal active item text (handles click-while-hovered losing text)
-            if (activeIndex !== -1) {
-                const activeText = items[activeIndex]?.querySelector('.nav-text');
-                if (isFirstMount.current) {
-                    gsap.set(activeText, { autoAlpha: 1, y: -6, visibility: 'visible' });
-                } else {
-                    gsap.to(activeText, {
-                        autoAlpha: 1,
-                        y: -6,
-                        duration: 0.4,
-                        ease: MELT_CONSTANTS.ANIMATION.SMOOTH_EASE,
-                        overwrite: true
-                    });
-                }
-            }
-
-            // Smart Label Reveal — only replay on true expand transition, not page nav
-            if (expandedChanged || isFirstMount.current) {
-                items.forEach((item, i) => {
-                    const text = item.querySelector('.nav-text');
-                    const isHovered = (item as HTMLElement).matches(':hover');
-                    const isActive = i === activeIndex;
-
-                    // Only hide text if hovered AND NOT active (Active item text should stay visible)
-                    const shouldHideText = isHovered && !isActive;
-
-                    if (isFirstMount.current) {
-                        gsap.set(text, {
-                            autoAlpha: shouldHideText ? 0 : 1,
-                            x: 0,
-                            y: -6,
-                            visibility: shouldHideText ? 'hidden' : 'visible'
+                // Slide text in from right, but skip the hovered tab
+                texts.forEach((text, i) => {
+                    gsap.set(text, { clearProps: 'color' });
+                    if (i === hoveredIndex && i !== activeIndex) {
+                        // This tab is already hovered — keep text hidden, apply hover state
+                        gsap.set(text, { autoAlpha: 0, visibility: 'hidden' });
+                        gsap.to(icons[i], {
+                            left: '50%', xPercent: -50,
+                            scale: 1.55, rotation: -8,
+                            duration: 0.45, ease: "back.out(1.7)",
+                            overwrite: true, force3D: false
                         });
                     } else {
                         gsap.fromTo(text,
-                            { autoAlpha: 0, x: 0, y: -30 },
+                            { autoAlpha: 0, x: 30, visibility: 'hidden' },
                             {
-                                autoAlpha: shouldHideText ? 0 : 1,
-                                x: 0,
-                                y: -6,
-                                visibility: 'visible',
-                                duration: MELT_CONSTANTS.ANIMATION.TEXT_DURATION_EXPAND,
-                                delay: 0,
-                                overwrite: true,
-                                ease: "back.out(1.5)"
+                                autoAlpha: 1, x: 0, visibility: 'visible' as const,
+                                duration: 0.3,
+                                delay: 0.1,
+                                ease: "power2.out",
+                                overwrite: 'auto'
                             }
                         );
                     }
                 });
+            } else if (activeChanged) {
+                // Tab switch while expanded — restore text for affected items
+                texts.forEach((text, i) => {
+                    const isActive = i === activeIndex;
+                    const wasActive = i === oldActiveIndex;
+                    if (!isActive && !wasActive) return;
+
+                    gsap.set(text, { clearProps: 'color' });
+                    gsap.to(text, {
+                        x: 0, autoAlpha: 1, visibility: 'visible',
+                        duration: 0.45, ease: "power2.inOut", overwrite: true
+                    });
+                });
             }
 
-            // Mouse handlers always re-register — activeIndex may have changed on page nav
+            // ── Mouse handlers ──
             items.forEach((item, i) => {
                 (item as HTMLElement).onmouseenter = () => {
-                    // Active item is already "Popped Out" (Scale 2.5).
-                    // Do not apply Bounce (Scale 1.6) or hide text.
                     if (i === activeIndex) return;
 
-                    gsap.to(icons[i], {
-                        y: 0,
-                        scale: 1.6,
-                        rotation: -10,
-                        duration: 0.3,
-                        ease: MELT_CONSTANTS.ANIMATION.BOUNCE_EASE,
-                        overwrite: true,
-                        force3D: false
+                    // Text slides out right
+                    gsap.to(texts[i], {
+                        x: 40, autoAlpha: 0,
+                        duration: 0.35, ease: "power2.out", overwrite: true
                     });
-                    gsap.to(item.querySelector('.nav-text'), {
-                        autoAlpha: 0,
-                        y: -10,
-                        duration: 0.25,
-                        overwrite: true
+
+                    // Icon centers and scales
+                    gsap.to(icons[i], {
+                        left: '50%', xPercent: -50,
+                        scale: 1.55, rotation: -8,
+                        duration: 0.45, ease: "back.out(1.7)",
+                        overwrite: true, force3D: false
                     });
                 };
+
                 (item as HTMLElement).onmouseleave = () => {
-                    const isActive = i === activeIndex;
-                    gsap.to(icons[i], {
-                        y: "70%",
-                        scale: isActive ? 2.5 : 2.25,
-                        rotation: 0,
-                        duration: MELT_CONSTANTS.ANIMATION.ICON_DURATION,
-                        ease: MELT_CONSTANTS.ANIMATION.SMOOTH_EASE,
-                        overwrite: true,
-                        force3D: false
+                    if (i === activeIndex) return;
+
+                    // Text returns
+                    gsap.to(texts[i], {
+                        x: 0, autoAlpha: 1,
+                        duration: 0.45, ease: "power2.inOut", overwrite: true
                     });
-                    gsap.to(item.querySelector('.nav-text'), {
-                        autoAlpha: 1,
-                        y: -6,
-                        duration: 0.4,
-                        ease: MELT_CONSTANTS.ANIMATION.SMOOTH_EASE,
-                        overwrite: true
+
+                    // Icon returns to pinned position
+                    gsap.to(icons[i], {
+                        left: '20px', xPercent: -50,
+                        scale: 1, rotation: 0,
+                        duration: 0.45, ease: "power2.inOut",
+                        overwrite: true, force3D: false
                     });
                 };
             });
 
         } else {
-            // Only reverse the timeline on true collapse transition, not page nav
+            // ── Collapsed ──
             if (expandedChanged || isFirstMount.current) {
                 tl.current.timeScale(MELT_CONSTANTS.ANIMATION.UNHOVER_SPEED).reverse();
-            }
 
-            // Icons restore to Collapsed layout — always update for active state
-            icons.forEach((icon, i) => {
-                const isActive = i === activeIndex;
-                const targetRotation = isActive ? -10 : 0;
-                const targetScale = isActive ? 1.25 : 1;
-                const parentItem = icon.closest('.nav-item');
-
-                if (isFirstMount.current) {
-                    gsap.set(icon, { x: 0, y: 0, rotation: targetRotation, scale: targetScale, force3D: false });
-                    if (parentItem) gsap.set(parentItem, { overflow: 'hidden' });
-                } else {
-                    gsap.to(icon, {
-                        x: 0,
-                        y: 0,
-                        rotation: targetRotation,
-                        scale: targetScale,
-                        duration: 0.37,
-                        ease: MELT_CONSTANTS.ANIMATION.SMOOTH_EASE,
-                        overwrite: 'auto',
-                        force3D: false,
-                        onComplete: () => {
-                            if (parentItem) gsap.set(parentItem, { overflow: 'hidden' });
-                        }
-                    });
-                }
-            });
-
-            // Text hide and handler teardown — only on true collapse transition
-            if (expandedChanged || isFirstMount.current) {
+                // Hide text
                 if (isFirstMount.current) {
                     gsap.set('.nav-text', { autoAlpha: 0, x: 20, visibility: 'hidden' });
                 } else {
                     gsap.to('.nav-text', {
-                        autoAlpha: 0,
-                        x: 20,
-                        visibility: 'hidden',
-                        duration: 0.3,
-                        overwrite: true
+                        autoAlpha: 0, x: 20, visibility: 'hidden',
+                        duration: 0.3, overwrite: true
                     });
                 }
 
-                items.forEach(item => {
-                    (item as HTMLElement).onmouseenter = null;
-                    (item as HTMLElement).onmouseleave = null;
+                // Clear text color overrides
+                texts.forEach(text => gsap.set(text, { clearProps: 'color' }));
+
+                // Collapsed hover handlers — icon centers + text peeks
+                items.forEach((item, i) => {
+                    (item as HTMLElement).onmouseenter = () => {
+                        if (i === activeIndex) return;
+
+                        // Ensure text stays hidden
+                        gsap.set(texts[i], { autoAlpha: 0, visibility: 'hidden' });
+
+                        // Icon centers and scales
+                        gsap.to(icons[i], {
+                            left: '50%', xPercent: -50,
+                            scale: 1.55, rotation: -8,
+                            duration: 0.45, ease: "back.out(1.7)",
+                            overwrite: true, force3D: false
+                        });
+                    };
+
+                    (item as HTMLElement).onmouseleave = () => {
+                        if (i === activeIndex) return;
+
+                        // Icon returns to pinned position
+                        gsap.to(icons[i], {
+                            left: '20px', xPercent: -50,
+                            scale: 1, rotation: 0,
+                            duration: 0.45, ease: "power2.inOut",
+                            overwrite: true, force3D: false
+                        });
+                    };
                 });
             }
         }
 
-        // Finalize Mount Lifecycle
         isFirstMount.current = false;
     }, { dependencies: [isExpanded, activePage], scope: shellRef });
 
-    // 4. Resilience: Global Mouse Leave
+    // 3. Global mouse leave resilience
     useEffect(() => {
         const handleGlobalMouseLeave = () => setIsExpanded(false);
         window.addEventListener('mouseleave', handleGlobalMouseLeave);

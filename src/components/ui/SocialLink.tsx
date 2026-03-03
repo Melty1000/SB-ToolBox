@@ -26,6 +26,7 @@ export const SocialLink = ({
     const textRef = useRef<HTMLDivElement>(null);
     const bgRef = useRef<HTMLDivElement>(null);
     const [isHovered, setIsHovered] = useState(false);
+    const isFirstRender = useRef(true);
 
     useGSAP(() => {
         if (isHovered) {
@@ -55,29 +56,32 @@ export const SocialLink = ({
             });
         } else {
             // Default: Icon Left, Text Right
-            gsap.to(textRef.current, { x: 0, opacity: 1, duration: 0.5, ease: "power2.inOut", overwrite: "auto" });
-            gsap.to(iconRef.current, {
+            const method = isFirstRender.current ? gsap.set : gsap.to;
+            const dur = isFirstRender.current ? {} : { duration: 0.5, ease: "power2.inOut" };
+            const durShort = isFirstRender.current ? {} : { duration: 0.3 };
+            isFirstRender.current = false;
+
+            method(textRef.current, { x: 0, opacity: 1, overwrite: "auto", ...dur });
+            method(iconRef.current, {
                 top: "50%",
                 yPercent: -50,
                 left: "16px",
                 xPercent: 0,
                 scale: 1.55,
                 rotate: 0,
-                duration: 0.5,
-                ease: "power2.inOut",
                 color: color,
-                delay: 0.1, // Slight delay on color restoration for smoother feel
-                overwrite: "auto"
+                overwrite: "auto",
+                ...dur
             });
-            gsap.to(bgRef.current, {
+            method(bgRef.current, {
                 opacity: 0,
-                duration: 0.3,
-                overwrite: "auto"
+                overwrite: "auto",
+                ...durShort
             });
-            gsap.to(linkRef.current, {
+            method(linkRef.current, {
                 color: "var(--melt-text-label)",
-                duration: 0.3,
-                overwrite: "auto"
+                overwrite: "auto",
+                ...durShort
             });
         }
     }, { dependencies: [isHovered, maxWidth, color], scope: containerRef });

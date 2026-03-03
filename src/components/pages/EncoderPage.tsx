@@ -82,13 +82,13 @@ const ScriptStrip = ({
                         className={cn(
                             "flex items-center gap-2 px-0 py-1.5 rounded-none text-[8px] font-mono font-black uppercase tracking-widest transition-all hover:opacity-100",
                             targetAction
-                                ? "text-emerald-500/50"
-                                : (targetId ? "text-amber-500/60" : "text-rose-500/40")
+                                ? "text-emerald-500"
+                                : (targetId ? "text-amber-500" : "text-rose-500")
                         )}
                     >
                         {targetId ? <Zap size={10} fill={targetAction ? "currentColor" : "none"} className={cn(!targetAction && "opacity-50")} /> : <AlertCircle size={10} />}
                         {targetAction ? "Linked" : (targetId ? "Invalid Target" : "Unlinked")}
-                        <ChevronDown size={10} className={cn("transition-transform opacity-30", isLinking && "rotate-180")} />
+                        <ChevronDown size={10} strokeWidth={3} className={cn("transition-transform", isLinking && "rotate-180")} />
                     </button>
                 </div>
 
@@ -104,7 +104,7 @@ const ScriptStrip = ({
                 <div ref={dropdownRef} className="ml-5 overflow-hidden">
                     <div className="p-0 border-b border-transparent transition-colors">
                         <div className="relative">
-                            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-melt-accent/50" size={14} />
+                            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-melt-accent" size={14} />
                             <input
                                 autoFocus
                                 spellCheck="false"
@@ -170,6 +170,7 @@ export function EncoderPage({ initialValue }: { initialValue?: string }) {
     }, [initialValue]);
     const [scripts, setScripts] = useState<Record<string, string>>({});
     const [linkMap, setLinkMap] = useState<Record<string, string>>({});
+    const [unlinkedMap, setUnlinkedMap] = useState<Record<string, boolean>>({});
     const [result, setResult] = useState<string>('');
     const [encodingMode, setEncodingMode] = useState<'file' | 'string' | null>(null);
     const [isDraggingJson, setIsDraggingJson] = useState(false);
@@ -214,7 +215,7 @@ export function EncoderPage({ initialValue }: { initialValue?: string }) {
             const newMap = { ...linkMap };
             let changed = false;
             Object.keys(scripts || {}).forEach(fileName => {
-                if (!newMap[fileName]) {
+                if (!newMap[fileName] && !unlinkedMap[fileName]) {
                     const baseName = fileName.replace('.cs', '');
                     const sanitizeForMatch = (s: string) => s.toLowerCase().replace(/[^a-zA-Z0-9 _#[\]-]/g, '').replace(/\s+/g, ' ').trim();
                     const targetBase = sanitizeForMatch(baseName);
@@ -243,7 +244,13 @@ export function EncoderPage({ initialValue }: { initialValue?: string }) {
     }, [scripts, availableActions, linkMap]);
 
     useEffect(() => {
-        if (jsonTemplate.trim()) parseActions(jsonTemplate);
+        if (jsonTemplate.trim()) {
+            parseActions(jsonTemplate);
+        } else {
+            // If template is cleared, purge all links to prevent orphaned state
+            setLinkMap({});
+            setUnlinkedMap({});
+        }
     }, [jsonTemplate, parseActions]);
 
     useEffect(() => {
@@ -403,20 +410,20 @@ export function EncoderPage({ initialValue }: { initialValue?: string }) {
     };
 
     return (
-        <div className="flex flex-col gap-8 pb-20">
+        <div className="flex flex-col gap-4 pb-20">
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start px-2">
                 <div className="flex flex-col gap-4">
-                    <div className="flex items-center justify-between hidden lg:flex h-8">
+                    <div className="flex items-center justify-between hidden lg:flex">
                         <div className="flex items-center gap-3">
-                            <Braces size={20} className="text-melt-accent" />
-                            <h2 className="text-[11px] font-black text-melt-text-label uppercase tracking-[0.2em]">JSON Template</h2>
+                            <Braces size={18} className="text-melt-accent" />
+                            <h2 className="text-xs font-black text-melt-text-label uppercase tracking-[0.2em]">JSON Template</h2>
                         </div>
                     </div>
                     <div
                         className={cn(
-                            "relative group transition-all duration-300 h-[600px] border-b",
-                            (isHoveringJson || isDraggingJson) ? "border-melt-accent/50" : "border-transparent"
+                            "relative group transition-all duration-700 ease-in-out h-[600px] border-b",
+                            (isHoveringJson || isDraggingJson) ? "border-melt-accent" : "border-melt-text-muted/10"
                         )}
                         onMouseEnter={() => setIsHoveringJson(true)}
                         onMouseLeave={() => setIsHoveringJson(false)}
@@ -445,10 +452,10 @@ export function EncoderPage({ initialValue }: { initialValue?: string }) {
                 </div>
 
                 <div className="flex flex-col gap-4 h-full">
-                    <div className="flex items-center justify-between hidden lg:flex h-8">
+                    <div className="flex items-center justify-between hidden lg:flex">
                         <div className="flex items-center gap-3">
-                            <Code2 size={20} className="text-melt-accent" />
-                            <h2 className="text-[11px] font-black text-melt-text-label uppercase tracking-[0.2em]">.CS FILES</h2>
+                            <Code2 size={18} className="text-melt-accent" />
+                            <h2 className="text-xs font-black text-melt-text-label uppercase tracking-[0.2em]">.CS FILES</h2>
                         </div>
                     </div>
 
@@ -460,7 +467,7 @@ export function EncoderPage({ initialValue }: { initialValue?: string }) {
                         onDrop={handleScriptDrop}
                         className={cn(
                             "relative group transition-all duration-700 ease-in-out flex flex-col border-b h-[600px] overflow-y-auto custom-scrollbar",
-                            (isHoveringScripts || isDraggingScripts) ? "border-melt-accent/50" : "border-transparent"
+                            (isHoveringScripts || isDraggingScripts) ? "border-melt-accent" : "border-melt-text-muted/10"
                         )}
                     >
                         {Object.keys(scripts).length === 0 ? (
@@ -480,7 +487,21 @@ export function EncoderPage({ initialValue }: { initialValue?: string }) {
                                             const s = { ...scripts }; delete s[name]; setScripts(s);
                                             const m = { ...linkMap }; delete m[name]; setLinkMap(m);
                                         }}
-                                        onLink={(id) => setLinkMap(prev => ({ ...prev, [name]: id as string }))}
+                                        onLink={(id) => {
+                                            setLinkMap(prev => {
+                                                const m = { ...prev };
+                                                if (!id) {
+                                                    delete m[name];
+                                                    // Add to local storage or state to prevent auto-rematching
+                                                    setUnlinkedMap(u => ({ ...u, [name]: true }));
+                                                } else {
+                                                    m[name] = id;
+                                                    // Remove from blacklist if manually re-linked
+                                                    setUnlinkedMap(u => { const newU = { ...u }; delete newU[name]; return newU; });
+                                                }
+                                                return m;
+                                            });
+                                        }}
                                     />
                                 ))}
                             </div>
@@ -488,8 +509,16 @@ export function EncoderPage({ initialValue }: { initialValue?: string }) {
 
                         {Object.keys(scripts).length > 0 && (
                             <div className="mt-auto px-5 py-3 flex items-center justify-between pointer-events-none animate-in fade-in duration-500">
-                                <span className="text-[8px] font-black text-melt-text-muted/40 uppercase tracking-[0.3em] font-mono">{Object.keys(scripts).length} FILES</span>
-                                <span className="text-[8px] font-black text-emerald-500/20 uppercase tracking-[0.3em] font-mono">{Object.values(linkMap).filter(v => !!v).length} LINKED</span>
+                                <span className="text-[8px] font-black text-melt-text-muted uppercase tracking-[0.3em] font-mono">{Object.keys(scripts).length} FILES</span>
+                                {(() => {
+                                    const total = Object.keys(scripts).length;
+                                    const linked = Object.values(linkMap).filter(v => !!v).length;
+                                    return linked === 0 ? (
+                                        <span className="text-[8px] font-black text-rose-500 uppercase tracking-[0.3em] font-mono">0 / {total} LINKED</span>
+                                    ) : (
+                                        <span className="text-[8px] font-black text-emerald-500 uppercase tracking-[0.3em] font-mono">{linked} / {total} LINKED</span>
+                                    );
+                                })()}
                             </div>
                         )}
                     </div>
@@ -499,15 +528,16 @@ export function EncoderPage({ initialValue }: { initialValue?: string }) {
             {(jsonTemplate && Object.keys(scripts).length > 0) && (
                 <MeltPortal hostId="melt-footer-host">
                     <div
-                        className="absolute bottom-10 left-0 right-0 z-[100] px-10 pointer-events-none bg-melt-surface"
+                        className="absolute bottom-0 left-0 right-0 z-[100] px-10 pb-10 pt-4 pointer-events-none bg-melt-surface"
                     >
                         <div className="relative w-full animate-in fade-in slide-in-from-top-4 duration-500 pointer-events-auto">
                             <div className="flex flex-col lg:flex-row items-center justify-between w-full min-h-[52px] gap-6 lg:gap-0 py-4 lg:py-0">
                                 {/* LEFT SEGMENT */}
-                                <div className="flex-1 flex items-center h-full gap-6">
+                                <div className="flex-1 flex items-center gap-6">
                                     <div className="h-[1px] flex-1 bg-melt-text-muted/10 hidden lg:block" />
                                     <ActionBtn
                                         label={encodingMode === 'file' ? "Processing..." : "Encode To .SB File"}
+                                        desc="Generates a downloadable .sb script bundle."
                                         icon={encodingMode === 'file' ? Loader2 : FileUp}
                                         onClick={() => handleEncode('file')}
                                     />
@@ -515,17 +545,16 @@ export function EncoderPage({ initialValue }: { initialValue?: string }) {
                                 </div>
 
                                 {/* CENTER DIVIDER */}
-                                <div className="flex items-center h-full gap-6 shrink-0">
-                                    <div className="h-[1px] w-8 lg:w-12 bg-melt-text-muted/10" />
-                                    <div className="px-4 py-2 bg-melt-surface text-[10px] font-black text-melt-text-muted uppercase tracking-[0.6em] translate-y-[-1px] shrink-0">OR</div>
-                                    <div className="h-[1px] w-8 lg:w-12 bg-melt-text-muted/10" />
+                                <div className="hidden lg:flex items-center gap-6 shrink-0">
+                                    <div className="px-4 py-2 text-[10px] font-black text-melt-text-muted uppercase tracking-[0.6em] translate-y-[-1px]">OR</div>
                                 </div>
 
                                 {/* RIGHT SEGMENT */}
-                                <div className="flex-1 flex items-center h-full gap-6">
+                                <div className="flex-1 flex items-center gap-6">
                                     <div className="h-[1px] flex-1 bg-melt-text-muted/10 hidden lg:block" />
                                     <ActionBtn
-                                        label={encodingMode === 'string' ? "Processing..." : "Encode to Import String"}
+                                        label={encodingMode === 'string' ? "Processing..." : "Encode to String"}
+                                        desc="Generates a copyable base64 import string."
                                         icon={encodingMode === 'string' ? Loader2 : Terminal}
                                         onClick={() => handleEncode('string')}
                                     />
@@ -538,22 +567,22 @@ export function EncoderPage({ initialValue }: { initialValue?: string }) {
             )}
 
             {result && (
-                <div ref={resultRef} className="flex flex-col gap-4 py-8 animate-in fade-in slide-in-from-bottom-12 duration-1000">
-                    <div className="flex items-center justify-between h-8">
+                <div ref={resultRef} className="flex flex-col gap-4 py-8 px-2 animate-in fade-in slide-in-from-bottom-12 duration-1000">
+                    <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
-                            <Terminal size={20} className="text-melt-accent/40" />
-                            <h2 className="text-[11px] font-black text-melt-text-label uppercase tracking-[0.2em]">Encoded Result</h2>
+                            <Terminal size={18} className="text-melt-accent" />
+                            <h2 className="text-xs font-black text-melt-text-label uppercase tracking-[0.2em]">Encoded Result</h2>
                         </div>
                         <button
                             onClick={handleCopy}
-                            className="flex items-center gap-1.5 group/copy px-0 py-1 transition-all duration-700 ease-in-out border-b border-transparent hover:border-melt-accent/50"
+                            className="flex items-center gap-1.5 group/copy px-0 py-1 transition-all duration-700 ease-in-out border-b border-transparent hover:border-melt-accent"
                         >
                             <span className="text-[9px] font-mono font-black text-melt-text-muted/60 group-hover/copy:text-melt-accent uppercase tracking-[0.2em] transition-colors">COPY EXPORT STRING</span>
-                            <Copy size={11} className="text-melt-text-muted/40 group-hover/copy:text-melt-accent/60 transition-colors" />
+                            <Copy size={11} className="text-melt-text-muted/40 group-hover/copy:text-melt-accent transition-colors" />
                         </button>
                     </div>
 
-                    <div className="relative group transition-all duration-700 ease-in-out border-b border-transparent hover:border-b-melt-accent/50 h-[300px]">
+                    <div className="relative group transition-all duration-700 ease-in-out border-b border-melt-text-muted/10 hover:border-b-melt-accent h-[300px]">
                         <textarea
                             readOnly
                             value={result}

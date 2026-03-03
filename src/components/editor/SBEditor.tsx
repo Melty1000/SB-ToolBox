@@ -148,8 +148,8 @@ export const SBEditor: React.FC<SBEditorProps> = ({ value, language, onChange, r
             glyphMargin: false,
             folding: false,
             scrollbar: {
-                vertical: 'visible',
-                horizontal: 'visible',
+                vertical: 'auto',
+                horizontal: 'auto',
                 verticalScrollbarSize: 12,
                 horizontalScrollbarSize: 12,
             }
@@ -237,6 +237,30 @@ export const SBEditor: React.FC<SBEditorProps> = ({ value, language, onChange, r
                 .monaco-editor .cursor {
                     display: ${readOnly ? 'none' : 'block'} !important;
                 }
+                
+                /* Suppress initial mount flash */
+                @keyframes suppressScrollbarFlash {
+                    0% { opacity: 0; pointer-events: none; }
+                    99% { opacity: 0; pointer-events: none; }
+                    100% { pointer-events: auto; }
+                }
+
+                /* Override Monaco's internal JS fade so we control the timing */
+                .monaco-scrollable-element > .scrollbar {
+                    transition: opacity 700ms ease-in-out !important;
+                    visibility: visible !important;
+                    display: block !important;
+                    animation: suppressScrollbarFlash 1000ms forwards;
+                }
+                
+                .monaco-scrollable-element > .scrollbar > .slider {
+                    transition: background-color 700ms ease-in-out !important;
+                }
+                
+                /* Force hide when Monaco thinks it's hidden to ensure our 700ms fade-out runs */
+                .monaco-scrollable-element > .scrollbar.fade {
+                    opacity: 0 !important;
+                }
             `}</style>
             <Editor
                 height="100%"
@@ -248,7 +272,7 @@ export const SBEditor: React.FC<SBEditorProps> = ({ value, language, onChange, r
                 onMount={handleEditorDidMount}
                 loading={
                     <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 bg-melt-surface z-[100]">
-                        <div className="w-8 h-8 border-2 border-melt-accent/20 border-t-melt-accent rounded-full animate-spin" />
+                        <div className="w-8 h-8 border-2 border-melt-accent border-t-melt-accent rounded-full animate-spin" />
                         <span className="text-[10px] font-black text-melt-text-muted uppercase tracking-[0.3em]">INITIALIZING CORE...</span>
                     </div>
                 }
@@ -265,8 +289,8 @@ export const SBEditor: React.FC<SBEditorProps> = ({ value, language, onChange, r
                     stickyScroll: { enabled: false },
                     scrollbar: {
                         useShadows: false,
-                        vertical: 'visible',
-                        horizontal: 'visible',
+                        vertical: 'auto',
+                        horizontal: 'auto',
                         verticalScrollbarSize: 12,
                         horizontalScrollbarSize: 12,
                         alwaysConsumeMouseWheel: false,

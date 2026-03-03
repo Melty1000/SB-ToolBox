@@ -25,7 +25,7 @@ export function HelpPage() {
             <div className="flex flex-col gap-4 px-2 pt-0">
                 <div className="flex items-center gap-3">
                     <Info size={18} className="text-melt-accent" />
-                    <h2 className="text-sm font-black text-melt-text-label uppercase tracking-[0.4em]">HELP GUIDE</h2>
+                    <h2 className="text-xs font-black text-melt-text-label uppercase tracking-[0.2em]">HELP GUIDE</h2>
                 </div>
                 <div className="p-0 w-full max-w-4xl">
                     <p className="text-sm font-mono text-melt-text-label leading-relaxed text-left">
@@ -87,7 +87,7 @@ export function HelpPage() {
                             <MetadataField label="UUIDs" value="Lowercase RFC4122 format only" />
                         </div>
 
-                        <div className="flex items-start gap-4 p-4 border border-melt-accent/20 bg-transparent rounded-none">
+                        <div className="flex items-start gap-4 p-4 border border-melt-accent bg-transparent rounded-none">
                             <AlertTriangle className="text-melt-accent shrink-0 mt-0.5" size={16} />
                             <div className="flex flex-col gap-1">
                                 <span className="text-xs font-black text-melt-accent uppercase tracking-widest">CRITICAL WARNING</span>
@@ -239,10 +239,10 @@ export function HelpPage() {
 function Section({ icon: Icon, title, description, children }: any) {
     return (
         <div className="flex flex-col gap-6 py-8 border-0">
-            <div className="flex flex-col items-start px-0">
+            <div className="flex flex-col items-start px-2">
                 <div className="flex items-center gap-3 mb-2 w-full">
                     <Icon size={18} className="text-melt-accent" />
-                    <h2 className="text-xs font-black text-melt-text-label uppercase tracking-[0.3em]">{title}</h2>
+                    <h2 className="text-xs font-black text-melt-text-label uppercase tracking-[0.2em]">{title}</h2>
                     <div className="h-[1px] flex-1 bg-melt-text-muted/10 ml-4" />
                 </div>
                 <div className="w-full max-w-4xl">
@@ -307,7 +307,7 @@ function LinkBtn({ label, href }: { label: string; href: string }) {
         <a
             href={href}
             target="_blank"
-            className="flex items-center gap-2 px-6 py-3 bg-transparent hover:bg-melt-accent/10 border border-melt-text-muted/10 hover:border-melt-accent/40 text-[10px] font-black text-melt-text-label hover:text-melt-accent uppercase tracking-[0.2em] transition-all active:scale-95"
+            className="flex items-center gap-2 px-6 py-3 bg-transparent hover:bg-melt-accent border border-melt-text-muted/10 hover:border-melt-accent text-[10px] font-black text-melt-text-label hover:text-melt-accent uppercase tracking-[0.2em] transition-all active:scale-95"
         >
             {label}
             <ExternalLink size={12} className="opacity-50" />

@@ -53,7 +53,7 @@ export const MeltShell: React.FC<MeltShellProps> = ({ children, activePage = 'de
         { id: 'decoder', icon: FolderOpen, label: "Decoder" },
         { id: 'encoder', icon: Archive, label: "Encoder" },
         { id: 'history', icon: History, label: "History" },
-        { id: 'help', icon: CircleHelp, label: "Help Guide" },
+        { id: 'help', icon: CircleHelp, label: "Help" },
         { id: 'support', icon: Heart, label: "Support" },
         { id: 'settings', icon: Settings, label: "Settings" },
     ];
@@ -162,29 +162,26 @@ export const MeltShell: React.FC<MeltShellProps> = ({ children, activePage = 'de
                 </nav>
                 <div className="w-full px-3 pb-4 space-y-1 flex flex-col items-center">
                     <div className="h-px w-full bg-melt-text-muted/10 mb-2 opacity-30" />
-                    <div className="h-3 w-full relative version-container overflow-visible">
-                        <div className="absolute inset-x-0 top-0 text-label-2xs text-melt-text-muted tracking-widest text-center whitespace-nowrap version-compact">
-                            V{process.env.NEXT_PUBLIC_APP_VERSION}
-                        </div>
-                        <div className="absolute inset-x-0 top-0 text-label-2xs text-melt-text-muted tracking-widest text-center whitespace-nowrap version-expanded opacity-0">
-                            V{process.env.NEXT_PUBLIC_APP_VERSION} ALPHA
-                        </div>
+                    <div className="h-3 w-full flex flex-row items-center justify-center text-label-2xs text-melt-text-muted tracking-widest whitespace-nowrap">
+                        <span>V{process.env.NEXT_PUBLIC_APP_VERSION}</span>
+                        <span className="version-beta overflow-hidden opacity-0" style={{ width: 0 }}>&nbsp;BETA</span>
                     </div>
                 </div>
             </aside>
 
             {/* 2. TITLE BAR AREA */}
-            <header className="col-start-2 row-start-1 flex items-center justify-between pr-2 drag-region bg-melt-frame z-50">
+            <header className="col-start-2 row-start-1 flex items-center pr-2 drag-region bg-melt-frame z-50">
                 <div
-                    className="flex items-center"
+                    className="flex-shrink-0"
                     style={{ marginLeft: 'calc(var(--sidebar-width, 64px) - 64px)' }}
                 >
                     <span className="text-label-xs text-melt-text-muted tracking-[0.3em] ml-6">
                         SB ToolBox // {String(activePage?.toUpperCase() || 'DECODER')}
                     </span>
                 </div>
+
                 {isDesktop && (
-                    <div className="flex items-center no-drag">
+                    <div className="flex items-center no-drag fixed top-0 right-2 z-[100] h-10">
                         <ControlBtn icon={Minus} onClick={handleMin} />
                         <ControlBtn icon={Square} onClick={handleMax} />
                         <ControlBtn icon={X} onClick={handleClose} isClose />
@@ -266,38 +263,40 @@ const NavItem = ({ icon: Icon, label, active, isExpanded, onClick, id, hasBadge 
         id={`nav-item-${id}`}
         className={cn(
             "relative flex items-center justify-center rounded-md group w-full h-10 nav-item overflow-hidden",
-            active ? "text-melt-frame" : "text-melt-text-label group-hover:text-melt-text-heading"
+            active ? "text-melt-frame" : "text-melt-text-label"
         )}
     >
-        {/* Absolute Pivot for GSAP Morphing */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-            <span
-                className="flex items-center justify-center min-w-[20px] h-full nav-icon-wrapper"
-                style={{
-                    transform: active ? 'rotate(-10deg) scale(1.25)' : 'rotate(0deg) scale(1)',
-                    opacity: 1
-                } as any}
-            >
-                <Icon
-                    size={20}
-                    strokeWidth={2.5}
-                    className="nav-icon"
-                />
-                {hasBadge && (
-                    <span className="absolute top-0 right-0 w-2.5 h-2.5 bg-melt-accent rounded-full border-2 border-melt-frame" />
-                )}
-            </span>
-            <span
-                className="absolute inset-0 text-label-xs whitespace-nowrap nav-text flex items-center justify-center h-full px-4 text-center pointer-events-none tracking-[0.4em]"
-                style={{
-                    opacity: isExpanded ? 1 : 0,
-                    visibility: isExpanded ? 'visible' : 'hidden',
-                    transform: 'translateY(-30px)'
-                } as any}
-            >
+        {/* Background Fill (GSAP-driven, like SocialLink bgRef) */}
+        <div className="absolute inset-0 rounded-md nav-bg opacity-0 pointer-events-none bg-melt-accent" />
+
+        {/* Icon — GSAP fully controls positioning/transforms. Initial = collapsed centered. */}
+        <div
+            className="absolute pointer-events-none origin-center nav-icon-wrapper"
+            style={{
+                left: '20px',
+                top: '50%',
+                transform: `translateX(-50%) translateY(-50%) rotate(${active ? '-10deg' : '0deg'}) scale(${active ? 1.25 : 1})`,
+            }}
+        >
+            <Icon
+                size={20}
+                strokeWidth={2.5}
+                className="nav-icon"
+            />
+            {hasBadge && (
+                <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-melt-accent rounded-full border-2 border-melt-frame" />
+            )}
+        </div>
+
+        {/* Text Label — absolute right, slides out on hover like SocialLink */}
+        <span
+            className="absolute left-[36px] inset-y-0 flex items-center pointer-events-none nav-text"
+            style={{ opacity: 0, visibility: 'hidden' }}
+        >
+            <span className="text-[10px] font-black uppercase tracking-[0.3em] whitespace-nowrap">
                 {String(label).toUpperCase()}
             </span>
-        </div>
+        </span>
     </button>
 );
 
@@ -362,7 +361,7 @@ const ControlBtn = ({ icon: Icon, onClick, isClose }: any) => (
         onClick={onClick}
         className={cn(
             "w-10 h-7 flex items-center justify-center transition-all duration-200 rounded-md mx-0.5",
-            isClose ? "hover:bg-red-500/80 hover:text-melt-text-heading text-melt-text-label" : "hover:bg-melt-accent/10 text-melt-text-muted hover:text-melt-text-label"
+            isClose ? "hover:bg-red-500/80 hover:text-melt-text-heading text-melt-text-label" : "hover:bg-melt-accent text-melt-text-muted hover:text-melt-text-label"
         )}
     >
         <Icon size={14} />

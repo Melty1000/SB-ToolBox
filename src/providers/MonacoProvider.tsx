@@ -53,7 +53,7 @@ export const MonacoProvider: React.FC<{ children: React.ReactNode }> = ({ childr
             });
 
             // Set the initial global theme
-            const initialVariant = document.documentElement.getAttribute('data-theme') || 'default';
+            const initialVariant = document.documentElement.getAttribute('data-theme') || 'graphite-gold';
             monaco.editor.setTheme(`melt-theme-${initialVariant}`);
         });
     }, []);

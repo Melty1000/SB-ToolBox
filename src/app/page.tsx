@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { MeltShell } from '@/components/layout/MeltShell';
 import { DecoderPage } from '@/components/pages/DecoderPage';
 import { EncoderPage } from '@/components/pages/EncoderPage';
@@ -8,10 +8,13 @@ import { HelpPage } from '@/components/pages/HelpPage';
 import { SettingsPage } from '@/components/pages/SettingsPage';
 import { SupportPage } from '@/components/pages/SupportPage';
 import { HistoryPage } from '@/components/pages/HistoryPage';
+import { prefetchLiveStatus } from '@/lib/prefetchLiveStatus';
 
 export default function Home() {
     const [activePage, setActivePage] = useState('decoder');
     const [restoreData, setRestoreData] = useState<{ type: string, data: string } | null>(null);
+
+    useEffect(() => { prefetchLiveStatus(); }, []);
 
     const handleRestore = (type: 'decode' | 'encode', data: string) => {
         setRestoreData({ type, data });

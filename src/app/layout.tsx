@@ -29,9 +29,8 @@ export default function RootLayout({
         <script dangerouslySetInnerHTML={{
           __html: `
           (function() {
-            console.log('%c--- [FORENSIC V3] NUCLEAR_BLOCK BOOTING ---', 'color: white; background: #000; padding: 4px; border-radius: 4px;');
             try {
-              var theme = localStorage.getItem('melt-theme') || 'default';
+              var theme = localStorage.getItem('melt-theme') || 'graphite-gold';
               document.documentElement.setAttribute('data-theme', theme);
               
               function runForensics(reason, source) {

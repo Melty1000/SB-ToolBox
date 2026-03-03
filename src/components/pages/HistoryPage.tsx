@@ -91,7 +91,7 @@ export function HistoryPage({ onRestore }: HistoryPageProps) {
             {toast && (
                 <MeltPortal hostId="melt-portal-host">
                     <div className={cn(
-                        "fixed bottom-32 left-1/2 -translate-x-1/2 px-6 py-3 rounded-full shadow-2xl flex items-center gap-3 animate-in fade-in slide-in-from-bottom-4 duration-300 shrink-0 z-[100] border border-melt-accent/10",
+                        "fixed bottom-32 left-1/2 -translate-x-1/2 px-6 py-3 rounded-full shadow-2xl flex items-center gap-3 animate-in fade-in slide-in-from-bottom-4 duration-300 shrink-0 z-[100] border border-melt-accent",
                         toast.type === 'success' ? "bg-melt-accent text-melt-surface" : "bg-red-500/80 text-melt-text-heading"
                     )}>
                         <CheckCircle2 size={16} />
