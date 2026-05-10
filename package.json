@@ -1,6 +1,6 @@
 {
   "name": "sb-toolbox",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "private": true,
   "main": "dist/main.js",
   "scripts": {
@@ -49,10 +49,9 @@
     "@gsap/react": "^2.1.2",
     "@monaco-editor/react": "^4.7.0",
     "clsx": "^2.1.1",
-    "electron-serve": "^1.3.0",
-    "electron-updater": "^6.7.3",
+    "electron-serve": "^3.0.1",
+    "electron-updater": "^6.8.3",
     "file-saver": "^2.0.5",
-    "fs-extra": "^11.3.3",
     "gsap": "^3.14.2",
     "jszip": "^3.10.1",
     "lucide-react": "^0.562.0",

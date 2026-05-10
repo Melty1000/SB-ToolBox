@@ -14,7 +14,6 @@
     /* --- ACCENT: INDUSTRIAL ORANGE (Default) --- */
     --melt-accent: #ffaa00;
     --melt-accent-hover: #ffbb33;
-    --melt-accent-glow: rgba(255, 170, 0, 1);
 
     /* Utility Colors */
     --melt-twitch: #9146FF;
@@ -39,7 +38,6 @@
   [data-theme='graphite-cobalt'] {
     --melt-accent: #1D4267;
     --melt-accent-hover: #355C85;
-    --melt-accent-glow: rgba(29, 66, 103, 1);
   }
 
   /* Slate | Gold (Classic Pro Look) */
@@ -49,7 +47,6 @@
     --melt-surface: #1C1F26;
     --melt-accent: #F2AF0D;
     --melt-accent-hover: #FFC130;
-    --melt-accent-glow: rgba(242, 175, 13, 1);
     --melt-shadow-opacity: 0.5;
   }
 
@@ -57,7 +54,6 @@
   [data-theme='graphite-gold'] {
     --melt-accent: #F2AF0D;
     --melt-accent-hover: #FFC130;
-    --melt-accent-glow: rgba(242, 175, 13, 1);
   }
 
   /* Slate | Cobalt (Hybrid B) */
@@ -67,7 +63,6 @@
     --melt-surface: #1C1F26;
     --melt-accent: #1D4267;
     --melt-accent-hover: #355C85;
-    --melt-accent-glow: rgba(29, 66, 103, 1);
   }
 }
 
@@ -77,7 +72,6 @@
   --color-melt-surface: var(--melt-surface);
   --color-melt-accent: var(--melt-accent);
   --color-melt-accent-hover: var(--melt-accent-hover);
-  --color-melt-accent-glow: var(--melt-accent-glow);
   --color-melt-twitch: var(--melt-twitch);
 
   --color-melt-text-label: var(--melt-text-label);
@@ -120,6 +114,7 @@ body {
   outline: 0 !important;
   outline-offset: 0 !important;
   box-shadow: none !important;
+  appearance: none !important;
   -webkit-appearance: none !important;
 }
 
@@ -197,10 +192,6 @@ body {
 
 .no-drag {
   -webkit-app-region: no-drag;
-}
-
-.shadow-glow {
-  box-shadow: 0 0 20px var(--melt-accent-glow);
 }
 
 @layer utilities {

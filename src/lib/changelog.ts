@@ -7,6 +7,18 @@ export interface ChangelogEntry {
 // Most recent release first. The first entry is automatically marked as "latest".
 export const CHANGELOG: ChangelogEntry[] = [
     {
+        version: "V0.2.1 BETA",
+        date: "2026-03-03",
+        changes: [
+            "Performed a holistic project-wide dead code sweep",
+            "Deleted obsolete unused Next.js SVG template images to reduce compiled build size",
+            "Removed unused legacy TSX component backups to clear IDE search pollution",
+            "Removed vestigial --melt-accent-glow CSS variables from the application theme definitions",
+            "Purged fs-extra NPM dependency to reduce bundled dependencies",
+            "Added global `appearance: none` CSS flag to resolve Monaco-editor integration lints"
+        ]
+    },
+    {
         version: "V0.2.0 BETA",
         date: "2026-03-01",
         changes: [
