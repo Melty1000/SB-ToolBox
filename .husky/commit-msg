@@ -1,0 +1,16 @@
+#!/usr/bin/env sh
+
+msg_file="$1"
+
+subject="$(sed -n '1p' "$msg_file")"
+subject_metadata="$(printf '%s\n' "$subject" | grep -Ei '\[AI:[[:space:]]*[^]|]+[[:space:]]*\|[[:space:]]*Machine:[[:space:]]*[^]]+\]' || true)"
+
+if [ -z "$subject_metadata" ]; then
+  echo ""
+  echo "Commit metadata is required."
+  echo ""
+  echo "Add model and machine context to the first commit line:"
+  echo ""
+  echo "Commit subject [AI: GPT-5 | Machine: DESKTOP-ONC63TV]"
+  exit 1
+fi
